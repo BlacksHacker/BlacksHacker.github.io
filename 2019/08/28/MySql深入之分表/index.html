@@ -4,8 +4,8 @@
 
 <head><meta name="generator" content="Hexo 3.9.0">
     <meta charset="utf-8">
-    <meta name="keywords" content="Hello World, Shelton_Lee">
-    <meta name="description" content="Welcome to Hexo! This is your very first post. Check documentation for more info. If you get any problems when using Hex">
+    <meta name="keywords" content="MySql深入之分表, Shelton_Lee">
+    <meta name="description" content="1.前言  mysql中存在一种机制是表锁定（myisam存储引擎）和行锁定（innodb存储引擎），对于一行数据或一张表，同时只能有一条sql进行操作，其他针对该行或该表的执行sql需要进行排队，在高并发情况下，请求执行的sql如果出现骤">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <meta name="renderer" content="webkit|ie-stand|ie-comp">
@@ -13,7 +13,7 @@
     <meta name="format-detection" content="telephone=no">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <title>Hello World | Shelton_Lee</title>
+    <title>MySql深入之分表 | Shelton_Lee</title>
     <link rel="icon" type="image/png" href="/favicon.png">
 
     <link rel="stylesheet" type="text/css" href="/libs/awesome/css/font-awesome.min.css">
@@ -260,13 +260,13 @@
 
 
 
-<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/12.jpg')">
+<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/17.jpg')">
     <div class="container">
         <div class="row">
             <div class="col s12 m12 l12">
                 <div class="brand">
                     <div class="description center-align post-title">
-                        Hello World
+                        MySql深入之分表
                     </div>
                 </div>
             </div>
@@ -375,12 +375,33 @@
             <div class="row tag-cate">
                 <div class="col s7">
                     
-                          <div class="article-tag">
-                            <span class="chip bg-color">无标签</span>
-                          </div>
+                    <div class="article-tag">
+                        
+                            <a href="/tags/mysql/" target="_blank">
+                                <span class="chip bg-color">mysql</span>
+                            </a>
+                        
+                            <a href="/tags/数据库/" target="_blank">
+                                <span class="chip bg-color">数据库</span>
+                            </a>
+                        
+                            <a href="/tags/性能优化/" target="_blank">
+                                <span class="chip bg-color">性能优化</span>
+                            </a>
+                        
+                    </div>
                     
                 </div>
                 <div class="col s5 right-align">
+                    
+                    <div class="post-cate">
+                        <i class="fa fa-bookmark fa-fw icon-category"></i>
+                        
+                            <a href="/categories/mysql/" class="post-category" target="_blank">
+                                mysql
+                            </a>
+                        
+                    </div>
                     
                 </div>
             </div>
@@ -388,7 +409,7 @@
             <div class="post-info">
                 <div class="post-date info-break-policy">
                     <i class="fa fa-calendar-minus-o fa-fw"></i>发布日期:&nbsp;&nbsp;
-                    2019-08-26
+                    2019-08-28
                 </div>
 
                 
@@ -404,15 +425,55 @@
         <hr class="clearfix">
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <p>Welcome to <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/" target="_blank" rel="noopener">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html" target="_blank" rel="noopener">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="noopener">GitHub</a>.</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><pre class=" language-bash"><code class="language-bash">$ hexo new <span class="token string">"My New Post"</span></code></pre>
-<p>More info: <a href="https://hexo.io/docs/writing.html" target="_blank" rel="noopener">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><pre class=" language-bash"><code class="language-bash">$ hexo server</code></pre>
-<p>More info: <a href="https://hexo.io/docs/server.html" target="_blank" rel="noopener">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><pre class=" language-bash"><code class="language-bash">$ hexo generate</code></pre>
-<p>More info: <a href="https://hexo.io/docs/generating.html" target="_blank" rel="noopener">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><pre class=" language-bash"><code class="language-bash">$ hexo deploy</code></pre>
-<p>More info: <a href="https://hexo.io/docs/deployment.html" target="_blank" rel="noopener">Deployment</a></p>
+                <h3 id="1-前言"><a href="#1-前言" class="headerlink" title="1.前言"></a>1.前言</h3><p>  mysql中存在一种机制是表锁定（myisam存储引擎）和行锁定（innodb存储引擎），对于一行数据或一张表，同时只能有一条sql进行操作，其他针对该行或该表的执行sql需要进行排队，在高并发情况下，请求执行的sql如果出现骤增，整个系统的性能将会卡在sql的执行效率上。对一些数据庞大的表，可以采取分表策略，将执行的sql进行均匀分布，减少sql等候执行队列的长度，提高数据库的吞吐量。</p>
+<h3 id="2-分表"><a href="#2-分表" class="headerlink" title="2.分表"></a>2.分表</h3><p> 分表依据不同的业务情况可以分为两种切分方式：<strong>垂直切分</strong>和<strong>水平切分</strong>。</p>
+<h5 id="2-1-垂直切分"><a href="#2-1-垂直切分" class="headerlink" title="2.1 垂直切分"></a>2.1 垂直切分</h5><p> 垂直切分的场景是，表中属性很多，但是基本上是核心的几个属性的操作频率很高，其他的属性平时不怎么需要获取到。</p>
+<ul>
+<li>将长度较短，访问频率高的属性可以放到一个表中，暂且称为主表。</li>
+<li>将长度较短，访问频率低的属性放到一个表中，暂且称为扩展表。</li>
+<li>也可以将经常一起访问的属性，放置到同一表中，具体视业务而定。</li>
+</ul>
+<p> 数据库有自身的内存buffer，会将磁盘上的数据load到内存buffer中，其单位是以row为单位的，在内存有限的情况下，缓存越短的row，就能缓存更多的数据，提高缓存命中率，减少磁盘访问，有效提高操作效率。</p>
+<p><strong>缺点：</strong></p>
+<ul>
+<li>会造成一定量的冗余列</li>
+<li>查询所有数据需要进行join操作，如果进行了分库，表在不同库或服务器，将会增加访问数据库次数。<h5 id="2-2-水平切分"><a href="#2-2-水平切分" class="headerlink" title="2.2 水平切分"></a>2.2 水平切分</h5> 水平切分场景是，单表的数据量很大，执行多条sql会造成排队较长，整体的执行效率降低。这时需要将表中行数据按照一定的规则进行进行划分，创建多个子表，<strong>分表不同于分区，mysql的分表是真正的分表，一张表分成很多表后，每一个小表都是完整的一张表，都对应三个文件，.MYD数据文件，。MYI索引文件，。FRM表结构文件</strong>。这样就能保证sql的执行是在不同的表中，读取的时候从各自的表中进行读取，降低了单表的sql执行的排队长度。</li>
+</ul>
+<p><strong>缺点：</strong></p>
+<ul>
+<li>当分配规则确定后，打破这条规则很麻烦，可能会导致相同的数据，因为规则不同而出现在不同的表中。</li>
+<li>同库不同表数据需要进行union操作</li>
+<li>不同库不同表将会增加数据库访问次数</li>
+</ul>
+<p><strong>利用merge存储引擎分表</strong><br> 把已有的大数据量的表进行切分的确非常困难，可能涉及到要修改代码中大量的sql，利用merge存储引擎分表将会在数据库层面进行表的切分，而对外程序的中依旧是该主表，不需要代码中sql的修改，但仅限于MyISAM存储引擎，采用InnoDB引擎的表不适用。<br> 具体代码如下：</p>
+<pre><code># 分表1
+CREATE TABLE user_1(
+    id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    NAME VARCHAR(50)
+) ENGINE=MYISAM
+
+#分表2
+CREATE TABLE user_2(
+    id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    NAME VARCHAR(50)
+) ENGINE=MYISAM
+
+# merge表挂载分表
+CREATE TABLE USER(
+    id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    NAME VARCHAR(50)
+)  ENGINE=MERGE UNION=(user_1,user_2) INSERT_METHOD=LAST;</code></pre><ul>
+<li><strong>ENGINE=MERGE</strong> 指明merge表使用MERGE引擎</li>
+<li><strong>UNION=(user_1,user_2)</strong> 指明merge表挂载了哪些表</li>
+</ul>
+<pre><code>#该sql用于移除user_2的挂载
+ALTER TABLE USER ENGINE=MERGE UNION=(user_1) INSERT_METHOD=LAST </code></pre><ul>
+<li><strong>INSERT_METHOD=LAST</strong> 指明输入插入的方式，0表示不允许数据插入，<strong>FIRST</strong>将会插入UNION的第一个分表中，<strong>LAST</strong>将会插入UNION的最后一个分表中</li>
+<li>如上sql所示，merger表和其他的分表结构必须保持一致，包括同样的索引。</li>
+<li>一个merge表不能在整个表上维持unique约束，若merge存在重复主键，按主键查询，获取一条记录便会停止。后续重复主键的数据将无法插入，即只保证挂载之后主键的唯一性。</li>
+<li>若分表存在自增主键，merge表新数据的插入自增将会从分表中最大的主键开始自增。即user_1最大自增主键为10，user_2为20，则merge表数据的主键将会从21开始。</li>
+</ul>
+<p><strong>推荐：利用merge存储引擎分表，可以先有一张merge表，且只挂载一个分表，当分表的数据到达一定的数量级之后，再建立新的分表进行挂载，数据将会插入到新分表中</strong></p>
 <script>
         document.querySelectorAll('.github-emoji')
           .forEach(el => {
@@ -589,9 +650,9 @@
             <br/>
             <span xmlns:dct="http://purl.org/dc/terms/" href="http://purl.org/dc/dcmitype/Text"
                   property="dct:title" rel="dct:type">
-                    《Hello World》
+                    《MySql深入之分表》
                 </span> 由
-            <a xmlns:cc="http://creativecommons.org/ns#" href="/2019/08/26/hello-world/" property="cc:attributionName"
+            <a xmlns:cc="http://creativecommons.org/ns#" href="/2019/08/28/MySql深入之分表/" property="cc:attributionName"
                rel="cc:attributionURL">
                 Shelton Lee
             </a> 采用
@@ -635,6 +696,57 @@
             <div class="article-badge left-badge text-color">
                 <i class="fa fa-chevron-left"></i>&nbsp;上一篇</div>
             <div class="card">
+                <a href="/2019/08/28/动态代理-----JDK动态代理/">
+                    <div class="card-image">
+                        
+                        
+                        <img src="/medias/featureimages/19.jpg" class="responsive-img" alt="动态代理JDK">
+                        
+                        <span class="card-title">动态代理JDK</span>
+                    </div>
+                </a>
+                <div class="card-content article-content">
+                    <div class="summary block-with-text">
+                        
+                            1.前言  学习动态代理，可以先了解一下设计模式中的代理模式。  设计模式–代理模式
+2.JDK动态代理  JDK生成类的过程中比较高效，其基于java内部的拦截器和反射机制实现的，应用的前提是目标类要基于统一的接口
+2.1 使用JDK动态
+                        
+                    </div>
+                    <div class="publish-info">
+                        <span class="publish-date">
+                            <i class="fa fa-clock-o fa-fw icon-date"></i>2019-08-28
+                        </span>
+                        <span class="publish-author">
+                            
+                            <i class="fa fa-bookmark fa-fw icon-category"></i>
+                            
+                            <a href="/categories/java/" class="post-category" target="_blank">
+                                    java
+                                </a>
+                            
+                            
+                        </span>
+                    </div>
+                </div>
+                
+                <div class="card-action article-tags">
+                    
+                    <a href="/tags/java/" target="_blank">
+                        <span class="chip bg-color">java</span>
+                    </a>
+                    
+                </div>
+                
+            </div>
+        </div>
+        
+        
+        <div class="article col s12 m6" data-aos="fade-up">
+            <div class="article-badge right-badge text-color">
+                下一篇&nbsp;<i class="fa fa-chevron-right"></i>
+            </div>
+            <div class="card">
                 <a href="/2019/08/27/MySql深入之分区/">
                     <div class="card-image">
                         
@@ -651,9 +763,9 @@
                         
                     </div>
                     <div class="publish-info">
-                        <span class="publish-date">
-                            <i class="fa fa-clock-o fa-fw icon-date"></i>2019-08-27
-                        </span>
+                            <span class="publish-date">
+                                <i class="fa fa-clock-o fa-fw icon-date"></i>2019-08-27
+                            </span>
                         <span class="publish-author">
                             
                             <i class="fa fa-bookmark fa-fw icon-category"></i>
@@ -682,44 +794,6 @@
                     </a>
                     
                 </div>
-                
-            </div>
-        </div>
-        
-        
-        <div class="article col s12 m6" data-aos="fade-up">
-            <div class="article-badge right-badge text-color">
-                本篇&nbsp;<i class="fa fa-dot-circle-o"></i>
-            </div>
-            <div class="card">
-                <a href="/2019/08/26/hello-world/">
-                    <div class="card-image">
-                        
-                        
-                        <img src="/medias/featureimages/12.jpg" class="responsive-img" alt="Hello World">
-                        
-                        <span class="card-title">Hello World</span>
-                    </div>
-                </a>
-                <div class="card-content article-content">
-                    <div class="summary block-with-text">
-                        
-                            Welcome to Hexo! This is your very first post. Check documentation for more info. If you get any problems when using Hex
-                        
-                    </div>
-                    <div class="publish-info">
-                            <span class="publish-date">
-                                <i class="fa fa-clock-o fa-fw icon-date"></i>2019-08-26
-                            </span>
-                        <span class="publish-author">
-                            
-                            <i class="fa fa-user fa-fw"></i>
-                            Shelton Lee
-                            
-                        </span>
-                    </div>
-                </div>
-
                 
             </div>
         </div>

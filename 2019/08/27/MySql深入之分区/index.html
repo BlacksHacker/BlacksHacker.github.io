@@ -4,8 +4,8 @@
 
 <head><meta name="generator" content="Hexo 3.9.0">
     <meta charset="utf-8">
-    <meta name="keywords" content="Hello World, Shelton_Lee">
-    <meta name="description" content="Welcome to Hexo! This is your very first post. Check documentation for more info. If you get any problems when using Hex">
+    <meta name="keywords" content="MySql深入之分区, Shelton_Lee">
+    <meta name="description" content="1. 前言  日常开发中经常会遇到数据库的一些大表，即单表数据存储可能是百万级甚至千万级并且字段非常多，由于表数据的庞大，会导致在数据检索和变更方面的效率很低，如果SQL复杂，级联表众多，其运行性能会变的非常糟糕。使得数据库在高并发情况下成">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <meta name="renderer" content="webkit|ie-stand|ie-comp">
@@ -13,7 +13,7 @@
     <meta name="format-detection" content="telephone=no">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <title>Hello World | Shelton_Lee</title>
+    <title>MySql深入之分区 | Shelton_Lee</title>
     <link rel="icon" type="image/png" href="/favicon.png">
 
     <link rel="stylesheet" type="text/css" href="/libs/awesome/css/font-awesome.min.css">
@@ -260,13 +260,13 @@
 
 
 
-<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/12.jpg')">
+<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/23.jpg')">
     <div class="container">
         <div class="row">
             <div class="col s12 m12 l12">
                 <div class="brand">
                     <div class="description center-align post-title">
-                        Hello World
+                        MySql深入之分区
                     </div>
                 </div>
             </div>
@@ -375,12 +375,33 @@
             <div class="row tag-cate">
                 <div class="col s7">
                     
-                          <div class="article-tag">
-                            <span class="chip bg-color">无标签</span>
-                          </div>
+                    <div class="article-tag">
+                        
+                            <a href="/tags/mysql/" target="_blank">
+                                <span class="chip bg-color">mysql</span>
+                            </a>
+                        
+                            <a href="/tags/数据库/" target="_blank">
+                                <span class="chip bg-color">数据库</span>
+                            </a>
+                        
+                            <a href="/tags/性能优化/" target="_blank">
+                                <span class="chip bg-color">性能优化</span>
+                            </a>
+                        
+                    </div>
                     
                 </div>
                 <div class="col s5 right-align">
+                    
+                    <div class="post-cate">
+                        <i class="fa fa-bookmark fa-fw icon-category"></i>
+                        
+                            <a href="/categories/mysql/" class="post-category" target="_blank">
+                                mysql
+                            </a>
+                        
+                    </div>
                     
                 </div>
             </div>
@@ -388,7 +409,7 @@
             <div class="post-info">
                 <div class="post-date info-break-policy">
                     <i class="fa fa-calendar-minus-o fa-fw"></i>发布日期:&nbsp;&nbsp;
-                    2019-08-26
+                    2019-08-27
                 </div>
 
                 
@@ -404,15 +425,173 @@
         <hr class="clearfix">
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <p>Welcome to <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/" target="_blank" rel="noopener">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html" target="_blank" rel="noopener">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="noopener">GitHub</a>.</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><pre class=" language-bash"><code class="language-bash">$ hexo new <span class="token string">"My New Post"</span></code></pre>
-<p>More info: <a href="https://hexo.io/docs/writing.html" target="_blank" rel="noopener">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><pre class=" language-bash"><code class="language-bash">$ hexo server</code></pre>
-<p>More info: <a href="https://hexo.io/docs/server.html" target="_blank" rel="noopener">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><pre class=" language-bash"><code class="language-bash">$ hexo generate</code></pre>
-<p>More info: <a href="https://hexo.io/docs/generating.html" target="_blank" rel="noopener">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><pre class=" language-bash"><code class="language-bash">$ hexo deploy</code></pre>
-<p>More info: <a href="https://hexo.io/docs/deployment.html" target="_blank" rel="noopener">Deployment</a></p>
+                <h3 id="1-前言"><a href="#1-前言" class="headerlink" title="1. 前言"></a>1. 前言</h3><p>  日常开发中经常会遇到数据库的一些大表，即单表数据存储可能是百万级甚至千万级并且字段非常多，由于表数据的庞大，会导致在数据检索和变更方面的效率很低，如果SQL复杂，级联表众多，其运行性能会变的非常糟糕。使得数据库在高并发情况下成为系统的性能瓶颈。一定程度的分区分表，甚至在分布式情况下的分库等，能有效提升数据库的效率，但凡事均有度，分区分表过多，会造成内存占用升高，以及主从之间数据的一致性问题等等，怎样分区分表，分多少合适，还是要基于现实的业务情况进行选择处理。</p>
+<h3 id="2-分区"><a href="#2-分区" class="headerlink" title="2.分区"></a>2.分区</h3><p>  分区允许通过设置需要的规则在文件系统中分布存储单个表的各个部分。实际上就是表的不同部分作为单独的表存储在不同的位置，Mysql5.1引入的，是一种简单的<strong>水平拆分</strong>，在建表时加上分区参数，对应用是透明的，无需代码的修改。分区本质上是将数据底层的存储块变多，在数据库层面依旧是一张表。</p>
+<p>  目前的mysql8.0中，唯一支持分区的存储引擎是InnoDB和NDB。分区不能与不支持分区的存储引擎一起使用，这些引擎包括MyISAM、MERGE、CSV和FEDERATED存储引擎。</p>
+<p>  分区可以分为两种：<strong>水平分区</strong>和<strong>垂直分区</strong></p>
+<ul>
+<li>水平分区，通常是对表的行进行分区，将不同的行数据进行切割，但表中定义的列在每个数据集中都能找到，只是根据规则将不同的行数据存储在不同的存储块中。</li>
+<li>垂直分区，通过对表的垂直划分来减少目标表的宽度，使得特定的列被划分到特定的分区，每个分区都包含了该列所对应的所有的行</li>
+</ul>
+<p><strong>分区的本质是单表数据在物理层存储的改变，目前mysql还不支持垂直分区，网上大多数将垂直分区和垂直分表混为一谈。</strong></p>
+<p>  <strong>水平分区的四大类型</strong></p>
+<ul>
+<li>范围分区（Range）</li>
+<li>列表分区（List）</li>
+<li>哈希分区（Hash）</li>
+<li>Key分区<h5 id="2-1-Range分区"><a href="#2-1-Range分区" class="headerlink" title="2.1 Range分区"></a>2.1 Range分区</h5>   把一个连续的区间进行划分，把多行分配给分区，常见的字段为自增的主键ID,或者是时间等，基于分区的列最好是整型。</li>
+</ul>
+<pre><code>CREATE TABLE `sql_range` (
+  `id` BIGINT(20) NOT NULL AUTO_INCREMENT,
+  `name` VARCHAR(50) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=INNODB DEFAULT CHARSET=utf8
+PARTITION BY RANGE (id)(
+    PARTITION p1 VALUES LESS THAN (10),
+    PARTITION p2 VALUES LESS THAN (20),
+    PARTITION p3 VALUES LESS THAN (30),
+    PARTITION p4 VALUES LESS THAN (40),
+    PARTITION p5 VALUES LESS THAN (MAXVALUE)
+
+)
+
+-- 删除list或者range分区(同时删除分区对应的数据)
+alter table &lt;table&gt; drop partition &lt;分区名称&gt;;
+-- range添加新分区
+alter table &lt;table&gt; add partition(partition p4 values less than MAXVALUE);
+-- range重新分区
+ALTER TABLE user REORGANIZE PARTITION p0,p1,p2,p3,p4 INTO (PARTITION p0 VALUES LESS THAN MAXVALUE);</code></pre><p><strong><em>注意</em></strong>：</p>
+<ul>
+<li>按照时间范围分区时，转换函数最好使用UNIX_TIMESTAMP 而不是TIMESTAMP</li>
+<li>对于null值，Range分区会将其作为最小分区值存储<h5 id="2-2-List分区"><a href="#2-2-List分区" class="headerlink" title="2.2 List分区"></a>2.2 List分区</h5>  类似于Range分区，但区别在于List分区是一个枚举值列表的集合，而非区间，建议分区为非null列，否则插入null，而集合中不包含，则会报错。另外，List分区只支持整型。</li>
+</ul>
+<pre><code>CREATE TABLE `sql_list` (
+  `id` BIGINT(20) NOT NULL AUTO_INCREMENT,
+  `name` VARCHAR(50) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=INNODB DEFAULT CHARSET=utf8
+PARTITION BY LIST (id)(
+    PARTITION p1 VALUES IN (1,3,5),
+    PARTITION p2 VALUES IN  ('a','b')
+)
+
+会报错：
+VALUES value for partition 'p2' must have type INT
+
+-- 删除list或者range分区(同时删除分区对应的数据)
+alter table &lt;table&gt; drop partition &lt;分区名称&gt;;
+-- list添加新分区
+alter table &lt;table&gt; add partition(partition p4 values in (25,26,28));
+-- list重新分区
+ALTER TABLE &lt;table&gt; REORGANIZE PARTITION p0,p1,p2,p3,p4 INTO (PARTITION p0 VALUES in (1,2,3,4,5));</code></pre><h5 id="2-3-Hash分区"><a href="#2-3-Hash分区" class="headerlink" title="2.3 Hash分区"></a>2.3 Hash分区</h5><p>  对于一些表，是没有连续的字段或者集合性质的可以用来明显分区的特征字段，但表数据又非常庞大，为了将这些数据分散存储，mysql提供了hash分区，基于给定的分区个数，将数据分配到不同分区，但只针对于整数hash，非整数类型数据需要表达式转换，复杂表达式可能造成性能问题。</p>
+<p>hash分区可以细分为：<strong><em>hash</em></strong>分区和<strong><em>线性hash</em></strong>分区，语法区别在于 partition by linear hash.</p>
+<ul>
+<li>Hash分区，是通过MOD函数取模的方式可以让数据非常平均的分布在每一分区，但由于分区在创建时已经固定，新增和收缩分区，数据的迁移比较大。</li>
+<li>线性Hash分区，优点在于增加，删除，合并和拆分分区变的快捷，有利于处理大量的数据的表，缺点在于数据分布可能不太均匀。</li>
+</ul>
+<p>  hash分区示例代码如下：</p>
+<pre><code>CREATE TABLE `sql_hash` (
+  `id` BIGINT(20) NOT NULL AUTO_INCREMENT,
+  `name` VARCHAR(50) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=INNODB DEFAULT CHARSET=utf8
+PARTITION BY HASH (id)
+PARTITIONS 4;
+
+//不指定PARTITIONS 4子句时，默认分区为1
+-- hash重新分区
+alter table &lt;table&gt; add partition partitions 4;</code></pre><h5 id="2-4-Key分区"><a href="#2-4-Key分区" class="headerlink" title="2.4 Key分区"></a>2.4 Key分区</h5><p>  key分区类似于Hash分区，但区别在于以下四点：</p>
+<ul>
+<li><p>KEY分区允许多列，Hash只允许一列。</p>
+</li>
+<li><p>如果有主键或唯一键，key分区可不指定，默认是主键或唯一键。如果没有必须显示指定。</p>
+</li>
+<li><p>KEY分区必须基于列，而不是基于列的表达式</p>
+</li>
+<li><p>Hash的算法是MOD函数，而Key是MD5</p>
+</li>
+</ul>
+<pre><code>CREATE TABLE `sql_key` (
+  `id` BIGINT(20) NOT NULL AUTO_INCREMENT,
+  `name` VARCHAR(50) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=INNODB DEFAULT CHARSET=utf8
+PARTITION BY KEY (id)
+PARTITIONS 4;    
+
+-- key重新分区
+alter table &lt;table&gt; add partition partitions 4;</code></pre><h5 id="2-5-子分区"><a href="#2-5-子分区" class="headerlink" title="2.5 子分区"></a>2.5 子分区</h5><p>  子分区是对分区表中的每个分区再进行分割，又称复合分区，支持对range和list进行子分区，子分区可以采用hash分区或者key分区。复合分区用于保存大量的数据记录。<br>  示例代码如下：</p>
+<pre><code>CREATE TABLE custom(
+    id INT,
+    NAME VARCHAR(20)
+)
+PARTITION BY RANGE(id)
+SUBPARTITION BY HASH(id) SUBPARTITIONS 2(
+    PARTITION p1 VALUES LESS THAN (10),
+    PARTITION p2 VALUES LESS THAN (20),
+    PARTITION p3 VALUES LESS THAN MAXVALUE
+)
+
+# 指明了子分区名
+CREATE TABLE seller(
+    id INT,
+    NAME VARCHAR(50)
+) 
+PARTITION BY RANGE(id)
+SUBPARTITION BY HASH(id)(
+    PARTITION p1 VALUES LESS THAN (10)(SUBPARTITION s1, SUBPARTITION s2, SUBPARTITION s3),
+    PARTITION p2 VALUES LESS THAN (20)(SUBPARTITION s4, SUBPARTITION s5, SUBPARTITION s6),
+    PARTITION p3 VALUES LESS THAN MAXVALUE(SUBPARTITION s7, SUBPARTITION s8, SUBPARTITION s9)
+)
+
+--子分区添加新分区，系统自动为子分区命名
+alter table &lt;table&gt; add partition(partition p3 values less than MAXVALUE);</code></pre><h3 id="3-分区表"><a href="#3-分区表" class="headerlink" title="3.分区表"></a>3.分区表</h3><h5 id="3-1-原理"><a href="#3-1-原理" class="headerlink" title="3.1 原理"></a>3.1 原理</h5><p>  普通表进行分区之后就被称为分区表，分区表是由多个相关的底层表（存储块）来实现的，这些底层表也是由句柄对象表示，所以我们可以直接访问各个分区，管理分区的各个底层表和普通表对于存储引擎来说是一样的，分区表的索引只是在各个底层表上各自加上一个相同的索引，从存储角度来看没有区别，存储引擎无需知道该表是普通表还是分区表。</p>
+<p><img src="/2019/08/27/MySql深入之分区/1566879182129.png" alt=""></p>
+<h5 id="3-2-操作分析"><a href="#3-2-操作分析" class="headerlink" title="3.2 操作分析"></a>3.2 操作分析</h5><ul>
+<li>select：查询分区表时，分区层先打开并锁住所有的底层表，优化器判断是否可以过滤部分分区，然后再调用对应的存储引擎接口访问各个分区的数据</li>
+<li>insert：写入分区表时，分区层先打开并锁住所有的底层表，确定哪个分区接受这条记录，再将记录写入对应的底层</li>
+<li>delete: 删除数据时，分区层先打开并锁住所有的底层表，确定记录所在分区，并进行记录删除</li>
+<li>uodate: 更新数据时，分区层先打开并锁住所有的底层表，确定记录所在分区，取出更新，再确定数据该放到哪个分区，对底层表进行写操作，并删除原分区表的旧数据。</li>
+</ul>
+<p><strong>注意</strong>：如果存储引擎能够自己实现行级锁，如Innodb，则会在分区层释放对应的表锁，这个加锁和解锁的过程与普通Innodb上的查询类似。</p>
+<h3 id="4-总结"><a href="#4-总结" class="headerlink" title="4.总结"></a>4.总结</h3><h5 id="4-1-分区的注意事项"><a href="#4-1-分区的注意事项" class="headerlink" title="4.1 分区的注意事项"></a>4.1 分区的注意事项</h5><ul>
+<li><p>primary key  和unique key必须包含在分区key的一部分，否则在创建primary key 和unique index时会报错</p>
+</li>
+<li><p>范围分区添加分区只能在最大值后面追加分区</p>
+</li>
+<li><p>所有分区的engine必须一样</p>
+</li>
+<li><p>范围分区字段：integer，数值表达式，日期列，日期函数表达式（如year(), to_days(), to_seconds(), unix_timestamp()）</p>
+</li>
+<li><p>分区字段尽量避免null值，null值对于range分区，会放置到最左边的分区，对于list分区，必须在集合中加入null，对于key和hash分区，都会将null返回为0</p>
+</li>
+<li><p>一个表最多只能有1024个分区</p>
+</li>
+<li><p>分区表无法使用外键约束</p>
+<h5 id="4-2-分区的优点"><a href="#4-2-分区的优点" class="headerlink" title="4.2 分区的优点"></a>4.2 分区的优点</h5></li>
+<li><p>只获取表的热点数据，其他都是历史数据</p>
+</li>
+<li><p>分区表更容易进行维护，可以针对单个分区删除数据，也可以新增分区进行数据的插入，还可以对一个独立的分区进行优化、检查和修复等操作</p>
+</li>
+<li><p>部分查询能够从查询条件确定只落到少数分区上，速度比较快</p>
+</li>
+<li><p>分区表的数据可以分布到不同的物理设备上，从而高效利用多个硬件设备</p>
+</li>
+<li><p>可以使用分区表避免某些特殊瓶颈，如InnoDB单个索引的互斥访问、ext3文件系统的inode锁竞争</p>
+</li>
+<li><p>可以备份和恢复单个分区</p>
+</li>
+<li><p>优化查询，在where字句中包含分区列时，可以只使用必要的分区来提高查询效率，同时，涉及聚合函数是，可以在分区上进行处理，最终只需要汇总所有分区的得到的结果</p>
+<h5 id="4-3-分区与分表的关系"><a href="#4-3-分区与分表的关系" class="headerlink" title="4.3 分区与分表的关系"></a>4.3 分区与分表的关系</h5></li>
+<li><p>都能提高mysql的性能，在高并发状态下有一个良好的表现</p>
+</li>
+<li><p>分表和分区不矛盾，可以相互配合，对于需要大量访问，并且数据比较多的表，可以采用分区加分表的方式，访问量不大，但数据很多的表，可以仅采用分区的方式。</p>
+</li>
+<li><p>分表稍微复杂，需要手动创建子表，读写时需要计算子表名。</p>
+</li>
+<li><p>表分区相对于分表，操作方便，不需要创建子表</p>
+</li>
+</ul>
 <script>
         document.querySelectorAll('.github-emoji')
           .forEach(el => {
@@ -589,9 +768,9 @@
             <br/>
             <span xmlns:dct="http://purl.org/dc/terms/" href="http://purl.org/dc/dcmitype/Text"
                   property="dct:title" rel="dct:type">
-                    《Hello World》
+                    《MySql深入之分区》
                 </span> 由
-            <a xmlns:cc="http://creativecommons.org/ns#" href="/2019/08/26/hello-world/" property="cc:attributionName"
+            <a xmlns:cc="http://creativecommons.org/ns#" href="/2019/08/27/MySql深入之分区/" property="cc:attributionName"
                rel="cc:attributionURL">
                 Shelton Lee
             </a> 采用
@@ -635,24 +814,24 @@
             <div class="article-badge left-badge text-color">
                 <i class="fa fa-chevron-left"></i>&nbsp;上一篇</div>
             <div class="card">
-                <a href="/2019/08/27/MySql深入之分区/">
+                <a href="/2019/08/28/MySql深入之分表/">
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/23.jpg" class="responsive-img" alt="MySql深入之分区">
+                        <img src="/medias/featureimages/17.jpg" class="responsive-img" alt="MySql深入之分表">
                         
-                        <span class="card-title">MySql深入之分区</span>
+                        <span class="card-title">MySql深入之分表</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
                     <div class="summary block-with-text">
                         
-                            1. 前言  日常开发中经常会遇到数据库的一些大表，即单表数据存储可能是百万级甚至千万级并且字段非常多，由于表数据的庞大，会导致在数据检索和变更方面的效率很低，如果SQL复杂，级联表众多，其运行性能会变的非常糟糕。使得数据库在高并发情况下成
+                            1.前言  mysql中存在一种机制是表锁定（myisam存储引擎）和行锁定（innodb存储引擎），对于一行数据或一张表，同时只能有一条sql进行操作，其他针对该行或该表的执行sql需要进行排队，在高并发情况下，请求执行的sql如果出现骤
                         
                     </div>
                     <div class="publish-info">
                         <span class="publish-date">
-                            <i class="fa fa-clock-o fa-fw icon-date"></i>2019-08-27
+                            <i class="fa fa-clock-o fa-fw icon-date"></i>2019-08-28
                         </span>
                         <span class="publish-author">
                             
@@ -689,7 +868,7 @@
         
         <div class="article col s12 m6" data-aos="fade-up">
             <div class="article-badge right-badge text-color">
-                本篇&nbsp;<i class="fa fa-dot-circle-o"></i>
+                下一篇&nbsp;<i class="fa fa-chevron-right"></i>
             </div>
             <div class="card">
                 <a href="/2019/08/26/hello-world/">
@@ -719,7 +898,6 @@
                         </span>
                     </div>
                 </div>
-
                 
             </div>
         </div>

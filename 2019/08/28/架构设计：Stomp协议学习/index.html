@@ -4,8 +4,8 @@
 
 <head><meta name="generator" content="Hexo 3.9.0">
     <meta charset="utf-8">
-    <meta name="keywords" content="Hello World, Shelton_Lee">
-    <meta name="description" content="Welcome to Hexo! This is your very first post. Check documentation for more info. If you get any problems when using Hex">
+    <meta name="keywords" content="架构设计：Stomp协议, Shelton_Lee">
+    <meta name="description" content="1.前言  消息从发送到接受的方式有两种：一种称为即时消息通讯，即一端发送之后，另一端能够立即接受 ，具体实现就是RPC。另一种称为延迟消息通讯，即消息发出后，进入中间容器进行存储，到达一定条件之后，再发送给接受者，中间的容器称为消息队列。">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <meta name="renderer" content="webkit|ie-stand|ie-comp">
@@ -13,7 +13,7 @@
     <meta name="format-detection" content="telephone=no">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <title>Hello World | Shelton_Lee</title>
+    <title>架构设计：Stomp协议 | Shelton_Lee</title>
     <link rel="icon" type="image/png" href="/favicon.png">
 
     <link rel="stylesheet" type="text/css" href="/libs/awesome/css/font-awesome.min.css">
@@ -260,13 +260,13 @@
 
 
 
-<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/12.jpg')">
+<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/23.jpg')">
     <div class="container">
         <div class="row">
             <div class="col s12 m12 l12">
                 <div class="brand">
                     <div class="description center-align post-title">
-                        Hello World
+                        架构设计：Stomp协议
                     </div>
                 </div>
             </div>
@@ -375,12 +375,29 @@
             <div class="row tag-cate">
                 <div class="col s7">
                     
-                          <div class="article-tag">
-                            <span class="chip bg-color">无标签</span>
-                          </div>
+                    <div class="article-tag">
+                        
+                            <a href="/tags/系统架构/" target="_blank">
+                                <span class="chip bg-color">系统架构</span>
+                            </a>
+                        
+                            <a href="/tags/通信协议/" target="_blank">
+                                <span class="chip bg-color">通信协议</span>
+                            </a>
+                        
+                    </div>
                     
                 </div>
                 <div class="col s5 right-align">
+                    
+                    <div class="post-cate">
+                        <i class="fa fa-bookmark fa-fw icon-category"></i>
+                        
+                            <a href="/categories/网络协议/" class="post-category" target="_blank">
+                                网络协议
+                            </a>
+                        
+                    </div>
                     
                 </div>
             </div>
@@ -388,7 +405,7 @@
             <div class="post-info">
                 <div class="post-date info-break-policy">
                     <i class="fa fa-calendar-minus-o fa-fw"></i>发布日期:&nbsp;&nbsp;
-                    2019-08-26
+                    2019-08-28
                 </div>
 
                 
@@ -404,15 +421,82 @@
         <hr class="clearfix">
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <p>Welcome to <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/" target="_blank" rel="noopener">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html" target="_blank" rel="noopener">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="noopener">GitHub</a>.</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><pre class=" language-bash"><code class="language-bash">$ hexo new <span class="token string">"My New Post"</span></code></pre>
-<p>More info: <a href="https://hexo.io/docs/writing.html" target="_blank" rel="noopener">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><pre class=" language-bash"><code class="language-bash">$ hexo server</code></pre>
-<p>More info: <a href="https://hexo.io/docs/server.html" target="_blank" rel="noopener">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><pre class=" language-bash"><code class="language-bash">$ hexo generate</code></pre>
-<p>More info: <a href="https://hexo.io/docs/generating.html" target="_blank" rel="noopener">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><pre class=" language-bash"><code class="language-bash">$ hexo deploy</code></pre>
-<p>More info: <a href="https://hexo.io/docs/deployment.html" target="_blank" rel="noopener">Deployment</a></p>
+                <h3 id="1-前言"><a href="#1-前言" class="headerlink" title="1.前言"></a>1.前言</h3><p>  消息从发送到接受的方式有两种：一种称为<strong>即时消息通讯</strong>，即一端发送之后，另一端能够立即接受 ，具体实现就是RPC。另一种称为<strong>延迟消息通讯</strong>，即消息发出后，进入中间容器进行存储，到达一定条件之后，再发送给接受者，中间的容器称为<strong>消息队列</strong>。<br>  <strong>Stomp协议</strong>，英文全名<strong><em>Streaming Text Orientated Message Protocol</em></strong>，中文名称为 ‘流文本定向消息协议’。是一种以纯文本为载体的协议，前身是TTMP协议，专为消息中间件设计。<br>  <strong>Stomp协议属于延迟消息通讯</strong><br>  目前的版本为V1.1和V1.2</p>
+<h3 id="2-协议结构"><a href="#2-协议结构" class="headerlink" title="2.协议结构"></a>2.协议结构</h3><p>  标准的协议包括：<strong>命令/关键信息，头信息，文本内容</strong></p>
+<pre><code>CONNECT    //命令
+accept-version:1.2  //版本号（头信息）
+param1:value1
+param2:value2
+
+this is stomp    //文本内容</code></pre><p>  Stomp协议由两个角色组成：<strong>客户端(Client)</strong>和<strong>消息代理(Broker)</strong></p>
+<p><img src="/2019/08/28/架构设计：Stomp协议学习/1566985233886.png" alt=""></p>
+<p>  <strong>消息代理（Broker）</strong>只负责接受和存储客户端发送的消息，依据客户端要求的路径进行转发，对消息内容不做任何处理，只负责客户端连接和订阅</p>
+<h3 id="3-交互流程及命令"><a href="#3-交互流程及命令" class="headerlink" title="3. 交互流程及命令"></a>3. 交互流程及命令</h3><p>   交互流程大致如下图：<br><img src="/2019/08/28/架构设计：Stomp协议学习/1566986429790.png" alt=""></p>
+<ul>
+<li><strong>CONNECT/STOMP</strong>：客户端通过CONNECT命令连接到代理端，使用STOMP，必须版本是1.2</li>
+<li><strong>CONNECTED</strong>：代理接受客户端连接请求并成功处理，返回CONNECTED状态信息，失败返回ERROR信息</li>
+<li><strong>SEND</strong>：客户端向代理端的一个虚拟路径发送内容，其他订阅该虚拟路径的额客户端将受到该信息。</li>
+<li><strong>BEGIN</strong>：Stomp支持事务模式，开启事务模式后，send内容将不会发送给代理，直到执行COMMIT命令。</li>
+<li><strong>COMMIT</strong>：提交事务。使得事务中的一条或多条消息进入Stomp代理队列</li>
+<li><strong>ABORT</strong>：取消/终止当前还未COMMIT的事务。</li>
+<li><strong>SUBSCRIBE</strong>：订阅命令，向消息代理订阅某一指定虚拟路径的监听，ACK 属性表明客户端接受到消息后，是否需要进行回应。ACK的值只有三种：auto（默认）、client和client-individual</li>
+<li><strong>UNSUBSCRIBE</strong>：取消订阅，即取消对某个虚拟路径的监听，若本身未订阅，此命令无效</li>
+<li><strong>ACK</strong>：若SUBSCRIBE时，ACK选择client，则客户端接受消息后要进行回应，若断开连接前未回应，代理会将消息发送给其他客户端</li>
+<li><strong>NACK</strong>：若SUBSCRIBE时，ACK选择client，客户端回应NACK，表明消息处理失败，代理不管该客户端是否断开连接，都会将消息发送给其他客户端</li>
+<li><strong>DISCONNECT</strong>：断开客户端和消息代理之间的连接</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>命令</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>CONNECT/STOMP</strong></td>
+<td>客户端通过CONNECT命令连接到代理端，使用STOMP，必须版本是1.2</td>
+</tr>
+<tr>
+<td><strong>CONNECTED</strong></td>
+<td>代理接受客户端连接请求并成功处理，返回CONNECTED状态信息，失败返回ERROR信息</td>
+</tr>
+<tr>
+<td><strong>SEND</strong></td>
+<td>客户端向代理端的一个虚拟路径发送内容，其他订阅该虚拟路径的额客户端将受到该信息。</td>
+</tr>
+<tr>
+<td><strong>BEGIN</strong></td>
+<td>Stomp支持事务模式，开启事务模式后，send内容将不会发送给代理，直到执行COMMIT命令。</td>
+</tr>
+<tr>
+<td><strong>COMMIT</strong></td>
+<td>提交事务。使得事务中的一条或多条消息进入Stomp代理队列</td>
+</tr>
+<tr>
+<td><strong>ABORT</strong></td>
+<td>取消/终止当前还未COMMIT的事务</td>
+</tr>
+<tr>
+<td><strong>SUBSCRIBE</strong></td>
+<td>订阅命令，向消息代理订阅某一指定虚拟路径的监听，ACK 属性表明客户端接受到消息后，是否需要进行回应。ACK的值只有三种：auto（默认）、client和client-individual</td>
+</tr>
+<tr>
+<td><strong>UNSUBSCRIBE</strong></td>
+<td>取消订阅，即取消对某个虚拟路径的监听，若本身未订阅，此命令无效</td>
+</tr>
+<tr>
+<td><strong>ACK</strong></td>
+<td>若SUBSCRIBE时，ACK选择client，则客户端接受消息后要进行回应，若断开连接前未回应，代理会将消息发送给其他客户端</td>
+</tr>
+<tr>
+<td><strong>NACK</strong></td>
+<td>若SUBSCRIBE时，ACK选择client，客户端回应NACK，表明消息处理失败，代理不管该客户端是否断开连接，都会将消息发送给其他客户端</td>
+</tr>
+<tr>
+<td><strong>DISCONNECT</strong></td>
+<td>断开客户端和消息代理之间的连接</td>
+</tr>
+</tbody></table>
 <script>
         document.querySelectorAll('.github-emoji')
           .forEach(el => {
@@ -589,9 +673,9 @@
             <br/>
             <span xmlns:dct="http://purl.org/dc/terms/" href="http://purl.org/dc/dcmitype/Text"
                   property="dct:title" rel="dct:type">
-                    《Hello World》
+                    《架构设计：Stomp协议》
                 </span> 由
-            <a xmlns:cc="http://creativecommons.org/ns#" href="/2019/08/26/hello-world/" property="cc:attributionName"
+            <a xmlns:cc="http://creativecommons.org/ns#" href="/2019/08/28/架构设计：Stomp协议学习/" property="cc:attributionName"
                rel="cc:attributionURL">
                 Shelton Lee
             </a> 采用
@@ -631,29 +715,84 @@
 <article id="prenext-posts" class="prev-next articles">
     <div class="row article-row">
         
-        <div class="article col s12 m6" data-aos="fade-up">
+        <div class="article col s12 m6" data-aos="fade-up" data-aos="fade-up">
             <div class="article-badge left-badge text-color">
-                <i class="fa fa-chevron-left"></i>&nbsp;上一篇</div>
+                <i class="fa fa-dot-circle-o"></i>&nbsp;本篇
+            </div>
             <div class="card">
-                <a href="/2019/08/27/MySql深入之分区/">
+                <a href="/2019/08/28/架构设计：Stomp协议学习/">
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/23.jpg" class="responsive-img" alt="MySql深入之分区">
+                        <img src="/medias/featureimages/23.jpg" class="responsive-img" alt="架构设计：Stomp协议">
                         
-                        <span class="card-title">MySql深入之分区</span>
+                        <span class="card-title">架构设计：Stomp协议</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
                     <div class="summary block-with-text">
                         
-                            1. 前言  日常开发中经常会遇到数据库的一些大表，即单表数据存储可能是百万级甚至千万级并且字段非常多，由于表数据的庞大，会导致在数据检索和变更方面的效率很低，如果SQL复杂，级联表众多，其运行性能会变的非常糟糕。使得数据库在高并发情况下成
+                            1.前言  消息从发送到接受的方式有两种：一种称为即时消息通讯，即一端发送之后，另一端能够立即接受 ，具体实现就是RPC。另一种称为延迟消息通讯，即消息发出后，进入中间容器进行存储，到达一定条件之后，再发送给接受者，中间的容器称为消息队列。
                         
                     </div>
                     <div class="publish-info">
-                        <span class="publish-date">
-                            <i class="fa fa-clock-o fa-fw icon-date"></i>2019-08-27
+                            <span class="publish-date">
+                                <i class="fa fa-clock-o fa-fw icon-date"></i>2019-08-28
+                            </span>
+                        <span class="publish-author">
+                            
+                            <i class="fa fa-bookmark fa-fw icon-category"></i>
+                            
+                            <a href="/categories/网络协议/" class="post-category" target="_blank">
+                                    网络协议
+                                </a>
+                            
+                            
                         </span>
+                    </div>
+                </div>
+
+                
+                <div class="card-action article-tags">
+                    
+                    <a href="/tags/系统架构/" target="_blank">
+                        <span class="chip bg-color">系统架构</span>
+                    </a>
+                    
+                    <a href="/tags/通信协议/" target="_blank">
+                        <span class="chip bg-color">通信协议</span>
+                    </a>
+                    
+                </div>
+                
+            </div>
+        </div>
+        
+        
+        <div class="article col s12 m6" data-aos="fade-up">
+            <div class="article-badge right-badge text-color">
+                下一篇&nbsp;<i class="fa fa-chevron-right"></i>
+            </div>
+            <div class="card">
+                <a href="/2019/08/28/MySql深入之分库/">
+                    <div class="card-image">
+                        
+                        
+                        <img src="/medias/featureimages/22.jpg" class="responsive-img" alt="MySql深入之分库">
+                        
+                        <span class="card-title">MySql深入之分库</span>
+                    </div>
+                </a>
+                <div class="card-content article-content">
+                    <div class="summary block-with-text">
+                        
+                            1.前言  大多数的数据库设计往往是一台主库负责数据的写入，多台从库同步主库数据仅提供读数据，但随着业务的增长，主库的写压力会与日俱增，这时往往通过分库+分布式的架构来缓解来自业务数据增长带来的压力，但同时也会引发数据的一致性和事务等诸多问
+                        
+                    </div>
+                    <div class="publish-info">
+                            <span class="publish-date">
+                                <i class="fa fa-clock-o fa-fw icon-date"></i>2019-08-28
+                            </span>
                         <span class="publish-author">
                             
                             <i class="fa fa-bookmark fa-fw icon-category"></i>
@@ -682,44 +821,6 @@
                     </a>
                     
                 </div>
-                
-            </div>
-        </div>
-        
-        
-        <div class="article col s12 m6" data-aos="fade-up">
-            <div class="article-badge right-badge text-color">
-                本篇&nbsp;<i class="fa fa-dot-circle-o"></i>
-            </div>
-            <div class="card">
-                <a href="/2019/08/26/hello-world/">
-                    <div class="card-image">
-                        
-                        
-                        <img src="/medias/featureimages/12.jpg" class="responsive-img" alt="Hello World">
-                        
-                        <span class="card-title">Hello World</span>
-                    </div>
-                </a>
-                <div class="card-content article-content">
-                    <div class="summary block-with-text">
-                        
-                            Welcome to Hexo! This is your very first post. Check documentation for more info. If you get any problems when using Hex
-                        
-                    </div>
-                    <div class="publish-info">
-                            <span class="publish-date">
-                                <i class="fa fa-clock-o fa-fw icon-date"></i>2019-08-26
-                            </span>
-                        <span class="publish-author">
-                            
-                            <i class="fa fa-user fa-fw"></i>
-                            Shelton Lee
-                            
-                        </span>
-                    </div>
-                </div>
-
                 
             </div>
         </div>

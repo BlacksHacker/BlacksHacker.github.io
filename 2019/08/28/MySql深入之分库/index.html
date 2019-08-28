@@ -4,8 +4,8 @@
 
 <head><meta name="generator" content="Hexo 3.9.0">
     <meta charset="utf-8">
-    <meta name="keywords" content="Hello World, Shelton_Lee">
-    <meta name="description" content="Welcome to Hexo! This is your very first post. Check documentation for more info. If you get any problems when using Hex">
+    <meta name="keywords" content="MySql深入之分库, Shelton_Lee">
+    <meta name="description" content="1.前言  大多数的数据库设计往往是一台主库负责数据的写入，多台从库同步主库数据仅提供读数据，但随着业务的增长，主库的写压力会与日俱增，这时往往通过分库+分布式的架构来缓解来自业务数据增长带来的压力，但同时也会引发数据的一致性和事务等诸多问">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <meta name="renderer" content="webkit|ie-stand|ie-comp">
@@ -13,7 +13,7 @@
     <meta name="format-detection" content="telephone=no">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <title>Hello World | Shelton_Lee</title>
+    <title>MySql深入之分库 | Shelton_Lee</title>
     <link rel="icon" type="image/png" href="/favicon.png">
 
     <link rel="stylesheet" type="text/css" href="/libs/awesome/css/font-awesome.min.css">
@@ -260,13 +260,13 @@
 
 
 
-<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/12.jpg')">
+<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/22.jpg')">
     <div class="container">
         <div class="row">
             <div class="col s12 m12 l12">
                 <div class="brand">
                     <div class="description center-align post-title">
-                        Hello World
+                        MySql深入之分库
                     </div>
                 </div>
             </div>
@@ -375,12 +375,33 @@
             <div class="row tag-cate">
                 <div class="col s7">
                     
-                          <div class="article-tag">
-                            <span class="chip bg-color">无标签</span>
-                          </div>
+                    <div class="article-tag">
+                        
+                            <a href="/tags/mysql/" target="_blank">
+                                <span class="chip bg-color">mysql</span>
+                            </a>
+                        
+                            <a href="/tags/数据库/" target="_blank">
+                                <span class="chip bg-color">数据库</span>
+                            </a>
+                        
+                            <a href="/tags/性能优化/" target="_blank">
+                                <span class="chip bg-color">性能优化</span>
+                            </a>
+                        
+                    </div>
                     
                 </div>
                 <div class="col s5 right-align">
+                    
+                    <div class="post-cate">
+                        <i class="fa fa-bookmark fa-fw icon-category"></i>
+                        
+                            <a href="/categories/mysql/" class="post-category" target="_blank">
+                                mysql
+                            </a>
+                        
+                    </div>
                     
                 </div>
             </div>
@@ -388,7 +409,7 @@
             <div class="post-info">
                 <div class="post-date info-break-policy">
                     <i class="fa fa-calendar-minus-o fa-fw"></i>发布日期:&nbsp;&nbsp;
-                    2019-08-26
+                    2019-08-28
                 </div>
 
                 
@@ -404,15 +425,16 @@
         <hr class="clearfix">
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <p>Welcome to <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/" target="_blank" rel="noopener">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html" target="_blank" rel="noopener">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="noopener">GitHub</a>.</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><pre class=" language-bash"><code class="language-bash">$ hexo new <span class="token string">"My New Post"</span></code></pre>
-<p>More info: <a href="https://hexo.io/docs/writing.html" target="_blank" rel="noopener">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><pre class=" language-bash"><code class="language-bash">$ hexo server</code></pre>
-<p>More info: <a href="https://hexo.io/docs/server.html" target="_blank" rel="noopener">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><pre class=" language-bash"><code class="language-bash">$ hexo generate</code></pre>
-<p>More info: <a href="https://hexo.io/docs/generating.html" target="_blank" rel="noopener">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><pre class=" language-bash"><code class="language-bash">$ hexo deploy</code></pre>
-<p>More info: <a href="https://hexo.io/docs/deployment.html" target="_blank" rel="noopener">Deployment</a></p>
+                <h3 id="1-前言"><a href="#1-前言" class="headerlink" title="1.前言"></a>1.前言</h3><p>  大多数的数据库设计往往是一台主库负责数据的写入，多台从库同步主库数据仅提供读数据，但随着业务的增长，主库的写压力会与日俱增，这时往往通过分库+分布式的架构来缓解来自业务数据增长带来的压力，但同时也会引发数据的一致性和事务等诸多问题。</p>
+<h3 id="2-分库"><a href="#2-分库" class="headerlink" title="2.分库"></a>2.分库</h3><p>  数据库的拆分同样也可以分为两种<strong>垂直拆分</strong>和<strong>水平拆分</strong><br>  <strong>垂直拆分</strong>是分库的首选，其分库方式较为简单，因其的依据在于业务的整体架构，可以将独立不相关的业务模块的表迁移到不同的库中，要求数据的增长速度比较平稳。<br>  <strong>水平拆分</strong>复杂度较高，往往会涉及<strong>分表</strong>。<br>  拆分思路：</p>
+<ul>
+<li>按算法对应<br>  将数据的主键按照固定的算法进行分类，放置到不同的数据库中，实现较为方便，但扩展性较差，后续节点收缩或算法变动会造成很大的数据集迁移。</li>
+<li>按索引映射表对应<br>  即建立数据主键与所在数据库的关系表，每次数据请求先去该表查取，再到具体的数据库获取数据，优势在于伸缩性，新的数据进来，只需要放入合适的库中，在关系表上添加对应的记录便可。缺点在于会增加数据库的访问次数。<h3 id="3-分库面临的问题"><a href="#3-分库面临的问题" class="headerlink" title="3.分库面临的问题"></a>3.分库面临的问题</h3></li>
+<li>不能跨库关联查询<br>  当关联数据分布在不同的数据库中或者获取级联数据时不能进行join操作，解决思路要么数据两边均存储一份（全局表），采用空间换时间，要么只能代码层查询之后再进行聚合，牺牲部分性能</li>
+<li>不能保证数据的一致性<br>  跨库的数据没有外键约束，也没有事务保证。</li>
+<li>所有查询必须提供数据库线索<br>  分库之后的数据可能存在于不同库中，每次数据的操作都需要先定位库的位置。</li>
+<li>自增ID<br>  有时跨库数据可能依赖于数据主键，采取自增主键可能导致不同库的数据录入时主键信息不一致，可以采取第三方表数据生成自增主键为标准，作为相关数据的主键，保证自增的一致性。</li>
+</ul>
 <script>
         document.querySelectorAll('.github-emoji')
           .forEach(el => {
@@ -589,9 +611,9 @@
             <br/>
             <span xmlns:dct="http://purl.org/dc/terms/" href="http://purl.org/dc/dcmitype/Text"
                   property="dct:title" rel="dct:type">
-                    《Hello World》
+                    《MySql深入之分库》
                 </span> 由
-            <a xmlns:cc="http://creativecommons.org/ns#" href="/2019/08/26/hello-world/" property="cc:attributionName"
+            <a xmlns:cc="http://creativecommons.org/ns#" href="/2019/08/28/MySql深入之分库/" property="cc:attributionName"
                rel="cc:attributionURL">
                 Shelton Lee
             </a> 采用
@@ -635,31 +657,31 @@
             <div class="article-badge left-badge text-color">
                 <i class="fa fa-chevron-left"></i>&nbsp;上一篇</div>
             <div class="card">
-                <a href="/2019/08/27/MySql深入之分区/">
+                <a href="/2019/08/28/架构设计：Stomp协议学习/">
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/23.jpg" class="responsive-img" alt="MySql深入之分区">
+                        <img src="/medias/featureimages/23.jpg" class="responsive-img" alt="架构设计：Stomp协议">
                         
-                        <span class="card-title">MySql深入之分区</span>
+                        <span class="card-title">架构设计：Stomp协议</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
                     <div class="summary block-with-text">
                         
-                            1. 前言  日常开发中经常会遇到数据库的一些大表，即单表数据存储可能是百万级甚至千万级并且字段非常多，由于表数据的庞大，会导致在数据检索和变更方面的效率很低，如果SQL复杂，级联表众多，其运行性能会变的非常糟糕。使得数据库在高并发情况下成
+                            1.前言  消息从发送到接受的方式有两种：一种称为即时消息通讯，即一端发送之后，另一端能够立即接受 ，具体实现就是RPC。另一种称为延迟消息通讯，即消息发出后，进入中间容器进行存储，到达一定条件之后，再发送给接受者，中间的容器称为消息队列。
                         
                     </div>
                     <div class="publish-info">
                         <span class="publish-date">
-                            <i class="fa fa-clock-o fa-fw icon-date"></i>2019-08-27
+                            <i class="fa fa-clock-o fa-fw icon-date"></i>2019-08-28
                         </span>
                         <span class="publish-author">
                             
                             <i class="fa fa-bookmark fa-fw icon-category"></i>
                             
-                            <a href="/categories/mysql/" class="post-category" target="_blank">
-                                    mysql
+                            <a href="/categories/网络协议/" class="post-category" target="_blank">
+                                    网络协议
                                 </a>
                             
                             
@@ -669,16 +691,12 @@
                 
                 <div class="card-action article-tags">
                     
-                    <a href="/tags/mysql/" target="_blank">
-                        <span class="chip bg-color">mysql</span>
+                    <a href="/tags/系统架构/" target="_blank">
+                        <span class="chip bg-color">系统架构</span>
                     </a>
                     
-                    <a href="/tags/数据库/" target="_blank">
-                        <span class="chip bg-color">数据库</span>
-                    </a>
-                    
-                    <a href="/tags/性能优化/" target="_blank">
-                        <span class="chip bg-color">性能优化</span>
+                    <a href="/tags/通信协议/" target="_blank">
+                        <span class="chip bg-color">通信协议</span>
                     </a>
                     
                 </div>
@@ -689,37 +707,48 @@
         
         <div class="article col s12 m6" data-aos="fade-up">
             <div class="article-badge right-badge text-color">
-                本篇&nbsp;<i class="fa fa-dot-circle-o"></i>
+                下一篇&nbsp;<i class="fa fa-chevron-right"></i>
             </div>
             <div class="card">
-                <a href="/2019/08/26/hello-world/">
+                <a href="/2019/08/28/动态代理-----CGLIB/">
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/12.jpg" class="responsive-img" alt="Hello World">
+                        <img src="/medias/featureimages/13.jpg" class="responsive-img" alt="动态代理CGLIB">
                         
-                        <span class="card-title">Hello World</span>
+                        <span class="card-title">动态代理CGLIB</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
                     <div class="summary block-with-text">
                         
-                            Welcome to Hexo! This is your very first post. Check documentation for more info. If you get any problems when using Hex
+                            1.前言  CGLIB（Code Generator Library）是一个强大的、高性能的代码生成库。其被广泛应用于AOP框架（Spring、dynaop）中，用以提供方法拦截操作。  CGLIB的底层是通过使用一个小而快的字节码处理框架
                         
                     </div>
                     <div class="publish-info">
                             <span class="publish-date">
-                                <i class="fa fa-clock-o fa-fw icon-date"></i>2019-08-26
+                                <i class="fa fa-clock-o fa-fw icon-date"></i>2019-08-28
                             </span>
                         <span class="publish-author">
                             
-                            <i class="fa fa-user fa-fw"></i>
-                            Shelton Lee
+                            <i class="fa fa-bookmark fa-fw icon-category"></i>
+                            
+                            <a href="/categories/java/" class="post-category" target="_blank">
+                                    java
+                                </a>
+                            
                             
                         </span>
                     </div>
                 </div>
-
+                
+                <div class="card-action article-tags">
+                    
+                    <a href="/tags/java/" target="_blank">
+                        <span class="chip bg-color">java</span>
+                    </a>
+                    
+                </div>
                 
             </div>
         </div>

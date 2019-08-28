@@ -4,8 +4,8 @@
 
 <head><meta name="generator" content="Hexo 3.9.0">
     <meta charset="utf-8">
-    <meta name="keywords" content="分类: mysql, Shelton_Lee">
-    <meta name="description" content="分类: mysql | Shelton_Lee">
+    <meta name="keywords" content="标签: java, Shelton_Lee">
+    <meta name="description" content="标签: java | Shelton_Lee">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <meta name="renderer" content="webkit|ie-stand|ie-comp">
@@ -13,7 +13,7 @@
     <meta name="format-detection" content="telephone=no">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <title>分类: mysql | Shelton_Lee</title>
+    <title>标签: java | Shelton_Lee</title>
     <link rel="icon" type="image/png" href="/favicon.png">
 
     <link rel="stylesheet" type="text/css" href="/libs/awesome/css/font-awesome.min.css">
@@ -286,42 +286,67 @@ $('.bg-cover').css('background-image', 'url(/medias/banner/' + new Date().getDay
 
     
 
-<div id="category-cloud" class="container chip-container">
+<div id="tags" class="container chip-container">
     <div class="card">
         <div class="card-content">
             <div class="tag-title center-align">
-                <i class="fa fa-bookmark"></i>&nbsp;&nbsp;文章分类
+                <i class="fa fa-tags"></i>&nbsp;&nbsp;文章标签
             </div>
             <div class="tag-chips">
                 
                 
-                
-                <a href="/categories/mysql/" title="mysql: 3">
+                <a href="/tags/mysql/" title="mysql: 3">
                     <span class="chip center-align waves-effect waves-light
-                             chip-active "
-                            style="background-color: #F9EBEA;">mysql
+                             chip-default "
+                            data-tagname="mysql" style="background-color: #F9EBEA;">mysql
                         <span class="tag-length">3</span>
                     </span>
                 </a>
                 
                 
-                <a href="/categories/java/" title="java: 2">
+                <a href="/tags/数据库/" title="数据库: 3">
                     <span class="chip center-align waves-effect waves-light
                              chip-default "
-                            style="background-color: #F5EEF8;">java
+                            data-tagname="数据库" style="background-color: #F5EEF8;">数据库
+                        <span class="tag-length">3</span>
+                    </span>
+                </a>
+                
+                
+                <a href="/tags/性能优化/" title="性能优化: 3">
+                    <span class="chip center-align waves-effect waves-light
+                             chip-default "
+                            data-tagname="性能优化" style="background-color: #D5F5E3;">性能优化
+                        <span class="tag-length">3</span>
+                    </span>
+                </a>
+                
+                
+                <a href="/tags/java/" title="java: 2">
+                    <span class="chip center-align waves-effect waves-light
+                             chip-active "
+                            data-tagname="java" style="background-color: #E8F8F5;">java
                         <span class="tag-length">2</span>
                     </span>
                 </a>
                 
                 
-                <a href="/categories/网络协议/" title="网络协议: 1">
+                <a href="/tags/系统架构/" title="系统架构: 1">
                     <span class="chip center-align waves-effect waves-light
                              chip-default "
-                            style="background-color: #D5F5E3;">网络协议
+                            data-tagname="系统架构" style="background-color: #FEF9E7;">系统架构
                         <span class="tag-length">1</span>
                     </span>
                 </a>
                 
+                
+                <a href="/tags/通信协议/" title="通信协议: 1">
+                    <span class="chip center-align waves-effect waves-light
+                             chip-default "
+                            data-tagname="通信协议" style="background-color: #F8F9F9;">通信协议
+                        <span class="tag-length">1</span>
+                    </span>
+                </a>
                 
             </div>
         </div>
@@ -333,23 +358,19 @@ $('.bg-cover').css('background-image', 'url(/medias/banner/' + new Date().getDay
     <article id="articles" class="container articles">
         <div class="row tags-posts">
             
-            <div class="article tag-post col s12 m6 l4" data-aos="zoom-in">
+            
+            <div class="article tag-post col s12 m6 l4" data-tags="java" data-aos="fade-up">
                 <div class="card">
-                    <a href="/2019/08/28/MySql深入之分库/">
+                    <a href="/2019/08/28/动态代理-----JDK动态代理/">
                         <div class="card-image tag-image">
                             
                             
-                            <img src="/medias/featureimages/22.jpg" class="responsive-img" alt="MySql深入之分库">
+                            <img src="/medias/featureimages/19.jpg" class="responsive-img" alt="动态代理JDK">
                             
-                            <span class="card-title">MySql深入之分库</span>
+                            <span class="card-title">动态代理JDK</span>
                         </div>
                     </a>
                     <div class="card-content article-content">
-                        <div class="summary block-with-text">
-                            
-                                1.前言  大多数的数据库设计往往是一台主库负责数据的写入，多台从库同步主库数据仅提供读数据，但随着业务的增长，主库的写压力会与日俱增，这时往往通过分库+分布式的架构来缓解来自业务数据增长带来的压力，但同时也会引发数据的一致性和事务等诸多问
-                            
-                        </div>
                         <div class="publish-info">
                             <span class="publish-date">
                                 <i class="fa fa-clock-o fa-fw icon-date"></i>2019-08-28
@@ -358,52 +379,30 @@ $('.bg-cover').css('background-image', 'url(/medias/banner/' + new Date().getDay
                                 
                                 <i class="fa fa-bookmark fa-fw icon-category"></i>
                                 
-                                <a href="/categories/mysql/" class="post-category" target="_blank">
-                                    mysql
+                                <a href="/categories/java/" class="post-category" target="_blank">
+                                java
                                 </a>
                                 
                                 
                             </span>
                         </div>
                     </div>
-
-                    
-                    <div class="card-action article-tags">
-                        
-                        <a href="/tags/mysql/" target="_blank">
-                            <span class="chip bg-color">mysql</span>
-                        </a>
-                        
-                        <a href="/tags/数据库/" target="_blank">
-                            <span class="chip bg-color">数据库</span>
-                        </a>
-                        
-                        <a href="/tags/性能优化/" target="_blank">
-                            <span class="chip bg-color">性能优化</span>
-                        </a>
-                        
-                    </div>
-                    
                 </div>
             </div>
             
-            <div class="article tag-post col s12 m6 l4" data-aos="zoom-in">
+            
+            <div class="article tag-post col s12 m6 l4" data-tags="java" data-aos="fade-up">
                 <div class="card">
-                    <a href="/2019/08/28/MySql深入之分表/">
+                    <a href="/2019/08/28/动态代理-----CGLIB/">
                         <div class="card-image tag-image">
                             
                             
-                            <img src="/medias/featureimages/17.jpg" class="responsive-img" alt="MySql深入之分表">
+                            <img src="/medias/featureimages/13.jpg" class="responsive-img" alt="动态代理CGLIB">
                             
-                            <span class="card-title">MySql深入之分表</span>
+                            <span class="card-title">动态代理CGLIB</span>
                         </div>
                     </a>
                     <div class="card-content article-content">
-                        <div class="summary block-with-text">
-                            
-                                1.前言  mysql中存在一种机制是表锁定（myisam存储引擎）和行锁定（innodb存储引擎），对于一行数据或一张表，同时只能有一条sql进行操作，其他针对该行或该表的执行sql需要进行排队，在高并发情况下，请求执行的sql如果出现骤
-                            
-                        </div>
                         <div class="publish-info">
                             <span class="publish-date">
                                 <i class="fa fa-clock-o fa-fw icon-date"></i>2019-08-28
@@ -412,86 +411,14 @@ $('.bg-cover').css('background-image', 'url(/medias/banner/' + new Date().getDay
                                 
                                 <i class="fa fa-bookmark fa-fw icon-category"></i>
                                 
-                                <a href="/categories/mysql/" class="post-category" target="_blank">
-                                    mysql
+                                <a href="/categories/java/" class="post-category" target="_blank">
+                                java
                                 </a>
                                 
                                 
                             </span>
                         </div>
                     </div>
-
-                    
-                    <div class="card-action article-tags">
-                        
-                        <a href="/tags/mysql/" target="_blank">
-                            <span class="chip bg-color">mysql</span>
-                        </a>
-                        
-                        <a href="/tags/数据库/" target="_blank">
-                            <span class="chip bg-color">数据库</span>
-                        </a>
-                        
-                        <a href="/tags/性能优化/" target="_blank">
-                            <span class="chip bg-color">性能优化</span>
-                        </a>
-                        
-                    </div>
-                    
-                </div>
-            </div>
-            
-            <div class="article tag-post col s12 m6 l4" data-aos="zoom-in">
-                <div class="card">
-                    <a href="/2019/08/27/MySql深入之分区/">
-                        <div class="card-image tag-image">
-                            
-                            
-                            <img src="/medias/featureimages/23.jpg" class="responsive-img" alt="MySql深入之分区">
-                            
-                            <span class="card-title">MySql深入之分区</span>
-                        </div>
-                    </a>
-                    <div class="card-content article-content">
-                        <div class="summary block-with-text">
-                            
-                                1. 前言  日常开发中经常会遇到数据库的一些大表，即单表数据存储可能是百万级甚至千万级并且字段非常多，由于表数据的庞大，会导致在数据检索和变更方面的效率很低，如果SQL复杂，级联表众多，其运行性能会变的非常糟糕。使得数据库在高并发情况下成
-                            
-                        </div>
-                        <div class="publish-info">
-                            <span class="publish-date">
-                                <i class="fa fa-clock-o fa-fw icon-date"></i>2019-08-27
-                            </span>
-                            <span class="publish-author">
-                                
-                                <i class="fa fa-bookmark fa-fw icon-category"></i>
-                                
-                                <a href="/categories/mysql/" class="post-category" target="_blank">
-                                    mysql
-                                </a>
-                                
-                                
-                            </span>
-                        </div>
-                    </div>
-
-                    
-                    <div class="card-action article-tags">
-                        
-                        <a href="/tags/mysql/" target="_blank">
-                            <span class="chip bg-color">mysql</span>
-                        </a>
-                        
-                        <a href="/tags/数据库/" target="_blank">
-                            <span class="chip bg-color">数据库</span>
-                        </a>
-                        
-                        <a href="/tags/性能优化/" target="_blank">
-                            <span class="chip bg-color">性能优化</span>
-                        </a>
-                        
-                    </div>
-                    
                 </div>
             </div>
             
