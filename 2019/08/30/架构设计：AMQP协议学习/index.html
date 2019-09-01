@@ -4,8 +4,8 @@
 
 <head><meta name="generator" content="Hexo 3.9.0">
     <meta charset="utf-8">
-    <meta name="keywords" content="架构设计：Stomp协议, Shelton_Lee">
-    <meta name="description" content="1.前言  消息从发送到接受的方式有两种：一种称为即时消息通讯，即一端发送之后，另一端能够立即接受 ，具体实现就是RPC。另一种称为延迟消息通讯，即消息发出后，进入中间容器进行存储，到达一定条件之后，再发送给接受者，中间的容器称为消息队列。">
+    <meta name="keywords" content="架构设计：AMQP协议, Shelton_Lee">
+    <meta name="description" content="1.前言  AMQP协议的全称是：Advanced Message Queuing Protocol（高级消息队列协议）。目前AMQP协议的版本为 Version 1.0，是应用层协议的一个开放标准,为面向消息的中间件设计。基于此协议的客户">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <meta name="renderer" content="webkit|ie-stand|ie-comp">
@@ -13,7 +13,7 @@
     <meta name="format-detection" content="telephone=no">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <title>架构设计：Stomp协议 | Shelton_Lee</title>
+    <title>架构设计：AMQP协议 | Shelton_Lee</title>
     <link rel="icon" type="image/png" href="/favicon.png">
 
     <link rel="stylesheet" type="text/css" href="/libs/awesome/css/font-awesome.min.css">
@@ -260,13 +260,13 @@
 
 
 
-<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/23.jpg')">
+<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/19.jpg')">
     <div class="container">
         <div class="row">
             <div class="col s12 m12 l12">
                 <div class="brand">
                     <div class="description center-align post-title">
-                        架构设计：Stomp协议
+                        架构设计：AMQP协议
                     </div>
                 </div>
             </div>
@@ -405,7 +405,7 @@
             <div class="post-info">
                 <div class="post-date info-break-policy">
                     <i class="fa fa-calendar-minus-o fa-fw"></i>发布日期:&nbsp;&nbsp;
-                    2019-08-28
+                    2019-08-30
                 </div>
 
                 
@@ -421,80 +421,81 @@
         <hr class="clearfix">
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <h3 id="1-前言"><a href="#1-前言" class="headerlink" title="1.前言"></a>1.前言</h3><p>  消息从发送到接受的方式有两种：一种称为<strong>即时消息通讯</strong>，即一端发送之后，另一端能够立即接受 ，具体实现就是RPC。另一种称为<strong>延迟消息通讯</strong>，即消息发出后，进入中间容器进行存储，到达一定条件之后，再发送给接受者，中间的容器称为<strong>消息队列</strong>。<br>  <strong>Stomp协议</strong>，英文全名<strong><em>Streaming Text Orientated Message Protocol</em></strong>，中文名称为 ‘流文本定向消息协议’。是一种以纯文本为载体的协议，前身是TTMP协议，专为消息中间件设计。<br>  <strong>Stomp协议属于延迟消息通讯</strong><br>  目前的版本为V1.1和V1.2</p>
-<h3 id="2-协议结构"><a href="#2-协议结构" class="headerlink" title="2.协议结构"></a>2.协议结构</h3><p>  标准的协议包括：<strong>命令/关键信息，头信息，文本内容</strong></p>
-<pre><code>CONNECT    //命令
-accept-version:1.2  //版本号（头信息）
-param1:value1
-param2:value2
-
-this is stomp    //文本内容</code></pre><p>  Stomp协议由两个角色组成：<strong>客户端(Client)</strong>和<strong>消息代理(Broker)</strong></p>
-<p><img src="/2019/08/28/架构设计：Stomp协议学习/1566985233886.png" alt></p>
-<p>  <strong>消息代理（Broker）</strong>只负责接受和存储客户端发送的消息，依据客户端要求的路径进行转发，对消息内容不做任何处理，只负责客户端连接和订阅</p>
-<h3 id="3-交互流程及命令"><a href="#3-交互流程及命令" class="headerlink" title="3. 交互流程及命令"></a>3. 交互流程及命令</h3><p>   交互流程大致如下图：<br><img src="/2019/08/28/架构设计：Stomp协议学习/1566986429790.png" alt></p>
+                <h1 id="1-前言"><a href="#1-前言" class="headerlink" title="1.前言"></a>1.前言</h1><p>  AMQP协议的全称是：Advanced Message Queuing Protocol（高级消息队列协议）。目前AMQP协议的版本为 Version 1.0，是应用层协议的一个开放标准,为面向消息的中间件设计。基于此协议的客户端与消息中间件可传递消息，并不受客户端/中间件同产品，不同的开发语言等条件的限制。</p>
+<h1 id="2-协议结构"><a href="#2-协议结构" class="headerlink" title="2. 协议结构"></a>2. 协议结构</h1><p>  AMQP协议结构如下：</p>
+<p><img src="/2019/08/30/架构设计：AMQP协议学习/AMQP1.PNG" alt></p>
 <ul>
-<li><strong>CONNECT/STOMP</strong>：客户端通过CONNECT命令连接到代理端，使用STOMP，必须版本是1.2</li>
-<li><strong>CONNECTED</strong>：代理接受客户端连接请求并成功处理，返回CONNECTED状态信息，失败返回ERROR信息</li>
-<li><strong>SEND</strong>：客户端向代理端的一个虚拟路径发送内容，其他订阅该虚拟路径的额客户端将受到该信息。</li>
-<li><strong>BEGIN</strong>：Stomp支持事务模式，开启事务模式后，send内容将不会发送给代理，直到执行COMMIT命令。</li>
-<li><strong>COMMIT</strong>：提交事务。使得事务中的一条或多条消息进入Stomp代理队列</li>
-<li><strong>ABORT</strong>：取消/终止当前还未COMMIT的事务。</li>
-<li><strong>SUBSCRIBE</strong>：订阅命令，向消息代理订阅某一指定虚拟路径的监听，ACK 属性表明客户端接受到消息后，是否需要进行回应。ACK的值只有三种：auto（默认）、client和client-individual</li>
-<li><strong>UNSUBSCRIBE</strong>：取消订阅，即取消对某个虚拟路径的监听，若本身未订阅，此命令无效</li>
-<li><strong>ACK</strong>：若SUBSCRIBE时，ACK选择client，则客户端接受消息后要进行回应，若断开连接前未回应，代理会将消息发送给其他客户端</li>
-<li><strong>NACK</strong>：若SUBSCRIBE时，ACK选择client，客户端回应NACK，表明消息处理失败，代理不管该客户端是否断开连接，都会将消息发送给其他客户端</li>
-<li><strong>DISCONNECT</strong>：断开客户端和消息代理之间的连接</li>
+<li>由上图可以看出，AMQP结构的构成分为六块<ul>
+<li><strong>Message</strong>：消息体</li>
+<li><strong>Producer</strong>：生产者</li>
+<li><strong>Consumer</strong>：消费者</li>
+<li><strong>Virtual Host</strong>：虚拟节点</li>
+<li><strong>Exchange</strong>：交换机</li>
+<li><strong>Queue</strong>：队列<ul>
+<li>AMQP的客户端由<strong>Producer</strong>和<strong>Consumer</strong>组成，服务端Broker则是由Virtual Host，Exchange和Queue组成。</li>
 </ul>
-<table>
+</li>
+</ul>
+</li>
+<li><strong>Message</strong>的传递需要客户端（Producer和Consumer）创建连接到Broker的连接Connection，之后由客户端在Connection之上建立channel通道连接到Virtual host或者Queue上。Connection支持多个Channel的建立，消息的发送与接受只有在channel上才能进行。</li>
+<li><strong>Exchange</strong>作为协议中的交换机，可以和多个Queue以及Exchange进行绑定，消息会根据Exchange上的路由规则进行发送传播。Exchange要至少和一个Queue或者Exchange绑定关系，并且设置好Queue和Exchange的Routing（路由规则），Exchange根据路由规则发送消息到符合路由规则的Queue或Exchange中，路由规则可以和Message中的Routing key属性配合使用。Exchange的路由规则包含三种：<strong>Direct、Fanout、Topic</strong></li>
+<li><strong>Queue</strong>对于消息的处理，没有channel连接到Queue时，消息将会被存储，知道channel被创建，如果channel已经创建，消息按顺序发送给channel</li>
+<li><strong>Consumer</strong>在收到消息后，需要手动（可以设置自动发送和无需发送）发送一条ACK回应消息给对应的Queue，Queue接收到后，会将该消息移除掉，在channel断开之前Queue若未能收到消息，则该消息会被发送给其他的channel。发送NACK，消息会发送给其他channel，不论当前channel是否已经断开。<h1 id="3-消息格式"><a href="#3-消息格式" class="headerlink" title="3.消息格式"></a>3.消息格式</h1>  作为一种网络通讯协议，AMQP工作在七层/五层网路模型的应用层。其消息真正的内容主要在PAYLOAD区域，即交付区，非PAYLOAD区，在网络协议的应用层说明Channel的工作状态。<br>PAULOAD区域共七个数据区域：<table>
 <thead>
 <tr>
-<th>命令</th>
-<th>说明</th>
+<th>名称</th>
+<th>内容</th>
 </tr>
 </thead>
 <tbody><tr>
-<td><strong>CONNECT/STOMP</strong></td>
-<td>客户端通过CONNECT命令连接到代理端，使用STOMP，必须版本是1.2</td>
+<td>header</td>
+<td>记录AMQP消息在“支持AMQP的中间件”中的交互状态，如消息在节点间被交互的总次数，优先级，TTL值等信息</td>
 </tr>
 <tr>
-<td><strong>CONNECTED</strong></td>
-<td>代理接受客户端连接请求并成功处理，返回CONNECTED状态信息，失败返回ERROR信息</td>
+<td>delivery-annotations</td>
+<td>在header部分只能传递规范的、标准的、经过ISO/IEC组织定义过的属性。所以对应这里用来记录“非标”的header信息</td>
 </tr>
 <tr>
-<td><strong>SEND</strong></td>
-<td>客户端向代理端的一个虚拟路径发送内容，其他订阅该虚拟路径的额客户端将受到该信息。</td>
+<td>message-annotations</td>
+<td>用于存储一些自定义的辅助属性，主要用于消息的转换</td>
 </tr>
 <tr>
-<td><strong>BEGIN</strong></td>
-<td>Stomp支持事务模式，开启事务模式后，send内容将不会发送给代理，直到执行COMMIT命令。</td>
+<td>properties</td>
+<td>AMQP消息的正文内容是从properties到application-data部分，properties记录了消息正文中标准的，规范的属性，例如消息ID，分组ID,发送者ID等</td>
 </tr>
 <tr>
-<td><strong>COMMIT</strong></td>
-<td>提交事务。使得事务中的一条或多条消息进入Stomp代理队列</td>
+<td>application-properties</td>
+<td>主要记录和应用有关的数据，该协议的实现产品需要用这部分数据决定其处理逻辑，例如消息的Routing是什么，是否进行持久化等</td>
 </tr>
 <tr>
-<td><strong>ABORT</strong></td>
-<td>取消/终止当前还未COMMIT的事务</td>
+<td>application-data</td>
+<td>使用二进制格式描述的AMQP消息的用户部分内容，即发送的真实内容</td>
 </tr>
 <tr>
-<td><strong>SUBSCRIBE</strong></td>
-<td>订阅命令，向消息代理订阅某一指定虚拟路径的监听，ACK 属性表明客户端接受到消息后，是否需要进行回应。ACK的值只有三种：auto（默认）、client和client-individual</td>
+<td>footer</td>
+<td>一般用来存储辅助内容，如消息的哈希值，HMAC，签名或加密细节</td>
+</tr>
+</tbody></table>
+</li>
+</ul>
+<h1 id="3-Exchange路由规则"><a href="#3-Exchange路由规则" class="headerlink" title="3. Exchange路由规则"></a>3. Exchange路由规则</h1><table>
+<thead>
+<tr>
+<th>规则命称</th>
+<th>区别</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Direct路由</td>
+<td>该模式下Exchange将使用消息中所携带的Routing key 和Queue中的Routing key进行比较，如果匹配，该消息进入该队列</td>
 </tr>
 <tr>
-<td><strong>UNSUBSCRIBE</strong></td>
-<td>取消订阅，即取消对某个虚拟路径的监听，若本身未订阅，此命令无效</td>
+<td>Fanout</td>
+<td>Exchange接受消息后，会将消息赋值多份，发送到自己绑定的Exchange和Queue中，不需要Routing key</td>
 </tr>
 <tr>
-<td><strong>ACK</strong></td>
-<td>若SUBSCRIBE时，ACK选择client，则客户端接受消息后要进行回应，若断开连接前未回应，代理会将消息发送给其他客户端</td>
-</tr>
-<tr>
-<td><strong>NACK</strong></td>
-<td>若SUBSCRIBE时，ACK选择client，客户端回应NACK，表明消息处理失败，代理不管该客户端是否断开连接，都会将消息发送给其他客户端</td>
-</tr>
-<tr>
-<td><strong>DISCONNECT</strong></td>
-<td>断开客户端和消息代理之间的连接</td>
+<td>Topic路由</td>
+<td>Exchange将支持‘#’和’*‘通配符进行Routing key的匹配查找</td>
 </tr>
 </tbody></table>
 <script>
@@ -673,9 +674,9 @@ this is stomp    //文本内容</code></pre><p>  Stomp协议由两个角色�
             <br/>
             <span xmlns:dct="http://purl.org/dc/terms/" href="http://purl.org/dc/dcmitype/Text"
                   property="dct:title" rel="dct:type">
-                    《架构设计：Stomp协议》
+                    《架构设计：AMQP协议》
                 </span> 由
-            <a xmlns:cc="http://creativecommons.org/ns#" href="/2019/08/28/架构设计：Stomp协议学习/" property="cc:attributionName"
+            <a xmlns:cc="http://creativecommons.org/ns#" href="/2019/08/30/架构设计：AMQP协议学习/" property="cc:attributionName"
                rel="cc:attributionURL">
                 Shelton Lee
             </a> 采用
@@ -715,9 +716,10 @@ this is stomp    //文本内容</code></pre><p>  Stomp协议由两个角色�
 <article id="prenext-posts" class="prev-next articles">
     <div class="row article-row">
         
-        <div class="article col s12 m6" data-aos="fade-up">
+        <div class="article col s12 m6" data-aos="fade-up" data-aos="fade-up">
             <div class="article-badge left-badge text-color">
-                <i class="fa fa-chevron-left"></i>&nbsp;上一篇</div>
+                <i class="fa fa-dot-circle-o"></i>&nbsp;本篇
+            </div>
             <div class="card">
                 <a href="/2019/08/30/架构设计：AMQP协议学习/">
                     <div class="card-image">
@@ -735,9 +737,9 @@ this is stomp    //文本内容</code></pre><p>  Stomp协议由两个角色�
                         
                     </div>
                     <div class="publish-info">
-                        <span class="publish-date">
-                            <i class="fa fa-clock-o fa-fw icon-date"></i>2019-08-30
-                        </span>
+                            <span class="publish-date">
+                                <i class="fa fa-clock-o fa-fw icon-date"></i>2019-08-30
+                            </span>
                         <span class="publish-author">
                             
                             <i class="fa fa-bookmark fa-fw icon-category"></i>
@@ -750,6 +752,7 @@ this is stomp    //文本内容</code></pre><p>  Stomp协议由两个角色�
                         </span>
                     </div>
                 </div>
+
                 
                 <div class="card-action article-tags">
                     
@@ -772,19 +775,19 @@ this is stomp    //文本内容</code></pre><p>  Stomp协议由两个角色�
                 下一篇&nbsp;<i class="fa fa-chevron-right"></i>
             </div>
             <div class="card">
-                <a href="/2019/08/28/MySql深入之分库/">
+                <a href="/2019/08/28/架构设计：Stomp协议学习/">
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/22.jpg" class="responsive-img" alt="MySql深入之分库">
+                        <img src="/medias/featureimages/23.jpg" class="responsive-img" alt="架构设计：Stomp协议">
                         
-                        <span class="card-title">MySql深入之分库</span>
+                        <span class="card-title">架构设计：Stomp协议</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
                     <div class="summary block-with-text">
                         
-                            1.前言  大多数的数据库设计往往是一台主库负责数据的写入，多台从库同步主库数据仅提供读数据，但随着业务的增长，主库的写压力会与日俱增，这时往往通过分库+分布式的架构来缓解来自业务数据增长带来的压力，但同时也会引发数据的一致性和事务等诸多问
+                            1.前言  消息从发送到接受的方式有两种：一种称为即时消息通讯，即一端发送之后，另一端能够立即接受 ，具体实现就是RPC。另一种称为延迟消息通讯，即消息发出后，进入中间容器进行存储，到达一定条件之后，再发送给接受者，中间的容器称为消息队列。
                         
                     </div>
                     <div class="publish-info">
@@ -795,8 +798,8 @@ this is stomp    //文本内容</code></pre><p>  Stomp协议由两个角色�
                             
                             <i class="fa fa-bookmark fa-fw icon-category"></i>
                             
-                            <a href="/categories/mysql/" class="post-category" target="_blank">
-                                    mysql
+                            <a href="/categories/网络协议/" class="post-category" target="_blank">
+                                    网络协议
                                 </a>
                             
                             
@@ -806,16 +809,12 @@ this is stomp    //文本内容</code></pre><p>  Stomp协议由两个角色�
                 
                 <div class="card-action article-tags">
                     
-                    <a href="/tags/mysql/" target="_blank">
-                        <span class="chip bg-color">mysql</span>
+                    <a href="/tags/系统架构/" target="_blank">
+                        <span class="chip bg-color">系统架构</span>
                     </a>
                     
-                    <a href="/tags/数据库/" target="_blank">
-                        <span class="chip bg-color">数据库</span>
-                    </a>
-                    
-                    <a href="/tags/性能优化/" target="_blank">
-                        <span class="chip bg-color">性能优化</span>
+                    <a href="/tags/通信协议/" target="_blank">
+                        <span class="chip bg-color">通信协议</span>
                     </a>
                     
                 </div>
