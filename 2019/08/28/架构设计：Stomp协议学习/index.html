@@ -429,9 +429,9 @@ param1:value1
 param2:value2
 
 this is stomp    //文本内容</code></pre><p>  Stomp协议由两个角色组成：<strong>客户端(Client)</strong>和<strong>消息代理(Broker)</strong></p>
-<p><img src="/2019/08/28/架构设计：Stomp协议学习/1566985233886.png" alt></p>
+<p><img src="/2019/08/28/架构设计：Stomp协议学习/1566985233886.png" alt=""></p>
 <p>  <strong>消息代理（Broker）</strong>只负责接受和存储客户端发送的消息，依据客户端要求的路径进行转发，对消息内容不做任何处理，只负责客户端连接和订阅</p>
-<h3 id="3-交互流程及命令"><a href="#3-交互流程及命令" class="headerlink" title="3. 交互流程及命令"></a>3. 交互流程及命令</h3><p>   交互流程大致如下图：<br><img src="/2019/08/28/架构设计：Stomp协议学习/1566986429790.png" alt></p>
+<h3 id="3-交互流程及命令"><a href="#3-交互流程及命令" class="headerlink" title="3. 交互流程及命令"></a>3. 交互流程及命令</h3><p>   交互流程大致如下图：<br><img src="/2019/08/28/架构设计：Stomp协议学习/1566986429790.png" alt=""></p>
 <ul>
 <li><strong>CONNECT/STOMP</strong>：客户端通过CONNECT命令连接到代理端，使用STOMP，必须版本是1.2</li>
 <li><strong>CONNECTED</strong>：代理接受客户端连接请求并成功处理，返回CONNECTED状态信息，失败返回ERROR信息</li>
