@@ -844,30 +844,27 @@ sadd key element
                 下一篇&nbsp;<i class="fa fa-chevron-right"></i>
             </div>
             <div class="card">
-                <a href="/2019/03/16/Redis：基础介绍/">
+                <a href="/2019/03/16/Redis：哈希类型/">
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/9.jpg" class="responsive-img" alt="Redis：基础介绍">
+                        <img src="/medias/featureimages/21.jpg" class="responsive-img" alt="Redis：哈希类型">
                         
-                        <span class="card-title">Redis：基础介绍</span>
+                        <span class="card-title">Redis：哈希类型</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
                     <div class="summary block-with-text">
                         
-                            1. 全局命令
-查看所有键
-keys *    
-键总数
-dbsize
-检查键是否存在
-exists key 
-删除键(支持删除多个)
-del key
-键过期
-expire key seconds
-键过期剩余时间(-1 : 没有过期时间， 
+                            1. 数据结构
+​        哈希类型的值可以是字符串，数字，哈希，但键只能是字符串
+2. 常用命令
+设置值(可以给一个键设置多次，即设置多个值)
+hest key field value
+获取值
+hget key field
+删除值
+
                         
                     </div>
                     <div class="publish-info">
