@@ -429,7 +429,7 @@
 <li>程序运行依赖于配置文件，不同物理机如何实现像数据库地址，黑名单控制，服务地址列表等这些配置文件的共享，并且修改后能即时达到数据一致。</li>
 </ul>
 <h1 id="2-Zookeeper简介"><a href="#2-Zookeeper简介" class="headerlink" title="2.Zookeeper简介"></a>2.Zookeeper简介</h1><p>  Zookeeper是一个<strong>分布式协调服务</strong>。单机上的协调都是进程内的协调，在进行内进行协调可以使用语言，平台，操作系统等提供的同步机制，保证单机内部多线程访问同一资源时的同步，实现多线程的协调。但分布式集群环境下，程序可能在不同的机器，机器可能不在同一个机房，机房又在不同的地域分布，这时候需要类似Zookeeper这类分布式协调服务来进行对集群的协调。</p>
-<h2 id="2-1-存储结构"><a href="#2-1-存储结构" class="headerlink" title="2.1 存储结构"></a>2.1 存储结构</h2><p><img src="/2019/08/24/Zookeeper：分布式管理/1567479565493-1574416654648.png" alt><br>zookeeper的数据是按照<strong>树</strong>的结构进行存储的，节点分为四种类型：</p>
+<h2 id="2-1-存储结构"><a href="#2-1-存储结构" class="headerlink" title="2.1 存储结构"></a>2.1 存储结构</h2><p><img src="/2019/08/24/Zookeeper：分布式管理/1567479565493-1574416654648.png" alt=""><br>zookeeper的数据是按照<strong>树</strong>的结构进行存储的，节点分为四种类型：</p>
 <table>
 <thead>
 <tr>
@@ -834,8 +834,8 @@
                 
                 <div class="card-action article-tags">
                     
-                    <a href="/tags/Dubbor/" target="_blank">
-                        <span class="chip bg-color">Dubbor</span>
+                    <a href="/tags/Dubbo/" target="_blank">
+                        <span class="chip bg-color">Dubbo</span>
                     </a>
                     
                 </div>

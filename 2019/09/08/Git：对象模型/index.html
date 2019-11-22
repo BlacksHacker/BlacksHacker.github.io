@@ -438,7 +438,7 @@
 <li>大小</li>
 <li>内容</li>
 </ul>
-<h5 id="2-1-Blob对象"><a href="#2-1-Blob对象" class="headerlink" title="2.1 Blob对象"></a>2.1 Blob对象</h5><p>​            <img src="/2019/09/08/Git：对象模型/object-blob.png" alt></p>
+<h5 id="2-1-Blob对象"><a href="#2-1-Blob对象" class="headerlink" title="2.1 Blob对象"></a>2.1 Blob对象</h5><p>​            <img src="/2019/09/08/Git：对象模型/object-blob.png" alt=""></p>
 <ul>
 <li><p>一个blob就是一块二进制数据，没有指向任何东西和任何其他属性，甚至没有文件名。</p>
 </li>
@@ -446,7 +446,7 @@
 </li>
 </ul>
 <h5 id="2-2-Tree对象"><a href="#2-2-Tree对象" class="headerlink" title="2.2 Tree对象"></a>2.2 Tree对象</h5><p>​        一个tree对象拥有一串指向blob对象或是其他tree 对象的指针，一般表示内容之间的目录层次关系。</p>
-<p>​        <img src="/2019/09/08/Git：对象模型/object-tree.png" alt></p>
+<p>​        <img src="/2019/09/08/Git：对象模型/object-tree.png" alt=""></p>
 <p>​        tree对象的名称同样也是通过SHA1哈希值来命名的，当其两个tree对象的内容完全相同时，名称才会一样。</p>
 <p>​        一个tree对象包括一串条目，条目包括：</p>
 <ul>
@@ -456,7 +456,7 @@
 <li>名字</li>
 </ul>
 <h5 id="2-3-Commit对象"><a href="#2-3-Commit对象" class="headerlink" title="2.3 Commit对象"></a>2.3 Commit对象</h5><p>​        commit对象指向一个tree对象，并且带有相关的描述信息。</p>
-<p>​        <img src="/2019/09/08/Git：对象模型/object-commit.png" alt></p>
+<p>​        <img src="/2019/09/08/Git：对象模型/object-commit.png" alt=""></p>
 <p>​        commit的组成部分：</p>
 <ul>
 <li><p><strong>tree</strong> ：tree对象的SHA1签名，代表着目录在某一时间点的内容</p>
@@ -471,7 +471,7 @@
 <p>​        <strong>一个提交本身并没有任何信息来说明其做了哪些修改，所有的修改都是通过与父提交的内容比较得出的。</strong></p>
 <p>​        <strong>一般用git commit来创建一个提交，这个提交的父对象一般是当前分支，同时把存储在当前索引（index）的内容全部提交。</strong></p>
 <h5 id="2-4-标签对象"><a href="#2-4-标签对象" class="headerlink" title="2.4 标签对象"></a>2.4 标签对象</h5><p>​        一个标签对象包括一个对象名，对象类型，标签名，标签创建人的名字。</p>
-<p>​    <img src="/2019/09/08/Git：对象模型/object-tag.png" alt></p>
+<p>​    <img src="/2019/09/08/Git：对象模型/object-tag.png" alt=""></p>
 </li>
 </ul>
 <h3 id="3-对象模型"><a href="#3-对象模型" class="headerlink" title="3. 对象模型"></a>3. 对象模型</h3><p>​        项目的层次结构如下：</p>
@@ -484,7 +484,7 @@
     `-- mylib.rb
 
 2 directories, 3 files</code></pre><p>​        在Git中的存储层次如下：</p>
-<p><img src="/2019/09/08/Git：对象模型/image/objects-example.png" alt></p>
+<p><img src="/2019/09/08/Git：对象模型/image/objects-example.png" alt=""></p>
 <h3 id="4-Git目录"><a href="#4-Git目录" class="headerlink" title="4. Git目录"></a>4. Git目录</h3><pre><code>$&gt;tree -L 1
 .
 |-- HEAD         # 这个git项目当前处在哪个分支里
@@ -810,8 +810,8 @@
                 
                 <div class="card-action article-tags">
                     
-                    <a href="/tags/Dubbor/" target="_blank">
-                        <span class="chip bg-color">Dubbor</span>
+                    <a href="/tags/Dubbo/" target="_blank">
+                        <span class="chip bg-color">Dubbo</span>
                     </a>
                     
                 </div>
