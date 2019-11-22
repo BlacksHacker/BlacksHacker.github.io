@@ -457,17 +457,17 @@
 </ul>
 </li>
 </ul>
-<p><img src="/2019/07/13/Java并发：安全队列/20191009173338129%5B1%5D.png" alt=""></p>
+<p><img src="/2019/07/13/Java并发：安全队列/20191009173338129%5B1%5D.png" alt></p>
 <h5 id="2-2-阻塞队列（BlockingQueue）"><a href="#2-2-阻塞队列（BlockingQueue）" class="headerlink" title="2.2 阻塞队列（BlockingQueue）"></a>2.2 阻塞队列（BlockingQueue）</h5><ul>
 <li><p><strong>ArrayBlockingQueue</strong></p>
-<p>​    <img src="/2019/07/13/Java并发：安全队列/20190805172222378%5B1%5D.png" alt=""></p>
+<p>​    <img src="/2019/07/13/Java并发：安全队列/20190805172222378%5B1%5D.png" alt></p>
 </li>
 <li><p><strong>LinkedBlockingQueue</strong></p>
-<p><img src="/2019/07/13/Java并发：安全队列/20190805172336321%5B1%5D.png" alt=""></p>
+<p><img src="/2019/07/13/Java并发：安全队列/20190805172336321%5B1%5D.png" alt></p>
 <p>​    <strong>备注： 阻塞算法虽然使用了锁机制，但底层实质上还是CAS算法。</strong></p>
 </li>
 </ul>
-<h5 id="2-3-非阻塞队列（ConcurrentLinkedQueue-）"><a href="#2-3-非阻塞队列（ConcurrentLinkedQueue-）" class="headerlink" title="2.3 非阻塞队列（ConcurrentLinkedQueue ）"></a>2.3 非阻塞队列（<strong>ConcurrentLinkedQueue</strong> ）</h5><p><img src="/2019/07/13/Java并发：安全队列/20190805172704363.png" alt=""></p>
+<h5 id="2-3-非阻塞队列（ConcurrentLinkedQueue-）"><a href="#2-3-非阻塞队列（ConcurrentLinkedQueue-）" class="headerlink" title="2.3 非阻塞队列（ConcurrentLinkedQueue ）"></a>2.3 非阻塞队列（<strong>ConcurrentLinkedQueue</strong> ）</h5><p><img src="/2019/07/13/Java并发：安全队列/20190805172704363.png" alt></p>
 <h5 id="2-4-补充"><a href="#2-4-补充" class="headerlink" title="2.4 补充"></a>2.4 补充</h5><p>​        在消费者生产者模式下，有可能消费者不知道什么时候生产者会生产完毕，如果选择阻塞队列通过阻塞方法获取，如果队列中没有元素存在，可能消费者会被一直阻塞，进而无法下面的系列操作。之前查询获得一种解决办法，被称为“毒丸”策略。<br>​        在生产者生产结束后，可以加一个特殊的对象（“毒丸”）到队列中，当消费者获取到该对象时，表明队列中已经没有了对象，这时该消费者进行线程结束，并且将该对象加入到队列之中，等待其他消费者线程获取，这样就能依次关闭所有的消费者线程。</p>
 <script>
         document.querySelectorAll('.github-emoji')
