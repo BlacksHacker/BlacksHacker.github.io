@@ -296,7 +296,7 @@ $('.bg-cover').css('background-image', 'url(/medias/banner/' + new Date().getDay
             
             <div class="article col s12 m6 l4" data-aos="zoom-in">
                 <div class="card">
-                    <a href="/2019/06/22/Java并发：锁/">
+                    <a href="/2019/06/22/java-bing-fa-suo/">
                         <div class="card-image">
                             
                             
@@ -354,7 +354,7 @@ synchronized和Lock的实现都是悲观锁
             
             <div class="article col s12 m6 l4" data-aos="zoom-in">
                 <div class="card">
-                    <a href="/2019/06/16/Java并发：深入解析CAS/">
+                    <a href="/2019/06/16/java-bing-fa-shen-ru-jie-xi-cas/">
                         <div class="card-image">
                             
                             
@@ -405,7 +405,7 @@ synchronized和Lock的实现都是悲观锁
             
             <div class="article col s12 m6 l4" data-aos="zoom-in">
                 <div class="card">
-                    <a href="/2019/06/08/Java并发：流式数据处理/">
+                    <a href="/2019/06/08/java-bing-fa-liu-shi-shu-ju-chu-li/">
                         <div class="card-image">
                             
                             
@@ -461,7 +461,7 @@ synchronized和Lock的实现都是悲观锁
             
             <div class="article col s12 m6 l4" data-aos="zoom-in">
                 <div class="card">
-                    <a href="/2019/06/02/Java并发：ThreadLocal /">
+                    <a href="/2019/06/02/java-bing-fa-threadlocal/">
                         <div class="card-image">
                             
                             
@@ -512,7 +512,7 @@ synchronized和Lock的实现都是悲观锁
             
             <div class="article col s12 m6 l4" data-aos="zoom-in">
                 <div class="card">
-                    <a href="/2019/04/12/Redis：字符串类型/">
+                    <a href="/2019/04/12/redis-zi-fu-chuan-lei-xing/">
                         <div class="card-image">
                             
                             
@@ -579,7 +579,7 @@ mset key value [key value ...]
             
             <div class="article col s12 m6 l4" data-aos="zoom-in">
                 <div class="card">
-                    <a href="/2019/04/06/Redis：有序集合类型/">
+                    <a href="/2019/04/06/redis-you-xu-ji-he-lei-xing/">
                         <div class="card-image">
                             
                             
@@ -640,7 +640,7 @@ zadd key score member [score member ...]
             
             <div class="article col s12 m6 l4" data-aos="zoom-in">
                 <div class="card">
-                    <a href="/2019/03/31/Redis：列表类型/">
+                    <a href="/2019/03/31/redis-lie-biao-lei-xing/">
                         <div class="card-image">
                             
                             
@@ -707,7 +707,7 @@ zadd key score member [score member ...]
             
             <div class="article col s12 m6 l4" data-aos="zoom-in">
                 <div class="card">
-                    <a href="/2019/03/27/Redis：内存/">
+                    <a href="/2019/03/27/redis-nei-cun/">
                         <div class="card-image">
                             
                             
@@ -766,7 +766,7 @@ zadd key score member [score member ...]
             
             <div class="article col s12 m6 l4" data-aos="zoom-in">
                 <div class="card">
-                    <a href="/2019/03/24/Redis：集合类型/">
+                    <a href="/2019/03/24/redis-ji-he-lei-xing/">
                         <div class="card-image">
                             
                             
@@ -827,7 +827,7 @@ sadd key element
             
             <div class="article col s12 m6 l4" data-aos="zoom-in">
                 <div class="card">
-                    <a href="/2019/03/18/Redis：持久化/">
+                    <a href="/2019/03/18/redis-chi-jiu-hua/">
                         <div class="card-image">
                             
                             
@@ -883,28 +883,31 @@ sadd key element
             
             <div class="article col s12 m6 l4" data-aos="zoom-in">
                 <div class="card">
-                    <a href="/2019/03/16/Redis：哈希类型/">
+                    <a href="/2019/03/16/redis-ji-chu-jie-shao/">
                         <div class="card-image">
                             
                             
-                            <img src="/medias/featureimages/21.jpg" class="responsive-img" alt="Redis：哈希类型">
+                            <img src="/medias/featureimages/9.jpg" class="responsive-img" alt="Redis：基础介绍">
                             
-                            <span class="card-title">Redis：哈希类型</span>
+                            <span class="card-title">Redis：基础介绍</span>
                         </div>
                     </a>
 
                     <div class="card-content article-content">
                         <div class="summary block-with-text">
                             
-                                1. 数据结构
-​        哈希类型的值可以是字符串，数字，哈希，但键只能是字符串
-2. 常用命令
-设置值(可以给一个键设置多次，即设置多个值)
-hest key field value
-获取值
-hget key field
-删除值
-
+                                1. 全局命令
+查看所有键
+keys *    
+键总数
+dbsize
+检查键是否存在
+exists key 
+删除键(支持删除多个)
+del key
+键过期
+expire key seconds
+键过期剩余时间(-1 : 没有过期时间， 
                             
                         </div>
                         <div class="publish-info">
@@ -946,31 +949,28 @@ hget key field
             
             <div class="article col s12 m6 l4" data-aos="zoom-in">
                 <div class="card">
-                    <a href="/2019/03/16/Redis：基础介绍/">
+                    <a href="/2019/03/16/redis-ha-xi-lei-xing/">
                         <div class="card-image">
                             
                             
-                            <img src="/medias/featureimages/9.jpg" class="responsive-img" alt="Redis：基础介绍">
+                            <img src="/medias/featureimages/21.jpg" class="responsive-img" alt="Redis：哈希类型">
                             
-                            <span class="card-title">Redis：基础介绍</span>
+                            <span class="card-title">Redis：哈希类型</span>
                         </div>
                     </a>
 
                     <div class="card-content article-content">
                         <div class="summary block-with-text">
                             
-                                1. 全局命令
-查看所有键
-keys *    
-键总数
-dbsize
-检查键是否存在
-exists key 
-删除键(支持删除多个)
-del key
-键过期
-expire key seconds
-键过期剩余时间(-1 : 没有过期时间， 
+                                1. 数据结构
+​        哈希类型的值可以是字符串，数字，哈希，但键只能是字符串
+2. 常用命令
+设置值(可以给一个键设置多次，即设置多个值)
+hest key field value
+获取值
+hget key field
+删除值
+
                             
                         </div>
                         <div class="publish-info">
@@ -1045,9 +1045,9 @@ expire key seconds
 <footer class="page-footer bg-color">
     <div class="container row center-align">
         <div class="col s12 m8 l8 copy-right">
-            本站由&copy;<a href="https://blinkfox.github.io/" target="_blank">Blinkfox</a>基于
+            本站由&copy;<a href="https://blackshacker.github.io/" target="_blank">Shelton_Lee</a>基于
             <a href="https://hexo.io/" target="_blank">Hexo</a> 的
-            <a href="https://github.com/blinkfox/hexo-theme-matery" target="_blank">hexo-theme-matery</a>主题搭建.
+            <a href="https://github.com/BlacksHacker/hexo-theme-matery" target="_blank">hexo-theme-matery</a>主题搭建.
 
             
 
