@@ -4,18 +4,9 @@
 
 <head><meta name="generator" content="Hexo 3.9.0">
     <meta charset="utf-8">
-    <meta name="keywords" content="ActiveMQ：基本原理, Shelton_Lee">
-    <meta name="description" content="1.前言  ActiveMQ是Apache软件基金会的开源产品，支持AMQP协议、MQTT协议、Openwire协议和Stomp协议等多种消息协议,并且支持JMS API接口规范。
-2. 基本参数
-
-
-参数名称
-参数介绍
-
-
-
-stop
-停">
+    <meta name="keywords" content="基于前后端分离的API设计思路整理（三）, Shelton_Lee">
+    <meta name="description" content="1. 前言​        上一篇主要记录了接口处理具体的实现类的架构设计，其中使用到了模板模式的设计模式，本篇重点记录一下基于注解的关于接口请求参数的验证机制和基于Spring 的类启动加载机制，为以后开发做好知识储备。
+2. 注解接口验">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <meta name="renderer" content="webkit|ie-stand|ie-comp">
@@ -23,7 +14,7 @@ stop
     <meta name="format-detection" content="telephone=no">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <title>ActiveMQ：基本原理 | Shelton_Lee</title>
+    <title>基于前后端分离的API设计思路整理（三） | Shelton_Lee</title>
     <link rel="icon" type="image/png" href="/favicon.png">
 
     <link rel="stylesheet" type="text/css" href="/libs/awesome/css/font-awesome.min.css">
@@ -270,13 +261,13 @@ stop
 
 
 
-<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/1.jpg')">
+<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/4.jpg')">
     <div class="container">
         <div class="row">
             <div class="col s12 m12 l12">
                 <div class="brand">
                     <div class="description center-align post-title">
-                        ActiveMQ：基本原理
+                        基于前后端分离的API设计思路整理（三）
                     </div>
                 </div>
             </div>
@@ -387,12 +378,8 @@ stop
                     
                     <div class="article-tag">
                         
-                            <a href="/tags/消息中间件/" target="_blank">
-                                <span class="chip bg-color">消息中间件</span>
-                            </a>
-                        
-                            <a href="/tags/ActiveMQ/" target="_blank">
-                                <span class="chip bg-color">ActiveMQ</span>
+                            <a href="/tags/架构设计/" target="_blank">
+                                <span class="chip bg-color">架构设计</span>
                             </a>
                         
                     </div>
@@ -403,8 +390,8 @@ stop
                     <div class="post-cate">
                         <i class="fa fa-bookmark fa-fw icon-category"></i>
                         
-                            <a href="/categories/架构/" class="post-category" target="_blank">
-                                架构
+                            <a href="/categories/架构设计/" class="post-category" target="_blank">
+                                架构设计
                             </a>
                         
                     </div>
@@ -415,7 +402,7 @@ stop
             <div class="post-info">
                 <div class="post-date info-break-policy">
                     <i class="fa fa-calendar-minus-o fa-fw"></i>发布日期:&nbsp;&nbsp;
-                    2019-01-13
+                    2019-10-13
                 </div>
 
                 
@@ -431,213 +418,81 @@ stop
         <hr class="clearfix">
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <h1 id="1-前言"><a href="#1-前言" class="headerlink" title="1.前言"></a>1.前言</h1><p>  ActiveMQ是Apache软件基金会的开源产品，支持AMQP协议、MQTT协议、Openwire协议和Stomp协议等多种消息协议,并且支持JMS API接口规范。</p>
-<h1 id="2-基本参数"><a href="#2-基本参数" class="headerlink" title="2. 基本参数"></a>2. 基本参数</h1><table>
-<thead>
-<tr>
-<th>参数名称</th>
-<th>参数介绍</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>stop</td>
-<td>停止当前ActiveMQ节点的运行</td>
-</tr>
-<tr>
-<td>restart</td>
-<td>重启当前的ActiveMQ节点</td>
-</tr>
-<tr>
-<td>status</td>
-<td>仅展示当前节点是处于运行还是停止</td>
-</tr>
-<tr>
-<td>console</td>
-<td>使用控制台启动ActiveMQ节点</td>
-</tr>
-<tr>
-<td>dump</td>
-<td>采用console启动ActiveMQ,使用dump参数，可获取当前线程的快照</td>
-</tr>
-</tbody></table>
-<h1 id="3-工作机制"><a href="#3-工作机制" class="headerlink" title="3.工作机制"></a>3.工作机制</h1><p>  ActiveMQ有两种不同的模式队列：<strong>Topic订阅-发布模式，Queue负载均衡模式。</strong></p>
-<table>
-<thead>
-<tr>
-<th>比较内容</th>
-<th>Topic</th>
-<th>Queue</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>工作模式</td>
-<td>“订阅-发布”模式，如果有多个订阅者，消息会被复制多份进行发送，若没有订阅者，消息将会被丢弃</td>
-<td>“负载均衡”模式，如果有多个消费者，消息只会发送给其中的一个，并且要求ack进行消息的确认，如果没有消费者，消息将会被保存，直到有消费者连接订阅</td>
-</tr>
-<tr>
-<td>持久化</td>
-<td>不会</td>
-<td>数据默认在MQ服务器上以文件形式进行保存，可以配置为DB存储</td>
-</tr>
-<tr>
-<td>传递完整性</td>
-<td>没有订阅者，消息将被丢弃</td>
-<td>没有订阅者，消息被存储</td>
-</tr>
-<tr>
-<td>效率</td>
-<td>处理性能会伴随订阅者数量的增加而降低，并且也要考虑使用的协议性能差异</td>
-<td>仅有一个消费者进行信息的接受，性能不随消费者数量的变化而影响，但也受协议影响</td>
-</tr>
-<tr>
-<td># 4. 优化</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>  ActiveMQ的优化可以考虑从多个次层入手，如<strong>代码级性能、规则性能、网络性能和集群方案</strong>。</td>
-<td></td>
-<td></td>
-</tr>
-</tbody></table>
-<h2 id="4-1-网络性能优化"><a href="#4-1-网络性能优化" class="headerlink" title="4.1 网络性能优化"></a>4.1 网络性能优化</h2><p>  ActiveMQ的网络信息传递方式默认是基于网络模型的BIO方式，为提高单点性能，可以为单个节点配置更高效的网络IO模型。<br>  ActiveMQ支持的协议如下：</p>
-<ul>
-<li><strong>AMQP</strong></li>
-<li><strong>MQTT</strong></li>
-<li><strong>OpenWire</strong></li>
-<li><strong>REST</strong></li>
-<li><strong>Stomp</strong></li>
-<li><strong>XMPP</strong></li>
-</ul>
-<p><strong>不同的协议需要设置不同的网络监听端口</strong>，详见./conf/conf/activemq.xml文件。<br><strong>ActiveMQ中默认的消息协议是openwire</strong><br>在5.13.0+版本后，OpenWire，Stomp，AMQP，MQTT四种协议的端口监听进行了合并，使用auto关键字进行表示。ActiveMQ将会监听这一个端口的消息状态，匹配合适的协议格式,优化使得连接管理变的简洁，但没有提升单节点的处理性能。</p>
-<pre><code>&lt;transportConnectors&gt;
-    &lt;transportConnector name="auto" uri="auto://0.0.0.0:61617?maximumConnections=1000" /&gt;
-&lt;/transportConnectors&gt;</code></pre><p>端口默认使用BIO网络IO模型，为提高单节点吞吐量，可以指定网络模型为nio：</p>
-<pre><code>&lt;transportConnectors&gt;  
-    &lt;transportConnector name="nio" uri="nio://0.0.0.0:61618?maximumConnections=1000"/&gt;  
-&lt;/transportConnectors&gt;</code></pre><p>让某一端口支持NIO和协议：</p>
-<pre><code>&lt;transportConnector name="stomp+nio" uri="stomp+nio://0.0.0.0:61613?transport.transformer=jms"/&gt;
-// 表示这个端口使用NIO模型支持Stomp协议</code></pre><p>让某一端口支持NIO网络和多协议：</p>
-<pre><code>&lt;transportConnector name="auto+nio" uri="auto+nio://0.0.0.0:61608?maximumConnections=1000" /&gt;</code></pre><p>每一种协议都有一些特定的参数，各协议也包含共用的参数，具体详见官方文档<a href="http://activemq.apache.org/" target="_blank" rel="noopener">ActiveMQ官网</a></p>
-<h2 id="4-2-处理规则和优化"><a href="#4-2-处理规则和优化" class="headerlink" title="4.2 处理规则和优化"></a>4.2 处理规则和优化</h2><h3 id="4-2-1-JMS规范概念"><a href="#4-2-1-JMS规范概念" class="headerlink" title="4.2.1 JMS规范概念"></a>4.2.1 JMS规范概念</h3><p>   ActiveMQ是JMS规范的完整实现，故其调度与存储等原理与JMS中的概念原理相关。JMS的相关概念如下表：</p>
-<ul>
-<li><p>订阅发布与负载均衡模式<br>详见ActiveMQ的工作机制。</p>
-</li>
-<li><p>持久化消息和非持久化</p>
-<table>
-<thead>
-<tr>
-<th>差异</th>
-<th>持久化（PERSISTENT）</th>
-<th>非持久化（NON_PERSISTENT）</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>存储位置</td>
-<td>不受JMS服务端异常状态的影响，服务端会持久化保存消息，直到被处理</td>
-<td>只存储在JMS服务节点的内存区域</td>
-</tr>
-<tr>
-<td>持久化方案</td>
-<td>KahaDB、AMQ和关系型数据库</td>
-<td>无</td>
-</tr>
-<tr>
-<td>宕机</td>
-<td>数据保存</td>
-<td>数据丢失</td>
-</tr>
-<tr>
-<td>策略</td>
-<td>无</td>
-<td>内存区域不足时，采用辅助方案进行转存（ActiveMQ使用临时存储区域）</td>
-</tr>
-</tbody></table>
-</li>
-<li><p>持续订阅和非持续订阅<br>是针对<strong>“订阅-发布”</strong>模式的细分处理策略</p>
-<ul>
-<li>持续订阅（Durable-subscribers）被标记的用户获取某条消息和它曾经下线没有任何关系，Topic会保存该消息，直到订阅者上线，该消息被正确处理为止。</li>
-<li>非持久化订阅（Non-Durable-subscribers）Topic不再为下线的订阅者保留消息，发送给在线的消费者之后就可以标记为“处理完成”。<h3 id="4-2-2-生产者与消费者优化"><a href="#4-2-2-生产者与消费者优化" class="headerlink" title="4.2.2 生产者与消费者优化"></a>4.2.2 生产者与消费者优化</h3><h4 id="4-2-2-1-生产者（producer）"><a href="#4-2-2-1-生产者（producer）" class="headerlink" title="4.2.2.1 生产者（producer）"></a>4.2.2.1 生产者（producer）</h4>  生产者发送消息支持<strong>同步发送</strong>和<strong>异步发送</strong>。在消息产生堆积的情况下，补不能一味只追求发送效率。<br>  处理消息堆积的基本原则是：</li>
-</ul>
-</li>
-<li><p><strong>持久化状态</strong>：无论如何消息总会被持久化存储，再视情况进行发送。完成消息的存储后，服务节点<strong>会</strong>向生产者发送回执确认消息。</p>
-</li>
-<li><p><strong>非持久化状态</strong>：在内存中产生消息堆积后，会进行消息的转储到Temp store区域。完成消息的存储后，服务节点<strong>不会</strong>向生产者发送回执确认消息。<br>以上两种，如果区域也产生堆积，则会通知生产者开启Slow Producer机制。</p>
-<h5 id="4-2-2-1-1-生产者消息发送"><a href="#4-2-2-1-1-生产者消息发送" class="headerlink" title="4.2.2.1.1 生产者消息发送"></a>4.2.2.1.1 生产者消息发送</h5><p>   生产者默认发送的消息是<strong>持久化类型</strong>，非持久化消息需要明确指明，并且非持久的消息发送默认方式为<strong>异步方式</strong>，即消息存储之后默认不会发送回执消息给生产者。</p>
-</li>
-</ul>
-<p><strong>注意</strong>：异步模式下，在生产者发送一定量的消息后，也需要等待服务端的消息回执,否则会导致消息堆积，需要进行相关配置，仅限异步模式下，是必须配置的。</p>
-<pre><code>    //以下语句设置消息发送者在累计发送102400byte大小的消息后（可能是一条消息也可能是多条消息
-    connectionFactory.setProducerWindowSize(102400);</code></pre><p>使用以下配置可以异步条件下每次消息的存储都返回回执信息：</p>
-<pre><code>//会降低消息发送的效率
-    connectionFactory.setAlwaysSyncSend(true);</code></pre><p>在发送持久化消息时，也可以设置为异步方式。</p>
-<pre><code>//发送持久化消息时设置的异步
-    connectionFactory.setUseAsyncSend(true);
-    //因此异步模式下也要设置回执窗口
-    connectionFactory.setProducerWindowSize(102400);</code></pre><p><em>小结：</em><br>||持久化（系统默认）|非持久化|<br>|– |– |—|<br>|默认方式|同步发送|异步发送|<br>|改为同步||每次进行消息回执<br>connectionFactory.setAlwaysSyncSend(true);|<br>|改为异步|connectionFactory.setUseAsyncSend(true);<br>设置回执窗口<br>connectionFactory.setProducerWindowSize(102400);|并非改为同步<br>异步模式下需要设置回执connectionFactory.setProducerWindowSize(102400);|</p>
-<h5 id="4-2-1-1-2-生产者事务"><a href="#4-2-1-1-2-生产者事务" class="headerlink" title="4.2.1.1.2 生产者事务"></a>4.2.1.1.2 生产者事务</h5><p>  事务由消息发送者发起，会在连接会话中设置一个Transaction ID,之后可以在事务中发送多条消息。事务未提交之前，消息已经被服务端所接受，但不会进入队列（发现有Transaction ID），消息会被先放置在“transaction store”中，该区域存在“redo”日志，用于事务的回滚。事务在被提交之后，服务端根据自身的规则（持久化还是非持久化）进行消息的入队操作（无论订阅-发布模式还是负载均衡模式）。</p>
-<h5 id="4-2-1-1-3-生产者策略"><a href="#4-2-1-1-3-生产者策略" class="headerlink" title="4.2.1.1.3 生产者策略"></a>4.2.1.1.3 生产者策略</h5><p>  ProducerFlowControl 生产控制流，当发生消息堆积时，生产者收到服务端的回执消息，服务端会让生成者进入<strong>等待状态</strong>或者直接<strong>抛出JMSException</strong>异常。<br>  关闭订阅-发布的生产控制流</p>
-<pre><code> &lt;policyEntry topic="&gt;" producerFlowControl="false"/&gt;</code></pre><p>  启用负载均衡的生产控制流</p>
-<pre><code>&lt;policyEntry queue="&gt;" producerFlowControl="true" memoryLimit="200mb"&gt;</code></pre><p>memoryLimit 表示每个Queue信息的最大内存存储限制，指最多使用200MB的内存区域，非消息总和。</p>
-<h4 id="4-2-2-2-消费者"><a href="#4-2-2-2-消费者" class="headerlink" title="4.2.2.2 消费者"></a>4.2.2.2 消费者</h4><p>  相比较于生产者，消费者的性能会更加影响ActiveMQ系统的整体性能。</p>
-<h5 id="4-2-2-2-1-消费者消息接收"><a href="#4-2-2-2-1-消费者消息接收" class="headerlink" title="4.2.2.2.1 消费者消息接收"></a>4.2.2.2.1 消费者消息接收</h5><p>  默认情况下，ActiveMQ服务端采用异步的方式向消费者推送消息，即服务端不会一直等待消费者响应，消费者完成消息处理之后，主动发送状态到服务端。<br>  将推送设置为同步：</p>
-<pre><code>connectionFactory.setDispatchAsync(false);</code></pre><p>  服务端推送消息给消费者，存在推送数量限制，即“预期数量”PrefetchSize。ActiveMQ的默认策略是一旦有新的消息，就主动按照设置的规则推送给当前活动的消费者。<br>   针对不同的工作机制，不同的存储方案，服务端有不同的预期数量设置：<br>||Queue|Topic|<br>|–|–|–|<br>|持久化|1000|100|<br>|非持久化|1000|32766|</p>
-<ul>
-<li>通过ActiveMQPrefetchPolicy变更预取数量<pre><code>// 预取策略对象
-ActiveMQPrefetchPolicy prefetchPolicy = connectionFactory.getPrefetchPolicy();
-// 设置Queue的预取数量为50
-prefetchPolicy.setQueuePrefetch(50);
-connectionFactory.setPrefetchPolicy(prefetchPolicy);</code></pre></li>
-<li>更改Properties属性变更预取数量<pre><code>Properties props = new Properties();
-props.setProperty("prefetchPolicy.queuePrefetch", "1000");
-props.setProperty("prefetchPolicy.topicPrefetch", "1000");
-//设置属性
-connectionFactory.setProperties(props);</code></pre><h5 id="4-2-2-2-2-消费者事务"><a href="#4-2-2-2-2-消费者事务" class="headerlink" title="4.2.2.2.2 消费者事务"></a>4.2.2.2.2 消费者事务</h5>  消费者采用事务告知服务器一组消息是否处理成功，要么全部处理成功，要么失败全部进行回滚。<br>  调用回滚时，回滚之前的数据将会被重新进行发送，并且在同一个会话之中。消息的重发计数器（redeliveryCounter）属性将会加1.<h5 id="4-2-2-2-3-死信队列"><a href="#4-2-2-2-3-死信队列" class="headerlink" title="4.2.2.2.3 死信队列"></a>4.2.2.2.3 死信队列</h5>  一条消息失败，会进行回滚重发，一旦重发次数达到一定的策略值（默认为6次），该消息将会被加入到死信队列。</li>
-<li>非持久化策略下，消息超过重发上限，将会被删除</li>
-<li>默认情况下持久化策略下，消息会加入到死信队列<br>  设置非持久化也加入到死信队列：<pre><code>&lt;policyEntry queue="&gt;"&gt;  
-  &lt;deadLetterStrategy&gt;  
-      &lt;sharedDeadLetterStrategy processNonPersistent="true" /&gt;  
-  &lt;/deadLetterStrategy&gt;  
-&lt;/policyEntry&gt;</code></pre>  修改默认的重发次数：<pre><code>RedeliveryPolicy redeliveryPolicy = connectionFactory.getRedeliveryPolicy();
-// 设置最大重发次数
-redeliveryPolicy.setMaximumRedeliveries(3);</code></pre>  触发重发的三种机制：<table>
-<thead>
-<tr>
-<th>描述</th>
-<th>重发计数器的作用域</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>在消费者连接会话中调用回滚</td>
-<td>本次连接会话</td>
-</tr>
-<tr>
-<td>在消费者连接会话中，commit之前，连接终止</td>
-<td>整个ActiveMQ系统范围</td>
-</tr>
-<tr>
-<td>在发送ACK告知服务器之前，连接终止</td>
-<td>整个ActiveMQ系统范围</td>
-</tr>
-<tr>
-<td>##### 4.2.2.2.4 消费者acknowledge策略</td>
-<td></td>
-</tr>
-<tr>
-<td>  消费者端通知服务器的两种方式：<strong>事务</strong>和<strong>acknowledge</strong></td>
-<td></td>
-</tr>
-</tbody></table>
-</li>
-</ul>
-<p>  acknowledge模式的四种方式：<br>|参数|简介|<br>|–|–|<br>|AUTO_ACKNOWLEDGE|连接会话会自动认为消费者端对消息的处理时成功的，无论是服务端主动推送还是消费者端主动拉取，但消费端不一定是逐条进行ACK|<br>|CLIENT_ACKNOWLEDGE|同上场景，但必须要进行ACK确认，否则认为消息没有处理成功|<br>|DUPS_OK_ACKNOWLEDGE|批量确认方式，消费端依据策略间隔发送ack，表示一批消息处理完成|<br>|INDIVIDUAL_ACKNOWLEDGE|单独确认方式，消费者端逐条发送ack确认消息，性能较差|</p>
-<p><strong>备注</strong>：</p>
-<ul>
-<li>推荐使用AUTO_ACKNOWLEDGE + optimizeACK，该优化选项只有在AUTO_ACKNOWLEDGE的模式下生效，目的在于“延迟确认”，当消息的数量达到策略值，通过ack告知服务端，这批消息处理完成。<strong>数量阈值为：prefetch*0.65, 时间阈值为：&gt; optimizeAcknowledgeTimeOut</strong></li>
-<li>DUPS_OK_ACKNOWLEDGE 在<strong>负载均衡模式</strong>下和AUTO_ACKNOWLEDGE是一致的。</li>
-<li>AUTO_ACKNOWLEDGE 下 如果prefetchSize = 1,也会进行逐条确认</li>
-<li>如果是<strong>发布-订阅模式</strong>，阈值&gt;= prefetch*0.5时，都会进行批量确认。</li>
-</ul>
+                <h3 id="1-前言"><a href="#1-前言" class="headerlink" title="1. 前言"></a>1. 前言</h3><p>​        上一篇主要记录了接口处理具体的实现类的架构设计，其中使用到了模板模式的设计模式，本篇重点记录一下基于注解的关于接口请求参数的验证机制和基于Spring 的类启动加载机制，为以后开发做好知识储备。</p>
+<h3 id="2-注解接口验证"><a href="#2-注解接口验证" class="headerlink" title="2. 注解接口验证"></a>2. 注解接口验证</h3><p>​        该方法的入参依次是，<strong>具体接口实现类的Class，输入参数，入参的Class</strong>。</p>
+<p>​        原理是通过接口实现类的class文件,拿到对应要解析的方法，将其上的注解进行解析，并与入参进行对比，保证入参和注解标记内容的规范一致性。</p>
+<pre><code>protected void validApi(Class&lt;?&gt; apiClass, JSONObject paramObj, Class&lt;?&gt;... classes) throws NoSuchMethodException, SecurityException {
+        // 获取目标类
+        Boolean isAuth = false;
+        if (apiClass != null) {
+        //AuthAction注解的作用是进行url权限验证
+            AuthAction action = apiClass.getAnnotation(AuthAction.class);
+            if (null != action &amp;&amp; StringUtils.isNotBlank(action.name())) {
+                String actionName = action.name();
+                // 判断用户角色是否拥有接口权限
+                if (AuthActionChecker.check(actionName)) {
+                    isAuth = true;
+                }
+            } else {
+                isAuth = true;
+            }
+
+            if (!isAuth) {
+                throw new PermissionDeniedException();
+            }
+            // 判断参数是否合法，拿到具体接口实现类的“myDoservice”方法
+            Method method = apiClass.getMethod("myDoService", classes);
+            if (method != null) {
+                //拿到Input注解
+                Input input = method.getAnnotation(Input.class);
+                if (input != null) {
+                    Param[] params = input.value();
+                    if (params != null &amp;&amp; params.length &gt; 0) {
+                        for (Param p : params) {
+                            // 判断是否必填，即isRequired的值为true，但参数中没有则抛出异常
+                            if (p.isRequired() &amp;&amp; !paramObj.containsKey(p.name())) {
+                                throw new ParamNotExistsException("参数：“" + p.name() + "”不能为空");
+                            }
+                            // 参数类型校验
+                            Object paramValue = paramObj.get(p.name());
+                            // xss过滤
+                            if (p.xss() &amp;&amp; paramObj.containsKey(p.name())) {
+                                encodeHtml(paramObj, p.name());
+                            }
+
+                            // 判断长度
+                            if (p.length() &gt; 0 &amp;&amp; paramValue != null &amp;&amp; paramValue instanceof String) {
+                                if (paramValue.toString().length() &gt; p.length()) {
+                                    throw new ParamValueTooLongException(p.name(), paramValue.toString().length(), p.length());
+                                }
+                            }
+                            if (paramValue != null &amp;&amp; !ApiParamFactory.getAuthInstance(p.type()).validate(paramValue, p.rule())) {
+                                throw new ParamIrregularException("参数“" + p.name() + "”不符合格式要求");
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }</code></pre><h3 id="3-SpringBean加载"><a href="#3-SpringBean加载" class="headerlink" title="3.  SpringBean加载"></a>3.  SpringBean加载</h3><p>​        在项目启动时，会扫描拿到指定接口的所有实现类，存储在内存中。其原理是在项目启动时拿到上下文，在上下文中拿到指定接口的实现类，将其存储在List或者Map中。</p>
+<pre><code>//实现ApplicationListener&lt;ContextRefreshedEvent&gt; 接口，实现 onApplicationEvent 方法
+@RootComponent
+public class ApiComponentFactory implements ApplicationListener&lt;ContextRefreshedEvent&gt; {
+    @Override
+    public void onApplicationEvent(ContextRefreshedEvent event) {
+        //拿到启动上下文
+        ApplicationContext context = event.getApplicationContext();
+        //获取指定接口的BeanMap
+        Map&lt;String, ApiComponent&gt; myMap = context.getBeansOfType(ApiComponent.class);
+        for (Map.Entry&lt;String, ApiComponent&gt; entry : myMap.entrySet()) {
+            //拿到具体的实现类，作相应的处理
+            ApiComponent component = entry.getValue();
+            if (component.getId() != null) {
+
+            }
+        }
+    }        
+}</code></pre><p>​        可将其存储到Map中，通过工厂模式，后期的获取只需要根据主键ID去获取响应的实体Bean。</p>
 <script>
         document.querySelectorAll('.github-emoji')
           .forEach(el => {
@@ -814,9 +669,9 @@ redeliveryPolicy.setMaximumRedeliveries(3);</code></pre>  触发重发的三
             <br/>
             <span xmlns:dct="http://purl.org/dc/terms/" href="http://purl.org/dc/dcmitype/Text"
                   property="dct:title" rel="dct:type">
-                    《ActiveMQ：基本原理》
+                    《基于前后端分离的API设计思路整理（三）》
                 </span> 由
-            <a xmlns:cc="http://creativecommons.org/ns#" href="/2019/01/13/activemq-ji-ben-yuan-li/" property="cc:attributionName"
+            <a xmlns:cc="http://creativecommons.org/ns#" href="/2019/10/13/ji-yu-qian-hou-duan-fen-chi-de-api-she-ji-si-lu-zheng-li-san/" property="cc:attributionName"
                rel="cc:attributionURL">
                 Shelton Lee
             </a> 采用
@@ -856,52 +711,49 @@ redeliveryPolicy.setMaximumRedeliveries(3);</code></pre>  触发重发的三
 <article id="prenext-posts" class="prev-next articles">
     <div class="row article-row">
         
-        <div class="article col s12 m6" data-aos="fade-up">
+        <div class="article col s12 m6" data-aos="fade-up" data-aos="fade-up">
             <div class="article-badge left-badge text-color">
-                <i class="fa fa-chevron-left"></i>&nbsp;上一篇</div>
+                <i class="fa fa-dot-circle-o"></i>&nbsp;本篇
+            </div>
             <div class="card">
-                <a href="/2019/01/20/activemq-cun-chu-fang-an/">
+                <a href="/2019/10/13/ji-yu-qian-hou-duan-fen-chi-de-api-she-ji-si-lu-zheng-li-san/">
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/15.jpg" class="responsive-img" alt="ActiveMQ：存储方案">
+                        <img src="/medias/featureimages/4.jpg" class="responsive-img" alt="基于前后端分离的API设计思路整理（三）">
                         
-                        <span class="card-title">ActiveMQ：存储方案</span>
+                        <span class="card-title">基于前后端分离的API设计思路整理（三）</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
                     <div class="summary block-with-text">
                         
-                            1.前言  上文已经学习了ActiveMQ的存储分为两种：持久化和非持久化，其中持久化的介质可以是磁盘文件系统，也可以是其内置数据库，或者外部的关系型数据库。
-2.持久化存储
-发布订阅模式下，没有订阅者时，消息也要进行先存储再标记，但不一定
+                            1. 前言​        上一篇主要记录了接口处理具体的实现类的架构设计，其中使用到了模板模式的设计模式，本篇重点记录一下基于注解的关于接口请求参数的验证机制和基于Spring 的类启动加载机制，为以后开发做好知识储备。
+2. 注解接口验
                         
                     </div>
                     <div class="publish-info">
-                        <span class="publish-date">
-                            <i class="fa fa-clock-o fa-fw icon-date"></i>2019-01-20
-                        </span>
+                            <span class="publish-date">
+                                <i class="fa fa-clock-o fa-fw icon-date"></i>2019-10-13
+                            </span>
                         <span class="publish-author">
                             
                             <i class="fa fa-bookmark fa-fw icon-category"></i>
                             
-                            <a href="/categories/架构/" class="post-category" target="_blank">
-                                    架构
+                            <a href="/categories/架构设计/" class="post-category" target="_blank">
+                                    架构设计
                                 </a>
                             
                             
                         </span>
                     </div>
                 </div>
+
                 
                 <div class="card-action article-tags">
                     
-                    <a href="/tags/消息中间件/" target="_blank">
-                        <span class="chip bg-color">消息中间件</span>
-                    </a>
-                    
-                    <a href="/tags/ActiveMQ/" target="_blank">
-                        <span class="chip bg-color">ActiveMQ</span>
+                    <a href="/tags/架构设计/" target="_blank">
+                        <span class="chip bg-color">架构设计</span>
                     </a>
                     
                 </div>
@@ -915,33 +767,36 @@ redeliveryPolicy.setMaximumRedeliveries(3);</code></pre>  触发重发的三
                 下一篇&nbsp;<i class="fa fa-chevron-right"></i>
             </div>
             <div class="card">
-                <a href="/2019/01/05/java-xu-ni-ji-lei-jia-zai-ji-zhi/">
+                <a href="/2019/10/06/qian-hou-duan-fen-chi-de-api-she-ji-si-lu-zheng-li-er/">
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/3.jpg" class="responsive-img" alt="Java虚拟机：类加载机制">
+                        <img src="/medias/featureimages/9.jpg" class="responsive-img" alt="基于前后端分离的API设计思路整理（二）">
                         
-                        <span class="card-title">Java虚拟机：类加载机制</span>
+                        <span class="card-title">基于前后端分离的API设计思路整理（二）</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
                     <div class="summary block-with-text">
                         
-                            1.什么是类加载机制？
-虚拟机把描述类的数据从Class文件加载到内存中，并对数据进行校验，转换解析和初始化，最终形成可以被虚拟机直接使用的Java类型
-类型的加载，连接和初始化都是在程序运行期间完成的，增加了性能开销，但是提高了代码灵活性
+                            1. 前言​        前一篇主要介绍了接口的顶层分派器的设计思路，但本质上业务逻辑的处理还是要由底层的接口具体实现类来进行处理，这篇主要记录一下具体接口实现类的架构体系。
+2. 接口实现类架构
+接口继承与实现关系
+
+
+ApiCompo
                         
                     </div>
                     <div class="publish-info">
                             <span class="publish-date">
-                                <i class="fa fa-clock-o fa-fw icon-date"></i>2019-01-05
+                                <i class="fa fa-clock-o fa-fw icon-date"></i>2019-10-06
                             </span>
                         <span class="publish-author">
                             
                             <i class="fa fa-bookmark fa-fw icon-category"></i>
                             
-                            <a href="/categories/JVM/" class="post-category" target="_blank">
-                                    JVM
+                            <a href="/categories/架构设计/" class="post-category" target="_blank">
+                                    架构设计
                                 </a>
                             
                             
@@ -951,8 +806,8 @@ redeliveryPolicy.setMaximumRedeliveries(3);</code></pre>  触发重发的三
                 
                 <div class="card-action article-tags">
                     
-                    <a href="/tags/JVM/" target="_blank">
-                        <span class="chip bg-color">JVM</span>
+                    <a href="/tags/架构设计/" target="_blank">
+                        <span class="chip bg-color">架构设计</span>
                     </a>
                     
                 </div>

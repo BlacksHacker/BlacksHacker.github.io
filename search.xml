@@ -4,6 +4,31 @@
   
     
     <entry>
+      <title>基于前后端分离的API设计思路整理（三）</title>
+      <link href="/2019/10/13/ji-yu-qian-hou-duan-fen-chi-de-api-she-ji-si-lu-zheng-li-san/"/>
+      <url>/2019/10/13/ji-yu-qian-hou-duan-fen-chi-de-api-she-ji-si-lu-zheng-li-san/</url>
+      
+        <content type="html"><![CDATA[<h3 id="1-前言"><a href="#1-前言" class="headerlink" title="1. 前言"></a>1. 前言</h3><p>​        上一篇主要记录了接口处理具体的实现类的架构设计，其中使用到了模板模式的设计模式，本篇重点记录一下基于注解的关于接口请求参数的验证机制和基于Spring 的类启动加载机制，为以后开发做好知识储备。</p><h3 id="2-注解接口验证"><a href="#2-注解接口验证" class="headerlink" title="2. 注解接口验证"></a>2. 注解接口验证</h3><p>​        该方法的入参依次是，<strong>具体接口实现类的Class，输入参数，入参的Class</strong>。</p><p>​        原理是通过接口实现类的class文件,拿到对应要解析的方法，将其上的注解进行解析，并与入参进行对比，保证入参和注解标记内容的规范一致性。</p><pre><code>protected void validApi(Class&lt;?&gt; apiClass, JSONObject paramObj, Class&lt;?&gt;... classes) throws NoSuchMethodException, SecurityException {        // 获取目标类        Boolean isAuth = false;        if (apiClass != null) {        //AuthAction注解的作用是进行url权限验证            AuthAction action = apiClass.getAnnotation(AuthAction.class);            if (null != action &amp;&amp; StringUtils.isNotBlank(action.name())) {                String actionName = action.name();                // 判断用户角色是否拥有接口权限                if (AuthActionChecker.check(actionName)) {                    isAuth = true;                }            } else {                isAuth = true;            }            if (!isAuth) {                throw new PermissionDeniedException();            }            // 判断参数是否合法，拿到具体接口实现类的“myDoservice”方法            Method method = apiClass.getMethod("myDoService", classes);            if (method != null) {                //拿到Input注解                Input input = method.getAnnotation(Input.class);                if (input != null) {                    Param[] params = input.value();                    if (params != null &amp;&amp; params.length &gt; 0) {                        for (Param p : params) {                            // 判断是否必填，即isRequired的值为true，但参数中没有则抛出异常                            if (p.isRequired() &amp;&amp; !paramObj.containsKey(p.name())) {                                throw new ParamNotExistsException("参数：“" + p.name() + "”不能为空");                            }                            // 参数类型校验                            Object paramValue = paramObj.get(p.name());                            // xss过滤                            if (p.xss() &amp;&amp; paramObj.containsKey(p.name())) {                                encodeHtml(paramObj, p.name());                            }                            // 判断长度                            if (p.length() &gt; 0 &amp;&amp; paramValue != null &amp;&amp; paramValue instanceof String) {                                if (paramValue.toString().length() &gt; p.length()) {                                    throw new ParamValueTooLongException(p.name(), paramValue.toString().length(), p.length());                                }                            }                            if (paramValue != null &amp;&amp; !ApiParamFactory.getAuthInstance(p.type()).validate(paramValue, p.rule())) {                                throw new ParamIrregularException("参数“" + p.name() + "”不符合格式要求");                            }                        }                    }                }            }        }    }</code></pre><h3 id="3-SpringBean加载"><a href="#3-SpringBean加载" class="headerlink" title="3.  SpringBean加载"></a>3.  SpringBean加载</h3><p>​        在项目启动时，会扫描拿到指定接口的所有实现类，存储在内存中。其原理是在项目启动时拿到上下文，在上下文中拿到指定接口的实现类，将其存储在List或者Map中。</p><pre><code>//实现ApplicationListener&lt;ContextRefreshedEvent&gt; 接口，实现 onApplicationEvent 方法@RootComponentpublic class ApiComponentFactory implements ApplicationListener&lt;ContextRefreshedEvent&gt; {    @Override    public void onApplicationEvent(ContextRefreshedEvent event) {        //拿到启动上下文        ApplicationContext context = event.getApplicationContext();        //获取指定接口的BeanMap        Map&lt;String, ApiComponent&gt; myMap = context.getBeansOfType(ApiComponent.class);        for (Map.Entry&lt;String, ApiComponent&gt; entry : myMap.entrySet()) {            //拿到具体的实现类，作相应的处理            ApiComponent component = entry.getValue();            if (component.getId() != null) {            }        }    }        }</code></pre><p>​        可将其存储到Map中，通过工厂模式，后期的获取只需要根据主键ID去获取响应的实体Bean。</p><script>        document.querySelectorAll('.github-emoji')          .forEach(el => {            if (!el.dataset.src) { return; }            const img = document.createElement('img');            img.style = 'display:none !important;';            img.src = el.dataset.src;            img.addEventListener('error', () => {              img.remove();              el.style.color = 'inherit';              el.style.backgroundImage = 'none';              el.style.background = 'none';            });            img.addEventListener('load', () => {              img.remove();            });            document.body.appendChild(img);          });      </script>]]></content>
+      
+      
+      <categories>
+          
+          <category> 架构设计 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 架构设计 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>基于前后端分离的API设计思路整理（二）</title>
       <link href="/2019/10/06/qian-hou-duan-fen-chi-de-api-she-ji-si-lu-zheng-li-er/"/>
       <url>/2019/10/06/qian-hou-duan-fen-chi-de-api-she-ji-si-lu-zheng-li-er/</url>
@@ -956,9 +981,9 @@
       
         <tags>
             
-            <tag> ActiveMQ </tag>
-            
             <tag> 消息中间件 </tag>
+            
+            <tag> ActiveMQ </tag>
             
             <tag> 软件安装 </tag>
             
@@ -985,9 +1010,9 @@
       
         <tags>
             
-            <tag> ActiveMQ </tag>
-            
             <tag> 消息中间件 </tag>
+            
+            <tag> ActiveMQ </tag>
             
         </tags>
       
@@ -1012,9 +1037,9 @@
       
         <tags>
             
-            <tag> ActiveMQ </tag>
-            
             <tag> 消息中间件 </tag>
+            
+            <tag> ActiveMQ </tag>
             
         </tags>
       
