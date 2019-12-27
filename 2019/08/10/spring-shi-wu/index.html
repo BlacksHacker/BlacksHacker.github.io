@@ -725,12 +725,16 @@
 </li>
 <li><p>位置说明</p>
 <ul>
-<li><p>基于JDK动态代理 ，可以将@Transactional放置在接口和具体类上。</p>
+<li>基于JDK动态代理 ，可以将@Transactional放置在接口和具体类上，jdk动态代理的实现方式是基于接口实现的，大概流程是。<ul>
+<li>为接口创建代理类的字节码文件</li>
+<li>使用ClassLoader将字节码文件加载到JVM中</li>
+<li>创建代理类实例对象，执行对象的目标方法。</li>
+<li>使用的是反射技术</li>
+</ul>
 </li>
-<li><p>基于CGLIB类代理，只能将@Transactional放置在具体类上。</p>
-</li>
-<li><p>注解不能被继承，如果采用CGLib类代理，即proxy-target-class 为true，业务类不会添加事务增强。</p>
-</li>
+<li>基于CGLIB类代理，只能将@Transactional放置在具体类上，cglib可以直接代理类，使用的是字节码技术。</li>
+<li>Spring默认用的是基于jdk动态代理。</li>
+<li>注解不能被继承，如果采用CGLib类代理，即proxy-target-class 为true，如果事务注解加到接口上，业务类不会添加事务增强。</li>
 </ul>
 </li>
 <li><p>除有public之外的方法，均不能被事务增强，包括 public static 也不能被增强</p>
@@ -740,6 +744,15 @@
 <li><p>这些不能被Spring事务增强的方法，并非不工作在事务中，只要被外部事务调用，由于Spring的传播机制，内部方法也可以工作在外部方法所启动的事务上下文中。</p>
 </li>
 <li><p>能被增强和不能被增强的唯一区别在于，是否可以主动启动一个新事务，前者可以，后者不能。 针对事务传播行为来说，两者是一样的。 即，如果这些方法被无事务上下文调用，则工作在无事务上下文中，否则，就工作在事务上下文中</p>
+<h4 id="2-4-常见问题汇总"><a href="#2-4-常见问题汇总" class="headerlink" title="2.4 常见问题汇总"></a>2.4 常见问题汇总</h4><ol>
+<li><p>在AOP增强过程中，一个类的两个方法A,B都通过AOP进行了增强，但当A调用B时，不会触发B的增强代码。</p>
+<p><strong>原因</strong>：通过AOP进行增强时，所本质是基于动态代理技术，当外部调用方法A时，本质是代理对象进行调用，所以A方法会得到增强，当A调用B方法时，当前的对象并非代理对象，所以要重新获取代理对象。</p>
+<pre><code>Object proxy = AopContent.currentProxy();
+
+//补充：获取当前的被代理类
+Class&lt;?&gt; targetClass = AopUtils.getTargetClass(proxy)</code></pre><p><strong>注意：</strong> 在Spring的配置文件中要进行一下设置，目的是可以通过AopContent拿到代理</p>
+<pre><code>&lt;aop:aspectj-autoproxy expose-proxy="true"&gt;&lt;/aop:aspectj-autoproxy&gt;</code></pre></li>
+</ol>
 </li>
 </ul>
 <script>

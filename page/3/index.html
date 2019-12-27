@@ -296,26 +296,31 @@ $('.bg-cover').css('background-image', 'url(/medias/banner/' + new Date().getDay
             
             <div class="article col s12 m6 l4" data-aos="zoom-in">
                 <div class="card">
-                    <a href="/2019/03/18/redis-chi-jiu-hua/">
+                    <a href="/2019/03/24/redis-ji-he-lei-xing/">
                         <div class="card-image">
                             
                             
-                            <img src="/medias/featureimages/3.jpg" class="responsive-img" alt="Redis：持久化">
+                            <img src="/medias/featureimages/17.jpg" class="responsive-img" alt="Redis：集合类型">
                             
-                            <span class="card-title">Redis：持久化</span>
+                            <span class="card-title">Redis：集合类型</span>
                         </div>
                     </a>
 
                     <div class="card-content article-content">
                         <div class="summary block-with-text">
                             
-                                1.前言​        Redis的持久化支持RDB和AOF两种持久化机制，持久化能有效避免进程的退出造成数据的丢失问题，保证重启时，利用持久化文件进行数据的恢复。
-2. RDB2.1 持久化触发​        RDB的持久化分为手动触
+                                1. 数据结构​        集合Set也用来保存多个字符串元素，但不允许有重复元素，并且时无序的，也无法通过下标进行元素获取，最多存储2的32次方减1个元素。
+
+2. 常用命令
+集合内操作
+
+添加元素
+sadd key element 
                             
                         </div>
                         <div class="publish-info">
                             <span class="publish-date">
-                                <i class="fa fa-clock-o fa-fw icon-date"></i>2019-03-18
+                                <i class="fa fa-clock-o fa-fw icon-date"></i>2019-03-24
                             </span>
                             <span class="publish-author">
                                 
@@ -352,33 +357,26 @@ $('.bg-cover').css('background-image', 'url(/medias/banner/' + new Date().getDay
             
             <div class="article col s12 m6 l4" data-aos="zoom-in">
                 <div class="card">
-                    <a href="/2019/03/16/redis-ha-xi-lei-xing/">
+                    <a href="/2019/03/18/redis-chi-jiu-hua/">
                         <div class="card-image">
                             
                             
-                            <img src="/medias/featureimages/21.jpg" class="responsive-img" alt="Redis：哈希类型">
+                            <img src="/medias/featureimages/3.jpg" class="responsive-img" alt="Redis：持久化">
                             
-                            <span class="card-title">Redis：哈希类型</span>
+                            <span class="card-title">Redis：持久化</span>
                         </div>
                     </a>
 
                     <div class="card-content article-content">
                         <div class="summary block-with-text">
                             
-                                1. 数据结构
-​        哈希类型的值可以是字符串，数字，哈希，但键只能是字符串
-2. 常用命令
-设置值(可以给一个键设置多次，即设置多个值)
-hest key field value
-获取值
-hget key field
-删除值
-
+                                1.前言​        Redis的持久化支持RDB和AOF两种持久化机制，持久化能有效避免进程的退出造成数据的丢失问题，保证重启时，利用持久化文件进行数据的恢复。
+2. RDB2.1 持久化触发​        RDB的持久化分为手动触
                             
                         </div>
                         <div class="publish-info">
                             <span class="publish-date">
-                                <i class="fa fa-clock-o fa-fw icon-date"></i>2019-03-16
+                                <i class="fa fa-clock-o fa-fw icon-date"></i>2019-03-18
                             </span>
                             <span class="publish-author">
                                 
@@ -440,6 +438,69 @@ del key
 键过期
 expire key seconds
 键过期剩余时间(-1 : 没有过期时间， 
+                            
+                        </div>
+                        <div class="publish-info">
+                            <span class="publish-date">
+                                <i class="fa fa-clock-o fa-fw icon-date"></i>2019-03-16
+                            </span>
+                            <span class="publish-author">
+                                
+                                <i class="fa fa-bookmark fa-fw icon-category"></i>
+                                
+                                <a href="/categories/数据库/" class="post-category" target="_blank">
+                                    数据库
+                                </a>
+                                
+                                
+                            </span>
+                        </div>
+                    </div>
+
+                    
+                    <div class="card-action article-tags">
+                        
+                        <a href="/tags/数据库/" target="_blank">
+                            <span class="chip bg-color">数据库</span>
+                        </a>
+                        
+                        <a href="/tags/Redis/" target="_blank">
+                            <span class="chip bg-color">Redis</span>
+                        </a>
+                        
+                        <a href="/tags/缓存/" target="_blank">
+                            <span class="chip bg-color">缓存</span>
+                        </a>
+                        
+                    </div>
+                    
+                </div>
+            </div>
+            
+            <div class="article col s12 m6 l4" data-aos="zoom-in">
+                <div class="card">
+                    <a href="/2019/03/16/redis-ha-xi-lei-xing/">
+                        <div class="card-image">
+                            
+                            
+                            <img src="/medias/featureimages/21.jpg" class="responsive-img" alt="Redis：哈希类型">
+                            
+                            <span class="card-title">Redis：哈希类型</span>
+                        </div>
+                    </a>
+
+                    <div class="card-content article-content">
+                        <div class="summary block-with-text">
+                            
+                                1. 数据结构
+​        哈希类型的值可以是字符串，数字，哈希，但键只能是字符串
+2. 常用命令
+设置值(可以给一个键设置多次，即设置多个值)
+hest key field value
+获取值
+hget key field
+删除值
+
                             
                         </div>
                         <div class="publish-info">
@@ -905,68 +966,6 @@ mv apache-tomcat-8.5.45
                         
                         <a href="/tags/Stomp/" target="_blank">
                             <span class="chip bg-color">Stomp</span>
-                        </a>
-                        
-                    </div>
-                    
-                </div>
-            </div>
-            
-            <div class="article col s12 m6 l4" data-aos="zoom-in">
-                <div class="card">
-                    <a href="/2019/01/27/activemq-an-zhuang/">
-                        <div class="card-image">
-                            
-                            
-                            <img src="/medias/featureimages/12.jpg" class="responsive-img" alt="ActiveMQ：安装">
-                            
-                            <span class="card-title">ActiveMQ：安装</span>
-                        </div>
-                    </a>
-
-                    <div class="card-content article-content">
-                        <div class="summary block-with-text">
-                            
-                                前言   ActiveMQ安装较为简单, 下载的官网：ActiveMQ
-ActiveMQ的安装
-解压包
-
-tar -zxvf apache-activemq-5.13.2-bin.tar.gz  
-配置环境变量
-
-vim /etc/prof
-                            
-                        </div>
-                        <div class="publish-info">
-                            <span class="publish-date">
-                                <i class="fa fa-clock-o fa-fw icon-date"></i>2019-01-27
-                            </span>
-                            <span class="publish-author">
-                                
-                                <i class="fa fa-bookmark fa-fw icon-category"></i>
-                                
-                                <a href="/categories/中间件/" class="post-category" target="_blank">
-                                    中间件
-                                </a>
-                                
-                                
-                            </span>
-                        </div>
-                    </div>
-
-                    
-                    <div class="card-action article-tags">
-                        
-                        <a href="/tags/消息中间件/" target="_blank">
-                            <span class="chip bg-color">消息中间件</span>
-                        </a>
-                        
-                        <a href="/tags/ActiveMQ/" target="_blank">
-                            <span class="chip bg-color">ActiveMQ</span>
-                        </a>
-                        
-                        <a href="/tags/软件安装/" target="_blank">
-                            <span class="chip bg-color">软件安装</span>
                         </a>
                         
                     </div>

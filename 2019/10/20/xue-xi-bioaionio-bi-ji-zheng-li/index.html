@@ -4,9 +4,9 @@
 
 <head><meta name="generator" content="Hexo 3.9.0">
     <meta charset="utf-8">
-    <meta name="keywords" content="基于前后端分离的API设计思路整理（三）, Shelton_Lee">
-    <meta name="description" content="1. 前言​        上一篇主要记录了接口处理具体的实现类的架构设计，其中使用到了模板模式的设计模式，本篇重点记录一下基于注解的关于接口请求参数的验证机制和基于Spring 的类启动加载机制，为以后开发做好知识储备。
-2. 注解接口验">
+    <meta name="keywords" content="AIO BIO NIO 笔记整理, Shelton_Lee">
+    <meta name="description" content="1.前言​        本篇文章主要用来记录在开发过程中涉及的IO的一些概念和代码思路，以及对于BIO，NIO，AIO的区分和理解 ，了解如何更好的优化代码。
+2.I/O介绍2.1 什么是IO?​        IO的全称是Input/O">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <meta name="renderer" content="webkit|ie-stand|ie-comp">
@@ -14,7 +14,7 @@
     <meta name="format-detection" content="telephone=no">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <title>基于前后端分离的API设计思路整理（三） | Shelton_Lee</title>
+    <title>AIO BIO NIO 笔记整理 | Shelton_Lee</title>
     <link rel="icon" type="image/png" href="/favicon.png">
 
     <link rel="stylesheet" type="text/css" href="/libs/awesome/css/font-awesome.min.css">
@@ -261,13 +261,13 @@
 
 
 
-<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/4.jpg')">
+<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/11.jpg')">
     <div class="container">
         <div class="row">
             <div class="col s12 m12 l12">
                 <div class="brand">
                     <div class="description center-align post-title">
-                        基于前后端分离的API设计思路整理（三）
+                        AIO BIO NIO 笔记整理
                     </div>
                 </div>
             </div>
@@ -378,8 +378,8 @@
                     
                     <div class="article-tag">
                         
-                            <a href="/tags/架构设计/" target="_blank">
-                                <span class="chip bg-color">架构设计</span>
+                            <a href="/tags/java基础/" target="_blank">
+                                <span class="chip bg-color">java基础</span>
                             </a>
                         
                     </div>
@@ -390,8 +390,8 @@
                     <div class="post-cate">
                         <i class="fa fa-bookmark fa-fw icon-category"></i>
                         
-                            <a href="/categories/架构设计/" class="post-category" target="_blank">
-                                架构设计
+                            <a href="/categories/java/" class="post-category" target="_blank">
+                                java
                             </a>
                         
                     </div>
@@ -402,7 +402,7 @@
             <div class="post-info">
                 <div class="post-date info-break-policy">
                     <i class="fa fa-calendar-minus-o fa-fw"></i>发布日期:&nbsp;&nbsp;
-                    2019-10-13
+                    2019-10-20
                 </div>
 
                 
@@ -418,82 +418,257 @@
         <hr class="clearfix">
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <h3 id="1-前言"><a href="#1-前言" class="headerlink" title="1. 前言"></a>1. 前言</h3><p>​        上一篇主要记录了接口处理具体的实现类的架构设计，其中使用到了模板模式的设计模式，本篇重点记录一下基于注解的关于接口请求参数的验证机制和基于Spring 的类启动加载机制，为以后开发做好知识储备。</p>
-<h3 id="2-注解接口验证"><a href="#2-注解接口验证" class="headerlink" title="2. 注解接口验证"></a>2. 注解接口验证</h3><p>​        该方法的入参依次是，<strong>具体接口实现类的Class，输入参数，入参的Class</strong>。</p>
-<p>​        原理是通过接口实现类的class文件,拿到对应要解析的方法，将其上的注解进行解析，并与入参进行对比，保证入参和注解标记内容的规范一致性。</p>
-<pre><code>protected void validApi(Class&lt;?&gt; apiClass, JSONObject paramObj, Class&lt;?&gt;... classes) throws NoSuchMethodException, SecurityException {
-        // 获取目标类
-        Boolean isAuth = false;
-        if (apiClass != null) {
-        //AuthAction注解的作用是进行url权限验证
-            AuthAction action = apiClass.getAnnotation(AuthAction.class);
-            if (null != action &amp;&amp; StringUtils.isNotBlank(action.name())) {
-                String actionName = action.name();
-                // 判断用户角色是否拥有接口权限
-                if (AuthActionChecker.check(actionName)) {
-                    isAuth = true;
-                }
-            } else {
-                isAuth = true;
-            }
+                <h3 id="1-前言"><a href="#1-前言" class="headerlink" title="1.前言"></a>1.前言</h3><p>​        本篇文章主要用来记录在开发过程中涉及的IO的一些概念和代码思路，以及对于BIO，NIO，AIO的区分和理解 ，了解如何更好的优化代码。</p>
+<h3 id="2-I-O介绍"><a href="#2-I-O介绍" class="headerlink" title="2.I/O介绍"></a>2.I/O介绍</h3><h5 id="2-1-什么是IO"><a href="#2-1-什么是IO" class="headerlink" title="2.1 什么是IO?"></a>2.1 什么是IO?</h5><p>​        IO的全称是Input/Output的缩写，我们平时大多用的关于一些文件的上传下载，基本都是使用IO下的BIO,BIO是相对于NIO来说的，BIO是Java最早推出的，是BlockingIO的缩写，即阻塞IO.</p>
+<h5 id="2-2-异步-VS-同步"><a href="#2-2-异步-VS-同步" class="headerlink" title="2.2 异步 VS 同步"></a>2.2 异步 VS 同步</h5><table>
+<thead>
+<tr>
+<th>异步</th>
+<th>同步</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>如果A任务依赖B任务，但A任务完成就认为完成了，而不用担心B任务是否完成，以及整体是否真正完成，不可靠的任务序列。</td>
+<td>如果A任务的完成需要依赖B任务，那么它会等，直到B任务完成，A才回去完成任务。B失败，A也会失败，基本步调一致。</td>
+</tr>
+</tbody></table>
+<h5 id="2-3-阻塞-VS-非阻塞"><a href="#2-3-阻塞-VS-非阻塞" class="headerlink" title="2.3 阻塞 VS 非阻塞"></a>2.3 阻塞 VS 非阻塞</h5><table>
+<thead>
+<tr>
+<th>阻塞</th>
+<th>非阻塞</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>CPU会停下来等待一个慢操作的完成，完成之后，CPU才接着完成其他的事。</td>
+<td>在慢操作执行的过程中，CPU并不会等待，而是切换线程去做其他的事情，能提高CPU的利用率，也会导致系统的线程切换成本增加</td>
+</tr>
+</tbody></table>
+<h5 id="2-4-BIO-AIO-NIO的区别？"><a href="#2-4-BIO-AIO-NIO的区别？" class="headerlink" title="2.4 BIO AIO NIO的区别？"></a>2.4 BIO AIO NIO的区别？</h5><table>
+<thead>
+<tr>
+<th>差异类型</th>
+<th>BIO</th>
+<th>NIO</th>
+<th>AIO</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>名称</td>
+<td>BlockingIO(同步阻塞IO)</td>
+<td>non-BlockingIO（同步非阻塞IO）</td>
+<td>Asynchronous-non-blocking-IO(异步非阻塞IO)</td>
+</tr>
+<tr>
+<td>JDK引入版本</td>
+<td>1.1</td>
+<td>1.4</td>
+<td>1.7</td>
+</tr>
+<tr>
+<td>模型机制</td>
+<td>流模型</td>
+<td>缓冲区模型，单线轮询事件机制</td>
+<td>基于事件和回调机制</td>
+</tr>
+<tr>
+<td>优点</td>
+<td>代码简单、直观</td>
+<td>可以构件多路复用，更接近操作系统底层数据操作方式，在长连接下，数据不多时提升性能很有效</td>
+<td>适用于复杂的分布式环境中，传输数据量不大，但非常频繁的下，性能能达到最高</td>
+</tr>
+<tr>
+<td>缺点</td>
+<td>IO效率和扩展性很低</td>
+<td>会增加CPU的消耗，考虑IO性能能否补偿CPU消耗</td>
+<td>编码较为复杂</td>
+</tr>
+<tr>
+<td>简介</td>
+<td>是最常见的用法，调用是线性顺序，所以大多数时间处于空闲状态，Java的线程是重量级的，所以每次创建线程会造成很高的资源消耗，尤其阻塞在高并发状态下，性能更加明显不足。</td>
+<td>将阻塞改为非阻塞，采用单线程轮询事件机制，通过定位channel来决定做什么，仅仅select阶段会阻塞，避免并发时，线程切换带来的问题</td>
+<td>采用事件和回调机制，反向通知型处理</td>
+</tr>
+</tbody></table>
+<h5 id="2-5-IO的使用"><a href="#2-5-IO的使用" class="headerlink" title="2.5 IO的使用"></a>2.5 IO的使用</h5><p>传统的IO基本可以分为4种：</p>
+<ul>
+<li>InputStream、OuputStream 基于子节操作的IO</li>
+<li>Writer、Reader基于字符操作的IO</li>
+<li>File 基于磁盘的操作IO</li>
+<li>Socket基于网络操作的IO</li>
+</ul>
+<h6 id="2-5-1-InputStream的使用"><a href="#2-5-1-InputStream的使用" class="headerlink" title="2.5.1 InputStream的使用"></a>2.5.1 InputStream的使用</h6><p>​        接口继承关系如下：</p>
+<p><img src="/2019/10/20/xue-xi-bioaionio-bi-ji-zheng-li/image-20191227143422595.png" alt="image-20191227143422595"></p>
+<p>​        使用示例：</p>
+<pre><code>InputStream inputStream = new FileInputStream("test.txt");
+byte[] bytes = new byte[inputStream.available()];
+inputStream.read(bytes);
+String str = new String(bytes, "utf-8");
+System.out.println(str);
+inputStream.close();</code></pre><h6 id="2-5-2-OuputStream的使用"><a href="#2-5-2-OuputStream的使用" class="headerlink" title="2.5.2 OuputStream的使用"></a>2.5.2 OuputStream的使用</h6><p>​        接口继承关系如下：</p>
+<p>​                    <img src="/2019/10/20/xue-xi-bioaionio-bi-ji-zheng-li/image-20191227143843547.png" alt="image-20191227143843547"></p>
+<p>​    使用示例：</p>
+<pre><code>OutputStream outputStream = new FileOutputStream("test.txt",true); 
+outputStream.write("你好，世界".getBytes("utf-8"));
+outputStream.close();</code></pre><h6 id="2-5-3-Writer-使用"><a href="#2-5-3-Writer-使用" class="headerlink" title="2.5.3 Writer 使用"></a>2.5.3 Writer 使用</h6><p>​        接口继承关系如下：</p>
+<p>​        <img src="/2019/10/20/xue-xi-bioaionio-bi-ji-zheng-li/image-20191227144214989.png" alt="image-20191227144214989"></p>
+<p>​        使用示例：</p>
+<pre><code>Writer writer = new FileWriter("test.txt",true); 
+writer.write("hello world");
+writer.close();
 
-            if (!isAuth) {
-                throw new PermissionDeniedException();
-            }
-            // 判断参数是否合法，拿到具体接口实现类的“myDoservice”方法
-            Method method = apiClass.getMethod("myDoService", classes);
-            if (method != null) {
-                //拿到Input注解
-                Input input = method.getAnnotation(Input.class);
-                if (input != null) {
-                    Param[] params = input.value();
-                    if (params != null &amp;&amp; params.length &gt; 0) {
-                        for (Param p : params) {
-                            // 判断是否必填，即isRequired的值为true，但参数中没有则抛出异常
-                            if (p.isRequired() &amp;&amp; !paramObj.containsKey(p.name())) {
-                                throw new ParamNotExistsException("参数：“" + p.name() + "”不能为空");
-                            }
-                            // 参数类型校验
-                            Object paramValue = paramObj.get(p.name());
-                            // xss过滤
-                            if (p.xss() &amp;&amp; paramObj.containsKey(p.name())) {
-                                encodeHtml(paramObj, p.name());
-                            }
+//采用nio的方式
 
-                            // 判断长度
-                            if (p.length() &gt; 0 &amp;&amp; paramValue != null &amp;&amp; paramValue instanceof String) {
-                                if (paramValue.toString().length() &gt; p.length()) {
-                                    throw new ParamValueTooLongException(p.name(), paramValue.toString().length(), p.length());
-                                }
-                            }
-                            if (paramValue != null &amp;&amp; !ApiParamFactory.getAuthInstance(p.type()).validate(paramValue, p.rule())) {
-                                throw new ParamIrregularException("参数“" + p.name() + "”不符合格式要求");
-                            }
+Files.write(Paths.get(filePath), Content.getBytes(StandardCharsets.UTF_8), StandardOpenOption.APPEND);</code></pre><h6 id="2-5-4-Reader-的使用"><a href="#2-5-4-Reader-的使用" class="headerlink" title="2.5.4 Reader 的使用"></a>2.5.4 Reader 的使用</h6><p>​        类的继承关系如下：</p>
+<p>​        <img src="/2019/10/20/xue-xi-bioaionio-bi-ji-zheng-li/image-20191227145109053.png" alt="image-20191227145109053"> </p>
+<p>​            使用用例：</p>
+<pre><code>Reader reader = new FileReader(filePath);
+BufferedReader bufferedReader = new BufferedReader(reader);
+StringBuffer bf = new StringBuffer();
+String str;
+while ((str = bufferedReader.readLine()) != null) {
+    bf.append(str + "\n");
+}
+bufferedReader.close();
+reader.close();
+System.out.println(bf.toString());
+
+//采用nio的方式
+byte[] data = Files.readAllBytes(Paths.get(filePath));
+System.out.println(new String(data, StandardCharsets.UTF_8));</code></pre><h3 id="3-实现Socket"><a href="#3-实现Socket" class="headerlink" title="3. 实现Socket"></a>3. 实现Socket</h3><h5 id="3-1-BIO实现Socket"><a href="#3-1-BIO实现Socket" class="headerlink" title="3.1 BIO实现Socket"></a>3.1 BIO实现Socket</h5><p>​        传统方式实现Socket,每次建立传输连接时，都会创建线程，并发条件下，线程数的激增将会成为瓶颈。</p>
+<pre><code>int port = 8080; //端口号
+// Socket 服务器端（简单的发送信息）
+Thread sThread = new Thread(new Runnable() {
+    @Override
+    public void run() {
+        try {
+            ServerSocket serverSocket = new ServerSocket(port);
+            while (true) {
+                // 等待连接
+                Socket socket = serverSocket.accept();
+                Thread sHandlerThread = new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        try (PrintWriter printWriter = new PrintWriter(socket.getOutputStream())) {
+                            printWriter.println("hello world！");
+                            printWriter.flush();
+                        } catch (IOException e) {
+                            e.printStackTrace();
                         }
                     }
+                });
+                sHandlerThread.start();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+});
+sThread.start();
+
+// Socket 客户端（接收信息并打印）
+try (Socket cSocket = new Socket(InetAddress.getLocalHost(), port)) {
+    BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(cSocket.getInputStream()));
+    bufferedReader.lines().forEach(s -&gt; System.out.println("客户端：" + s));
+} catch (UnknownHostException e) {
+    e.printStackTrace();
+} catch (IOException e) {
+    e.printStackTrace();
+}</code></pre><h5 id="3-2-NIO实现Socket"><a href="#3-2-NIO实现Socket" class="headerlink" title="3.2 NIO实现Socket"></a>3.2 NIO实现Socket</h5><p>​        NIO利用单线程轮询事件的机制，通过定位就绪的Channel来决定做什么，仅仅select阶段是阻塞的。避免并发情况下，线程的频繁切换问题。</p>
+<pre><code>//创建线程池
+ThreadPoolExecutor threadPool = new ThreadPoolExecutor(4, 4,
+        60L, TimeUnit.SECONDS, new LinkedBlockingQueue&lt;Runnable&gt;());
+threadPool.execute(new Runnable() {
+    @Override
+    public void run() {
+        //获取选择器 和 通道
+        try (Selector selector = Selector.open();
+             ServerSocketChannel serverSocketChannel = ServerSocketChannel.open();) {
+             //通道绑定地址
+            serverSocketChannel.bind(new InetSocketAddress(InetAddress.getLocalHost(), port));
+            serverSocketChannel.configureBlocking(false);
+            //将通道注册到选择器中
+            serverSocketChannel.register(selector, SelectionKey.OP_ACCEPT);
+            while (true) {
+                selector.select(); // 阻塞等待就绪的Channel，当有Channel发生接入请求时，会被唤醒
+                Set&lt;SelectionKey&gt; selectionKeys = selector.selectedKeys();
+                Iterator&lt;SelectionKey&gt; iterator = selectionKeys.iterator();
+                while (iterator.hasNext()) {
+                    SelectionKey key = iterator.next();
+                    try (SocketChannel channel = ((ServerSocketChannel) key.channel()).accept()) {
+                        channel.write(Charset.defaultCharset().encode("你好，世界"));
+                    }
+                    iterator.remove();
                 }
             }
+        } catch (IOException e) {
+            e.printStackTrace();
         }
-    }</code></pre><h3 id="3-SpringBean加载"><a href="#3-SpringBean加载" class="headerlink" title="3.  SpringBean加载"></a>3.  SpringBean加载</h3><p>​        在项目启动时，会扫描拿到指定接口的所有实现类，存储在内存中。其原理是在项目启动时拿到上下文，在上下文中拿到指定接口的实现类，将其存储在List或者Map中。</p>
-<pre><code>//实现ApplicationListener&lt;ContextRefreshedEvent&gt; 接口，实现 onApplicationEvent 方法
-@RootComponent
-public class ApiComponentFactory implements ApplicationListener&lt;ContextRefreshedEvent&gt; {
-    @Override
-    public void onApplicationEvent(ContextRefreshedEvent event) {
-        //拿到启动上下文
-        ApplicationContext context = event.getApplicationContext();
-        //获取指定接口的BeanMap
-        Map&lt;String, ApiComponent&gt; myMap = context.getBeansOfType(ApiComponent.class);
-        for (Map.Entry&lt;String, ApiComponent&gt; entry : myMap.entrySet()) {
-            //拿到具体的实现类，作相应的处理
-            ApiComponent component = entry.getValue();
-            if (component.getId() != null) {
+    }
+});
 
-            }
+// Socket 客户端（接收信息并打印）
+try (Socket cSocket = new Socket(InetAddress.getLocalHost(), port)) {
+    BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(cSocket.getInputStream()));
+    bufferedReader.lines().forEach(s -&gt; System.out.println("NIO 客户端：" + s));
+} catch (IOException e) {
+    e.printStackTrace();
+}</code></pre><h5 id="3-3-AIO实现Socket"><a href="#3-3-AIO实现Socket" class="headerlink" title="3.3 AIO实现Socket"></a>3.3 AIO实现Socket</h5><pre><code>// AIO线程复用版
+Thread sThread = new Thread(new Runnable() {
+    @Override
+    public void run() {
+        AsynchronousChannelGroup group = null;
+        try {
+            group = AsynchronousChannelGroup.withThreadPool(Executors.newFixedThreadPool(4));
+            AsynchronousServerSocketChannel server = AsynchronousServerSocketChannel.open(group).bind(new InetSocketAddress(InetAddress.getLocalHost(), port));
+            server.accept(null, new CompletionHandler&lt;AsynchronousSocketChannel, AsynchronousServerSocketChannel&gt;() {
+                @Override
+                public void completed(AsynchronousSocketChannel result, AsynchronousServerSocketChannel attachment) {
+                    server.accept(null, this); // 接收下一个请求
+                    try {
+                        Future&lt;Integer&gt; f = result.write(Charset.defaultCharset().encode("你好，世界"));
+                        f.get();
+                        System.out.println("服务端发送时间：" + new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
+                        result.close();
+                    } catch (InterruptedException | ExecutionException | IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                @Override
+                public void failed(Throwable exc, AsynchronousServerSocketChannel attachment) {
+                }
+            });
+            group.awaitTermination(Long.MAX_VALUE, TimeUnit.SECONDS);
+        } catch (IOException | InterruptedException e) {
+            e.printStackTrace();
         }
-    }        
-}</code></pre><p>​        可将其存储到Map中，通过工厂模式，后期的获取只需要根据主键ID去获取响应的实体Bean。</p>
-<script>
+    }
+});
+sThread.start();
+
+// Socket 客户端
+AsynchronousSocketChannel client = AsynchronousSocketChannel.open();
+Future&lt;Void&gt; future = client.connect(new InetSocketAddress(InetAddress.getLocalHost(), port));
+future.get();
+ByteBuffer buffer = ByteBuffer.allocate(100);
+client.read(buffer, null, new CompletionHandler&lt;Integer, Void&gt;() {
+    @Override
+    public void completed(Integer result, Void attachment) {
+        System.out.println("客户端打印：" + new String(buffer.array()));
+    }
+
+    @Override
+    public void failed(Throwable exc, Void attachment) {
+        exc.printStackTrace();
+        try {
+            client.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+});
+Thread.sleep(10 * 1000);</code></pre><script>
         document.querySelectorAll('.github-emoji')
           .forEach(el => {
             if (!el.dataset.src) { return; }
@@ -669,9 +844,9 @@ public class ApiComponentFactory implements ApplicationListener&lt;ContextRefres
             <br/>
             <span xmlns:dct="http://purl.org/dc/terms/" href="http://purl.org/dc/dcmitype/Text"
                   property="dct:title" rel="dct:type">
-                    《基于前后端分离的API设计思路整理（三）》
+                    《AIO BIO NIO 笔记整理》
                 </span> 由
-            <a xmlns:cc="http://creativecommons.org/ns#" href="/2019/10/13/ji-yu-qian-hou-duan-fen-chi-de-api-she-ji-si-lu-zheng-li-san/" property="cc:attributionName"
+            <a xmlns:cc="http://creativecommons.org/ns#" href="/2019/10/20/xue-xi-bioaionio-bi-ji-zheng-li/" property="cc:attributionName"
                rel="cc:attributionURL">
                 Shelton Lee
             </a> 采用
@@ -711,9 +886,10 @@ public class ApiComponentFactory implements ApplicationListener&lt;ContextRefres
 <article id="prenext-posts" class="prev-next articles">
     <div class="row article-row">
         
-        <div class="article col s12 m6" data-aos="fade-up">
+        <div class="article col s12 m6" data-aos="fade-up" data-aos="fade-up">
             <div class="article-badge left-badge text-color">
-                <i class="fa fa-chevron-left"></i>&nbsp;上一篇</div>
+                <i class="fa fa-dot-circle-o"></i>&nbsp;本篇
+            </div>
             <div class="card">
                 <a href="/2019/10/20/xue-xi-bioaionio-bi-ji-zheng-li/">
                     <div class="card-image">
@@ -732,9 +908,9 @@ public class ApiComponentFactory implements ApplicationListener&lt;ContextRefres
                         
                     </div>
                     <div class="publish-info">
-                        <span class="publish-date">
-                            <i class="fa fa-clock-o fa-fw icon-date"></i>2019-10-20
-                        </span>
+                            <span class="publish-date">
+                                <i class="fa fa-clock-o fa-fw icon-date"></i>2019-10-20
+                            </span>
                         <span class="publish-author">
                             
                             <i class="fa fa-bookmark fa-fw icon-category"></i>
@@ -747,6 +923,7 @@ public class ApiComponentFactory implements ApplicationListener&lt;ContextRefres
                         </span>
                     </div>
                 </div>
+
                 
                 <div class="card-action article-tags">
                     
@@ -765,29 +942,25 @@ public class ApiComponentFactory implements ApplicationListener&lt;ContextRefres
                 下一篇&nbsp;<i class="fa fa-chevron-right"></i>
             </div>
             <div class="card">
-                <a href="/2019/10/06/qian-hou-duan-fen-chi-de-api-she-ji-si-lu-zheng-li-er/">
+                <a href="/2019/10/13/ji-yu-qian-hou-duan-fen-chi-de-api-she-ji-si-lu-zheng-li-san/">
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/9.jpg" class="responsive-img" alt="基于前后端分离的API设计思路整理（二）">
+                        <img src="/medias/featureimages/4.jpg" class="responsive-img" alt="基于前后端分离的API设计思路整理（三）">
                         
-                        <span class="card-title">基于前后端分离的API设计思路整理（二）</span>
+                        <span class="card-title">基于前后端分离的API设计思路整理（三）</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
                     <div class="summary block-with-text">
                         
-                            1. 前言​        前一篇主要介绍了接口的顶层分派器的设计思路，但本质上业务逻辑的处理还是要由底层的接口具体实现类来进行处理，这篇主要记录一下具体接口实现类的架构体系。
-2. 接口实现类架构
-接口继承与实现关系
-
-
-ApiCompo
+                            1. 前言​        上一篇主要记录了接口处理具体的实现类的架构设计，其中使用到了模板模式的设计模式，本篇重点记录一下基于注解的关于接口请求参数的验证机制和基于Spring 的类启动加载机制，为以后开发做好知识储备。
+2. 注解接口验
                         
                     </div>
                     <div class="publish-info">
                             <span class="publish-date">
-                                <i class="fa fa-clock-o fa-fw icon-date"></i>2019-10-06
+                                <i class="fa fa-clock-o fa-fw icon-date"></i>2019-10-13
                             </span>
                         <span class="publish-author">
                             
