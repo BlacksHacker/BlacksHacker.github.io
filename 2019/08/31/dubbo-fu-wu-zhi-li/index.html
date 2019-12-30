@@ -4,9 +4,8 @@
 
 <head><meta name="generator" content="Hexo 3.9.0">
     <meta charset="utf-8">
-    <meta name="keywords" content="Dubbo：服务治理, Shelton_Lee">
-    <meta name="description" content="1. 前言​        Dubbo是阿里巴巴开源的一个高性能优秀的服务框架，使得应用可通过高性能的RPC实现服务的输出和输入功能，可以和Spring框架无缝集成。
-​        RPC（Remote Procedure Call）—">
+    <meta name="keywords" content="Dubbo：服务治理（入门篇）, Shelton_Lee">
+    <meta name="description" content="1. 前言​        Dubbo是阿里巴巴开源的一个高性能优秀的服务框架，采用非常简单的模型，将服务的提供方和消费方抽象为两个角色，可实现软负载均衡，并且还可选性的支持监控中心和调用管理中心，使得应用可通过高性能的RPC实现服务的输出">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <meta name="renderer" content="webkit|ie-stand|ie-comp">
@@ -14,7 +13,7 @@
     <meta name="format-detection" content="telephone=no">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <title>Dubbo：服务治理 | Shelton_Lee</title>
+    <title>Dubbo：服务治理（入门篇） | Shelton_Lee</title>
     <link rel="icon" type="image/png" href="/favicon.png">
 
     <link rel="stylesheet" type="text/css" href="/libs/awesome/css/font-awesome.min.css">
@@ -261,13 +260,13 @@
 
 
 
-<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/13.jpg')">
+<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/18.jpg')">
     <div class="container">
         <div class="row">
             <div class="col s12 m12 l12">
                 <div class="brand">
                     <div class="description center-align post-title">
-                        Dubbo：服务治理
+                        Dubbo：服务治理（入门篇）
                     </div>
                 </div>
             </div>
@@ -418,11 +417,57 @@
         <hr class="clearfix">
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <h3 id="1-前言"><a href="#1-前言" class="headerlink" title="1. 前言"></a>1. 前言</h3><p>​        <strong>Dubbo</strong>是阿里巴巴开源的一个高性能优秀的服务框架，使得应用可通过高性能的RPC实现服务的输出和输入功能，可以和Spring框架无缝集成。</p>
+                <h3 id="1-前言"><a href="#1-前言" class="headerlink" title="1. 前言"></a>1. 前言</h3><p>​        <strong>Dubbo</strong>是阿里巴巴开源的一个高性能优秀的服务框架，采用非常简单的模型，将服务的提供方和消费方抽象为两个角色，可实现软负载均衡，并且还可选性的支持监控中心和调用管理中心，使得应用可通过高性能的RPC实现服务的输出和输入功能，可以和Spring框架无缝集成。</p>
 <p>​        <strong>RPC</strong>（Remote Procedure Call）—远程过程调用，它是一种通过网络从远程计算机程序上请求服务，而不需要了解底层网络技术的协议。RPC协议假定某些传输协议的存在，如TCP或UDP，为通信程序之间携带信息数据。在OSI网络通信模型中，RPC跨越了传输层和应用层。RPC使得开发包括网络分布式多程序在内的应用程序更加容易。 RPC采用客户机/服务器模式。请求程序就是一个客户机，而服务提供程序就是一个服务器。首先，客户机调用进程发送一个有进程参数的调用信息到服务进程，然后等待应答信息。在服务器端，进程保持睡眠状态直到调用信息到达为止。当一个调用信息到达，服务器获得进程参数，计算结果，发送答复信息，然后等待下一个调用信息，最后，客户端调用进程接收答复信息，获得进程结果，然后调用执行继续进行。</p>
 <p>​        相对于<strong>Http请求</strong>，良好的rpc调用是面向服务的封装，针对服务的可用性和效率等都做了优化。单纯使用http调用则缺少了这些特性。</p>
-<h3 id="2-Dubbo"><a href="#2-Dubbo" class="headerlink" title="2. Dubbo"></a>2. Dubbo</h3><h5 id="2-1-架构"><a href="#2-1-架构" class="headerlink" title="2.1 架构"></a>2.1 架构</h5><p><img src="/2019/08/31/dubbo-fu-wu-zhi-li/1573544852818.png" alt="1573544852818"></p>
-<p><strong>架构特点：</strong></p>
+<h3 id="2-产生背景"><a href="#2-产生背景" class="headerlink" title="2. 产生背景"></a>2. 产生背景</h3><p><img src="/2019/08/31/dubbo-fu-wu-zhi-li/dubbo-architecture-1577678816466.png" alt=""></p>
+<h5 id="2-1-架构演变"><a href="#2-1-架构演变" class="headerlink" title="2.1 架构演变"></a>2.1 架构演变</h5><p>​        随着互联网的发展，系统的架构也应业务需求和技术在不停的演变。</p>
+<ul>
+<li><p>单一应用架构（ORM）</p>
+<ul>
+<li>小网站，流量小，所有功能集中部署，节省节点和成本</li>
+<li>数据访问框架（ORM）简化增删改查工作</li>
+</ul>
+</li>
+<li><p>垂直应用架构（MVC）</p>
+<ul>
+<li>访问量增大时，将应用拆分为不相干的几个应用，以提升效率</li>
+<li>Web框架加速前端页面开发</li>
+</ul>
+</li>
+<li><p>分布式服务架构（RPC）</p>
+<ul>
+<li>垂直应用增多时，应用交互不可避免，将核心业务抽出，作为独立的服务，使前端更快速的响应需求变更</li>
+<li>分布式服务框架（RPC）提高业务复用及整合</li>
+</ul>
+</li>
+<li><p>流动计算架构</p>
+<ul>
+<li>服务增多时，容量评估和小服务资源浪费出现，需要调度中心基于访问压力实时管理集群容量，提高集群利用率。</li>
+<li>资源调度和治理中心（SOA）提高机器利用率</li>
+</ul>
+</li>
+</ul>
+<h5 id="2-2-解决问题"><a href="#2-2-解决问题" class="headerlink" title="2.2 解决问题"></a>2.2 解决问题</h5><p><img src="/2019/08/31/dubbo-fu-wu-zhi-li/dubbo.png" alt="dubbo"></p>
+<ul>
+<li><p>服务增多，URL配置管理难度增加，F5硬件负载均衡器的单点压力增大</p>
+<p>​    解决方案：</p>
+<ul>
+<li>配置服务注册中心，动态注册和发现服务，使服务位置透明</li>
+<li>在消费方提供服务地址列表，实现负载均衡，降低F5硬件负载器的依赖，减少成本。</li>
+</ul>
+</li>
+<li><p>服务间依赖关系错综复杂</p>
+</li>
+<li><p>服务调用的激增，无法正确预知服务容量，规划硬件配置</p>
+<p>​    解决方案：</p>
+<ul>
+<li>配置服务监控，实时获取服务调用数据，合理规划硬件配置信息</li>
+</ul>
+</li>
+</ul>
+<h3 id="3-Dubbo"><a href="#3-Dubbo" class="headerlink" title="3. Dubbo"></a>3. Dubbo</h3><h5 id="3-1-架构"><a href="#3-1-架构" class="headerlink" title="3.1 架构"></a>3.1 架构</h5><p><img src="/2019/08/31/dubbo-fu-wu-zhi-li/1573544852818.png" alt="1573544852818"></p>
+<p>架构特点：**</p>
 <ul>
 <li>基于透明接口的RPC</li>
 <li>智能负载平衡</li>
@@ -430,6 +475,12 @@
 <li>高扩展性</li>
 <li>运行时流量路由</li>
 <li>可视化服务治理</li>
+<li><strong>远程通讯“：</strong>提供多种基于长连接的NIO框架抽象封装框架，包括多线程模型，序列化，以及请求-响应模式的信息交换方式。</li>
+<li><strong>集群容错：</strong>提供基于接口方法的透明远程过程调用，包括多协议支持，软负载均衡，失败容错，地址路由，动态配置等集群支持。</li>
+<li><strong>自动发现：</strong>基于注册中心目录服务，使服务消费方能动态查找服务提供方，使地址透明。</li>
+<li>透明化的远程方法调用，就像调用本地方法一样调用远程方法，只需简单配置，没有API侵入。</li>
+<li>软负载及容错机制，可在内网替代F5等硬件负载均衡器，降低成本，减少单点。</li>
+<li>服务自动注册和发现，不需写死服务提供方地址，注册中心基于接口查询服务提供者的IP地址，并且能够平滑添加或删除服务提供者。</li>
 </ul>
 <p><strong>节点介绍：</strong></p>
 <ul>
@@ -456,7 +507,7 @@
 <li>Redis 注册中心</li>
 <li>Simple 注册中心</li>
 </ul>
-<h5 id="2-2-dubbo的使用（整合Spring）"><a href="#2-2-dubbo的使用（整合Spring）" class="headerlink" title="2.2 dubbo的使用（整合Spring）"></a>2.2 dubbo的使用（整合Spring）</h5><ol>
+<h5 id="3-2-dubbo的简单使用（整合Spring）"><a href="#3-2-dubbo的简单使用（整合Spring）" class="headerlink" title="3.2 dubbo的简单使用（整合Spring）"></a>3.2 dubbo的简单使用（整合Spring）</h5><ol>
 <li><p>导入POM文件</p>
 <pre><code>&lt;properties&gt;
     &lt;dubbo.version&gt;2.7.4.1&lt;/dubbo.version&gt;
@@ -697,7 +748,7 @@ public class GreetingsServiceImpl implements GreetingsService {
             <br/>
             <span xmlns:dct="http://purl.org/dc/terms/" href="http://purl.org/dc/dcmitype/Text"
                   property="dct:title" rel="dct:type">
-                    《Dubbo：服务治理》
+                    《Dubbo：服务治理（入门篇）》
                 </span> 由
             <a xmlns:cc="http://creativecommons.org/ns#" href="/2019/08/31/dubbo-fu-wu-zhi-li/" property="cc:attributionName"
                rel="cc:attributionURL">
@@ -743,34 +794,32 @@ public class GreetingsServiceImpl implements GreetingsService {
             <div class="article-badge left-badge text-color">
                 <i class="fa fa-chevron-left"></i>&nbsp;上一篇</div>
             <div class="card">
-                <a href="/2019/09/08/git-dui-xiang-mo-xing/">
+                <a href="/2019/09/01/dubbo-ji-qun-rong-cuo-mo-shi-fu-zai-jun-heng-mo-shi/">
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/10.jpg" class="responsive-img" alt="Git：对象模型">
+                        <img src="/medias/featureimages/21.jpg" class="responsive-img" alt="Dubbo：集群容错模式-负载均衡模式">
                         
-                        <span class="card-title">Git：对象模型</span>
+                        <span class="card-title">Dubbo：集群容错模式-负载均衡模式</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
                     <div class="summary block-with-text">
                         
-                            1. SHA​        所有表示项目历史信息的文件，都是由40个字符的“对象名”来索引的,每一个对象名都是对对象内容做SHA1哈希计算得来的。
-6ff87c4664981e4397625791c8ea3bbb5f2279a3优势：
-
-
+                            1. 前言​        Dubbo本身是一个开源的分布式服务框架，我们可以很容易的用来构建分布式服务，并根据实际业务场景选择合适的集群容错模式。
+2. Dubbo服务集群容错采用集群容错模式的意义在于，当服务消费方发起调用申请之后，针对
                         
                     </div>
                     <div class="publish-info">
                         <span class="publish-date">
-                            <i class="fa fa-clock-o fa-fw icon-date"></i>2019-09-08
+                            <i class="fa fa-clock-o fa-fw icon-date"></i>2019-09-01
                         </span>
                         <span class="publish-author">
                             
                             <i class="fa fa-bookmark fa-fw icon-category"></i>
                             
-                            <a href="/categories/版本管理/" class="post-category" target="_blank">
-                                    版本管理
+                            <a href="/categories/架构/" class="post-category" target="_blank">
+                                    架构
                                 </a>
                             
                             
@@ -780,8 +829,8 @@ public class GreetingsServiceImpl implements GreetingsService {
                 
                 <div class="card-action article-tags">
                     
-                    <a href="/tags/Git/" target="_blank">
-                        <span class="chip bg-color">Git</span>
+                    <a href="/tags/Dubbo/" target="_blank">
+                        <span class="chip bg-color">Dubbo</span>
                     </a>
                     
                 </div>

@@ -4,8 +4,9 @@
 
 <head><meta name="generator" content="Hexo 3.9.0">
     <meta charset="utf-8">
-    <meta name="keywords" content="Zookeeper：分布式管理, Shelton_Lee">
-    <meta name="description" content="1. 前言  随着公司业务的不断增长，单机模式已经不足以处理当下的业务量，所以不得不采用多台服务器构成集群，来处理激增的业务量。集群在一定程度上能够分解单个服务器的处理压力，打破单机的性能瓶颈，提高系统服务的可用性。但分布式集群往往存在一些">
+    <meta name="keywords" content="Dubbo：集群容错模式-负载均衡模式, Shelton_Lee">
+    <meta name="description" content="1. 前言​        Dubbo本身是一个开源的分布式服务框架，我们可以很容易的用来构建分布式服务，并根据实际业务场景选择合适的集群容错模式。
+2. Dubbo服务集群容错采用集群容错模式的意义在于，当服务消费方发起调用申请之后，针对">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <meta name="renderer" content="webkit|ie-stand|ie-comp">
@@ -13,7 +14,7 @@
     <meta name="format-detection" content="telephone=no">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <title>Zookeeper：分布式管理 | Shelton_Lee</title>
+    <title>Dubbo：集群容错模式-负载均衡模式 | Shelton_Lee</title>
     <link rel="icon" type="image/png" href="/favicon.png">
 
     <link rel="stylesheet" type="text/css" href="/libs/awesome/css/font-awesome.min.css">
@@ -260,13 +261,13 @@
 
 
 
-<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/23.jpg')">
+<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/21.jpg')">
     <div class="container">
         <div class="row">
             <div class="col s12 m12 l12">
                 <div class="brand">
                     <div class="description center-align post-title">
-                        Zookeeper：分布式管理
+                        Dubbo：集群容错模式-负载均衡模式
                     </div>
                 </div>
             </div>
@@ -377,12 +378,8 @@
                     
                     <div class="article-tag">
                         
-                            <a href="/tags/zookeeper/" target="_blank">
-                                <span class="chip bg-color">zookeeper</span>
-                            </a>
-                        
-                            <a href="/tags/分布式/" target="_blank">
-                                <span class="chip bg-color">分布式</span>
+                            <a href="/tags/Dubbo/" target="_blank">
+                                <span class="chip bg-color">Dubbo</span>
                             </a>
                         
                     </div>
@@ -405,7 +402,7 @@
             <div class="post-info">
                 <div class="post-date info-break-policy">
                     <i class="fa fa-calendar-minus-o fa-fw"></i>发布日期:&nbsp;&nbsp;
-                    2019-08-24
+                    2019-09-01
                 </div>
 
                 
@@ -421,162 +418,74 @@
         <hr class="clearfix">
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <h1 id="1-前言"><a href="#1-前言" class="headerlink" title="1. 前言"></a>1. 前言</h1><p>  随着公司业务的不断增长，单机模式已经不足以处理当下的业务量，所以不得不采用多台服务器构成集群，来处理激增的业务量。集群在一定程度上能够分解单个服务器的处理压力，打破单机的性能瓶颈，提高系统服务的可用性。但分布式集群往往存在一些问题：</p>
+                <h3 id="1-前言"><a href="#1-前言" class="headerlink" title="1. 前言"></a>1. 前言</h3><p>​        Dubbo本身是一个开源的分布式服务框架，我们可以很容易的用来构建分布式服务，并根据实际业务场景选择合适的集群容错模式。</p>
+<h3 id="2-Dubbo服务集群容错"><a href="#2-Dubbo服务集群容错" class="headerlink" title="2. Dubbo服务集群容错"></a>2. Dubbo服务集群容错</h3><p>采用集群容错模式的意义在于，当服务消费方发起调用申请之后，针对不同的错误情况，要有一套合理的配置架构来应对。</p>
+<h5 id="2-1-Dubbo架构组件"><a href="#2-1-Dubbo架构组件" class="headerlink" title="2.1 Dubbo架构组件"></a>2.1 Dubbo架构组件</h5><p>Dubbo的架构组件图如下：</p>
+<p><img src="/2019/09/01/dubbo-ji-qun-rong-cuo-mo-shi-fu-zai-jun-heng-mo-shi/137084-20180507104753924-755727985.png" alt="img"></p>
+<p>各组件关系如下：</p>
 <ul>
-<li>不同于单机下，多个进程或线程在日志信息的保证下能够安全的处理同一资源，多台服务器处理属于不同的物理机,如何能够保证事务安全性，即比如如何保证多台服务器对于一个文件的写操作。</li>
-<li>多台服务器下，如果一台宕机，如何保证其他服务器能接受其任务，如果保证业务激增时进行服务器扩展，能在不重启的情况下进行业务数据的迁移。</li>
-<li>如何保证任务的均匀分配，保证任务执行的效率，实现负载均衡。</li>
-<li>程序运行依赖于配置文件，不同物理机如何实现像数据库地址，黑名单控制，服务地址列表等这些配置文件的共享，并且修改后能即时达到数据一致。</li>
+<li>Invoker是Provider的一个可调用Service的抽象，Invoker封装了Provider地址以及Service接口信息。</li>
+<li>Directory代表多个Invoker,可以将其看成List,但其值是动态变化的，比如注册中心的推送变更。</li>
+<li>Cluster将Directory中的多个Invoker伪装成一个Invoker，对上层透明，但内部包含了容错逻辑。</li>
+<li>Router负责从多个Invoker中按路由规则选出子集，比如读写分离，应用隔离等。</li>
+<li>LoadBalance负责从多个Invoker中选出具体的一个用于本次调用，选的过程包含了负载均衡算法，调用失败后，需要重选。</li>
 </ul>
-<h1 id="2-Zookeeper简介"><a href="#2-Zookeeper简介" class="headerlink" title="2.Zookeeper简介"></a>2.Zookeeper简介</h1><p>  Zookeeper是一个<strong>分布式协调服务</strong>。单机上的协调都是进程内的协调，在进行内进行协调可以使用语言，平台，操作系统等提供的同步机制，保证单机内部多线程访问同一资源时的同步，实现多线程的协调。但分布式集群环境下，程序可能在不同的机器，机器可能不在同一个机房，机房又在不同的地域分布，这时候需要类似Zookeeper这类分布式协调服务来进行对集群的协调。</p>
-<h2 id="2-1-存储结构"><a href="#2-1-存储结构" class="headerlink" title="2.1 存储结构"></a>2.1 存储结构</h2><p><img src="/2019/08/24/zookeeper-fen-bu-shi-guan-li/1567479565493-1574416654648.png" alt=""><br>zookeeper的数据是按照<strong>树</strong>的结构进行存储的，节点分为四种类型：</p>
-<table>
-<thead>
-<tr>
-<th>名称</th>
-<th>简介</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>PERSISTENT-持久化节点</td>
-<td>在创建该节点的客户端与zookeeper断开后，该节点也不会被删除</td>
-</tr>
-<tr>
-<td>PERSISTENT-SEQUENTIAL-持久化顺序编号节点</td>
-<td>在请求创建节点时，会根据parent-znode的zxid状态，为该节点编写全目录唯一的编号，即使客户端断开，该节点不会被删除</td>
-</tr>
-<tr>
-<td>EPHEMERAL-临时znode节点</td>
-<td>客户端断开后，节点会被删除掉</td>
-</tr>
-<tr>
-<td>EPHEMERAL_SEQUENTIAL-临时顺序编号znode节点</td>
-<td>在请求创建节点时，会根据parent-znode的zxid状态，为该节点编写全目录唯一的编号，客户端断开时，该节点会被删除</td>
-</tr>
-</tbody></table>
-<h2 id="2-2-znode"><a href="#2-2-znode" class="headerlink" title="2.2 znode"></a>2.2 znode</h2><ul>
-<li>每一个znode默认存储1MB的数据</li>
-<li>登陆zookeeper，可以通过ls、create、delete、sync等命令去操作这些节点<br>znode结构</li>
-</ul>
-<table>
-<thead>
-<tr>
-<th>名称</th>
-<th>简介</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>zxid</td>
-<td>时间戳，每次修改znode都会产生新的zxid</td>
-</tr>
-<tr>
-<td>version</td>
-<td>对节点的每次修改都会使得节点的版本号加1</td>
-</tr>
-<tr>
-<td>data</td>
-<td>每一个znode默认能够存储1MB的数据，对data的修改会引起两种的变化</td>
-</tr>
-<tr>
-<td>tick</td>
-<td>租约协议的具体体现，如果当前节点是“临时节点”，在trick时间周期内没有收到新的客户端租约，则视为无效</td>
-</tr>
-</tbody></table>
-<h1 id="2-3-选举FastLeaderElection"><a href="#2-3-选举FastLeaderElection" class="headerlink" title="2.3 选举FastLeaderElection"></a>2.3 选举FastLeaderElection</h1><h1 id="2-4-监听机制"><a href="#2-4-监听机制" class="headerlink" title="2.4 监听机制"></a>2.4 监听机制</h1><p>  zookeeper的主要目的是统一分布式系统中各个节点的工作状态，在资源冲突的情况下协调提供节点资源抢占，给每个节点提供了解集群所处状态的途径，这都依赖于zookeeper中的时间监听和通知机制。</p>
-<h2 id="2-4-1事件和状态"><a href="#2-4-1事件和状态" class="headerlink" title="2.4.1事件和状态"></a>2.4.1事件和状态</h2><p>  <strong>事件和状态构成了zookeeper客户端连接描述的两个维度。</strong></p>
+<h5 id="2-2-Dubbo支持的集群模式"><a href="#2-2-Dubbo支持的集群模式" class="headerlink" title="2.2 Dubbo支持的集群模式"></a>2.2 Dubbo支持的集群模式</h5><p>​    <strong>Dubbo 支持6中集群模式</strong></p>
 <ul>
-<li>事件：指zookeeper监听某一个znode节点，一但触发，就执行该事件所绑定的事情。</li>
-<li>状态：指zookeeper与所连接的服务器之间的状态。</li>
-<li>zookeeper客户端与server连接的状态</li>
+<li><p><strong><em>Failover Cluster</em></strong>模式</p>
+<p>配置为failover,容错集群默认的选择，调用失败时，会自动切换，重新尝试调用其他节点上的可用服务，适用于一些幂等性操作，每次调用的副作用是相同的。</p>
+<pre><code>&lt;dubbo:service interface="org.shirdrn.dubbo.api.ChatRoomOnlineUserCounterService" version="1.0.0"
+     cluster="failover" retries="2" timeout="100" ref="chatRoomOnlineUserCounterService" protocol="dubbo" &gt;
+     &lt;dubbo:method name="queryRoomUserCount" timeout="80" retries="2" /&gt;
+&lt;/dubbo:service&gt;</code></pre><ul>
+<li>retries : 重试次数</li>
+<li>timeout：服务级别调用超时时间</li>
+<li>如果该服务中有其他方法，没有显示配置，则会继承服务级别的配置</li>
 </ul>
-<table>
-<thead>
-<tr>
-<th>连接状态</th>
-<th>状态含义</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>KeeperState.Expired</td>
-<td>客户端和服务器在ticktime的时间周期内，要进行发送心跳通知，这是租约协议的一个实现，客户端发送request，告知服务器上一个租约时间，服务器接受之后，告知客户端下一个续租时间，当客户端到达最后一个续租时间事，没有收到服务端发来的新租约时间，即认为自己下线，这个过期状态即为Expired状态</td>
-</tr>
-<tr>
-<td>KeeperState.Disconnected</td>
-<td>当客户端断开一个连接（租约期满或者客户端主动离开），这时客户端和服务器的状态就是Disconnected</td>
-</tr>
-<tr>
-<td>KeeperState.SynConnected</td>
-<td>一旦客户端和服务器的一个节点建立连接，并完成一次version、zxid的同步。该状态就是这个</td>
-</tr>
-<tr>
-<td>KeeperState.AuthFailed</td>
-<td>zookeeper客户端进行连接认证失败时，发生该状态</td>
-</tr>
-<tr>
-<td><strong>备注：这些状态触发时，所记录的事件类型都是：EventType.Node.</strong></td>
-<td></td>
-</tr>
-</tbody></table>
-<p>-zookeeper中的事件，当zookeeper客户端监听某个znode节点时：<br>|zookeeper事件|含义|<br>|—|—|<br>|EventType.NodeCreated|当这个节点被创建时，事件触发|<br>|EventType.NodeChildrenChanged|当这个节点的直接子节点被创建、删除、子节点数据被变更时，触发该事件|<br>|EventType.NodeDataChange|当这个节点的数据发生变更时，该事件被触发|<br>|EventType.NodeDeleted|当这个节点被删除时，该事件被触发|<br>|EventType.None|当zookeeper的客户端连接状态发生变更时，即上述几个状态之间互相切换时|</p>
-<h2 id="2-5-watcher机制"><a href="#2-5-watcher机制" class="headerlink" title="2.5 watcher机制"></a>2.5 watcher机制</h2><p>  zookeeper建立节点监听可采用的方法有：</p>
-<ul>
-<li>zk.getChilren(path,watch)</li>
-<li>zk.exists(path, watch)</li>
-<li>zk.getData(path,watch,stat)</li>
-<li>zk.register(watcher)注册默认监听</li>
-</ul>
-<p>  <strong>以上的注册方式，都可以对Event.Type事件进行监听，如果注册多个监听器，则它们都会收到Event.Node事件。</strong></p>
-<ul>
-<li>注册方法与监听事件间的关系</li>
-</ul>
-<table>
-<thead>
-<tr>
-<th>注册方式</th>
-<th>NodeCreated</th>
-<th>NodeChildrenChanged</th>
-<th>NodeDataChanged</th>
-<th>NodeDeleted</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>zk.getChildren(“”,watcher)</td>
-<td></td>
-<td>可监控</td>
-<td></td>
-<td>可监控</td>
-</tr>
-<tr>
-<td>zk.exists(“”,watcher)</td>
-<td>可监控</td>
-<td></td>
-<td>可监控</td>
-<td>可监控</td>
-</tr>
-<tr>
-<td>zk.getData(“”,watcher)</td>
-<td>悖论</td>
-<td></td>
-<td>可监控</td>
-<td>可监控</td>
-</tr>
-</tbody></table>
-<p><strong>注意：</strong></p>
-<ul>
-<li><p>当一个watcher实例多次注册一个节点时，zkClient只通知一次，当多个不同watcher实例注册同一个节点时，zkClient会依次进行通知。</p>
 </li>
-<li><p>监控同一个节点的一个watcher实例，通过exist、getData等多种注册方式注册时，zkClient也只会通知一次。</p>
-<h1 id="3-作用"><a href="#3-作用" class="headerlink" title="3. 作用"></a>3. 作用</h1></li>
-<li><p><strong>配置管理</strong><br>  程序中往往存在众多的配置信息，众多服务器依赖于该配置文件，zookeeper的作用就是对这些配置文件进行集中管理，将配置文件提取放置一个地方，对其进行监听，当配置信息发生改变时，受zookeeper管理的服务器将会受到通知，然后服务器获取新的配置信息。zookeeper使用了Zab这种一致性协议来保证配置在集群中的一致性。</p>
+<li><p><strong><em>Failfast Cluster</em></strong>模式</p>
+<p>配置为failfast，称为快速失败模式，调用只执行一次，失败立即报错。适用于非幂等性操作，每次调用的副作用是不同的。</p>
 </li>
-<li><p><strong>命名服务</strong><br>  在集群和分布式环境下，zookeeper能够简化子项目之间的调用关系，不至于出现不知道哪个调哪个，可以集中精力去处理业务逻辑。在集群中，相同的一个服务有很多个提供者，当提供者启动时，其相关信息（接口，地址，端口等）会注册到zookeeper中，当消费者需要消费时，再依据负载均衡机制选择一个服务者提供服务。</p>
+<li><p><strong><em>Failsafe Cluster</em></strong>模式</p>
+<p>配置为failsafe，失败安全模式，如果调用失败，则直接忽略失败的调用，而是要记录下失败的调用到日志文件，以便后续审计。</p>
 </li>
-<li><p><strong>分布式锁</strong><br>  zookeeper可以用来协调多个分布式进程之间的活动，一件事情交给多个服务器进行处理时，就需要进行分布式的同步，某个时刻只让一个服务去干活，出现问题时，立马释放分布式锁，交由其他服务器进行处理。其处理策略一般被称为<strong>选举机制</strong>。</p>
+<li><p><strong><em>Failback Cluster</em></strong>模式</p>
+<p>配置为failback，失败自动恢复，后台记录失败请求，定时重发，常用于消息通知。</p>
 </li>
-<li><p><strong>集群管理</strong><br>  分布式集群中，处于各种原因，节点总是在变化，集群中的其他机器需要动态的感知当前集群中的状态。像在一个分布式存储系统中，存在一个中央控制节点负责存储的分配，其依赖于感知集群节点的变化。</p>
+<li><p><strong><em>Forking Cluster</em></strong>模式</p>
+<p>配置为forking，并行调用多个服务器，只要一个成功即返回。常用于实时性要求较高的操作，但需要浪费更多资源。</p>
+</li>
+<li><p><strong><em>Broadcast Cluster</em></strong>模式</p>
+<p>配置为broadcast，广播调用所有提供者，逐个调用，任意一台报错则错，常用于通知所有提供者更新缓存或日志等。</p>
+</li>
+<li><p><strong><em>定制化集群容错模式可以通过扩展Cluster接口实现</em></strong></p>
 </li>
 </ul>
-<p>参考博客：<a href="https://blog.csdn.net/tang06211015/article/details/51850516" target="_blank" rel="noopener">Zookeeper场景分析及实例代码</a><br>    <a href="https://blog.csdn.net/yinwenjie/article/details/47361419" target="_blank" rel="noopener">  zookeeper单点和集群安装</a></p>
+<h5 id="2-3-Dubbo服务负载均衡"><a href="#2-3-Dubbo服务负载均衡" class="headerlink" title="2.3 Dubbo服务负载均衡"></a>2.3 Dubbo服务负载均衡</h5><p>​    <strong>Dubbo支持4种负载均衡策略</strong></p>
+<ul>
+<li><p><strong>Random LoadBalance:</strong>随机策略，配置值为random，可以设置权重。利于充分利用服务器资源，高配调大，低配调小。</p>
+</li>
+<li><p><strong>RoundRobin LoadBalance:</strong>轮询策略，配置值为roundrobin</p>
+</li>
+<li><p><strong>LeastActive LoadBalance:</strong>配置值为leastactive，根据请求调用的次数计数，处理请求更慢的节点会受到更少的请求。</p>
+</li>
+<li><p><strong>ConsistentHash LoadBalance:</strong>一致性Hash策略。相同调用参数的请求会发送到同一个服务提供的节点上，如果某个节点发生故障无法提供服务，则会基于一致性Hash算法映射到虚拟节点上。</p>
+<pre><code>&lt;dubbo:service interface="org.shirdrn.dubbo.api.ChatRoomOnlineUserCounterService" version="1.0.0"
+     cluster="failover" retries="2" timeout="100" loadbalance="random"
+     ref="chatRoomOnlineUserCounterService" protocol="dubbo" &gt;
+     &lt;dubbo:method name="queryRoomUserCount" timeout="80" retries="2" loadbalance="leastactive" /&gt;
+&lt;/dubbo:service&gt;</code></pre><p><strong>loadbalance也存在继承关系，即子类策略会覆盖父级策略。自定义的策略要实现LoadBalance接口。</strong></p>
+<h5 id="2-4-Dubbo服务管理和监控"><a href="#2-4-Dubbo服务管理和监控" class="headerlink" title="2.4 Dubbo服务管理和监控"></a>2.4 Dubbo服务管理和监控</h5><ul>
+<li><p>Dubbo服务管理中心</p>
+</li>
+<li><p>Dubbo监控中心</p>
+<p>​    </p>
+</li>
+</ul>
+</li>
+</ul>
+<p><img src="/2019/09/01/dubbo-ji-qun-rong-cuo-mo-shi-fu-zai-jun-heng-mo-shi/137084-20180507104907461-623468070.png" alt="img"></p>
+<p>管理中心和监控中心都可以通过安装的方式部署在tomcat上，这样就可以通过管理中心和监控中心来查看对应的详细情况。管理中心和注册中心是两个概念，管理中心可以调整提供者和消费者的状态以及其他设置，注册中心则用来提供注册，保证提供者的可见性，以及后续动态扩展的维护管理。</p>
 <script>
         document.querySelectorAll('.github-emoji')
           .forEach(el => {
@@ -753,9 +662,9 @@
             <br/>
             <span xmlns:dct="http://purl.org/dc/terms/" href="http://purl.org/dc/dcmitype/Text"
                   property="dct:title" rel="dct:type">
-                    《Zookeeper：分布式管理》
+                    《Dubbo：集群容错模式-负载均衡模式》
                 </span> 由
-            <a xmlns:cc="http://creativecommons.org/ns#" href="/2019/08/24/zookeeper-fen-bu-shi-guan-li/" property="cc:attributionName"
+            <a xmlns:cc="http://creativecommons.org/ns#" href="/2019/09/01/dubbo-ji-qun-rong-cuo-mo-shi-fu-zai-jun-heng-mo-shi/" property="cc:attributionName"
                rel="cc:attributionURL">
                 Shelton Lee
             </a> 采用
@@ -799,6 +708,58 @@
             <div class="article-badge left-badge text-color">
                 <i class="fa fa-chevron-left"></i>&nbsp;上一篇</div>
             <div class="card">
+                <a href="/2019/09/08/git-dui-xiang-mo-xing/">
+                    <div class="card-image">
+                        
+                        
+                        <img src="/medias/featureimages/10.jpg" class="responsive-img" alt="Git：对象模型">
+                        
+                        <span class="card-title">Git：对象模型</span>
+                    </div>
+                </a>
+                <div class="card-content article-content">
+                    <div class="summary block-with-text">
+                        
+                            1. SHA​        所有表示项目历史信息的文件，都是由40个字符的“对象名”来索引的,每一个对象名都是对对象内容做SHA1哈希计算得来的。
+6ff87c4664981e4397625791c8ea3bbb5f2279a3优势：
+
+
+                        
+                    </div>
+                    <div class="publish-info">
+                        <span class="publish-date">
+                            <i class="fa fa-clock-o fa-fw icon-date"></i>2019-09-08
+                        </span>
+                        <span class="publish-author">
+                            
+                            <i class="fa fa-bookmark fa-fw icon-category"></i>
+                            
+                            <a href="/categories/版本管理/" class="post-category" target="_blank">
+                                    版本管理
+                                </a>
+                            
+                            
+                        </span>
+                    </div>
+                </div>
+                
+                <div class="card-action article-tags">
+                    
+                    <a href="/tags/Git/" target="_blank">
+                        <span class="chip bg-color">Git</span>
+                    </a>
+                    
+                </div>
+                
+            </div>
+        </div>
+        
+        
+        <div class="article col s12 m6" data-aos="fade-up">
+            <div class="article-badge right-badge text-color">
+                下一篇&nbsp;<i class="fa fa-chevron-right"></i>
+            </div>
+            <div class="card">
                 <a href="/2019/08/31/dubbo-fu-wu-zhi-li/">
                     <div class="card-image">
                         
@@ -815,9 +776,9 @@
                         
                     </div>
                     <div class="publish-info">
-                        <span class="publish-date">
-                            <i class="fa fa-clock-o fa-fw icon-date"></i>2019-08-31
-                        </span>
+                            <span class="publish-date">
+                                <i class="fa fa-clock-o fa-fw icon-date"></i>2019-08-31
+                            </span>
                         <span class="publish-author">
                             
                             <i class="fa fa-bookmark fa-fw icon-category"></i>
@@ -835,67 +796,6 @@
                     
                     <a href="/tags/Dubbo/" target="_blank">
                         <span class="chip bg-color">Dubbo</span>
-                    </a>
-                    
-                </div>
-                
-            </div>
-        </div>
-        
-        
-        <div class="article col s12 m6" data-aos="fade-up">
-            <div class="article-badge right-badge text-color">
-                下一篇&nbsp;<i class="fa fa-chevron-right"></i>
-            </div>
-            <div class="card">
-                <a href="/2019/08/16/spring-yi-bu-tong-zhi/">
-                    <div class="card-image">
-                        
-                        
-                        <img src="/medias/featureimages/19.jpg" class="responsive-img" alt="Spring：异步通知">
-                        
-                        <span class="card-title">Spring：异步通知</span>
-                    </div>
-                </a>
-                <div class="card-content article-content">
-                    <div class="summary block-with-text">
-                        
-                            前言​        公司最近给主模块搞一个系统通知的功能，要求设计并对接各大分模块的消息通知，要求是分模块业务执行过程中会触发消息插件，将消息推送到系统通知的消息存储区域，但是一旦业务执行失败，业务会进行回滚，但是消息已经发出去了，显然不
-                        
-                    </div>
-                    <div class="publish-info">
-                            <span class="publish-date">
-                                <i class="fa fa-clock-o fa-fw icon-date"></i>2019-08-16
-                            </span>
-                        <span class="publish-author">
-                            
-                            <i class="fa fa-bookmark fa-fw icon-category"></i>
-                            
-                            <a href="/categories/Spring/" class="post-category" target="_blank">
-                                    Spring
-                                </a>
-                            
-                            
-                        </span>
-                    </div>
-                </div>
-                
-                <div class="card-action article-tags">
-                    
-                    <a href="/tags/Spring/" target="_blank">
-                        <span class="chip bg-color">Spring</span>
-                    </a>
-                    
-                    <a href="/tags/事务/" target="_blank">
-                        <span class="chip bg-color">事务</span>
-                    </a>
-                    
-                    <a href="/tags/框架/" target="_blank">
-                        <span class="chip bg-color">框架</span>
-                    </a>
-                    
-                    <a href="/tags/异步/" target="_blank">
-                        <span class="chip bg-color">异步</span>
                     </a>
                     
                 </div>
