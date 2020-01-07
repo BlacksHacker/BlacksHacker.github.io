@@ -486,8 +486,8 @@ finished
  我是第 5 个 start execute
  我是第 3 个 start execute
  我是第 2 个 start execute
- 我是第 1 个 start execute</code></pre><p>​        CountDownLatch是一个倒计时式的计数器，在初始化的时候可以通过构造参数指定所要统计的线程的数量，每当线程执行一次countDown()方法，计数器减一，当计数器的内部值变为0时，将会开始执行await()方法之后的代码，即允许指定数量的线程执行完毕之后才开始执行。</p>
-<p>​        CountDownLatch基于AQS，是一个共享锁，await()使当前线程阻塞等待。</p>
+ 我是第 1 个 start execute</code></pre><p>​        <strong>CountDownLatch</strong>是一个倒计时式的计数器，在初始化的时候可以通过构造参数指定所要统计的线程的数量，每当线程执行一次countDown()方法，计数器减一，当计数器的内部值变为0时，将会开始执行await()方法之后的代码，即允许指定数量的线程执行完毕之后才开始执行。</p>
+<p>​        <strong>CountDownLatch</strong>基于AQS，是一个共享锁，await()使当前线程阻塞等待。</p>
 <pre><code>// CountDownLatch aqs源码：
 ‘’private static final class Sync 
                 extends AbstractQueuedSynchronizer {
@@ -586,8 +586,8 @@ finished
 我朋友他好了
 我朋友他好了
 我朋友他好了
- 我是第 9 个 start execute</code></pre><p>​        CyclicBarrier是可循环的同步屏障，如上示例，构造函数赋值为3，所以每次屏障会拦截三个线程，待三个线程同时抵达屏障时，屏障被打破，线程执行后面逻辑代码。与此同时，循环截取后面的三个线程，依次循环。</p>
-<p>​        CyclicBarrier使用一个重入锁实现。</p>
+ 我是第 9 个 start execute</code></pre><p>​        <strong>CyclicBarrier</strong>是可循环的同步屏障，如上示例，构造函数赋值为3，所以每次屏障会拦截三个线程，待三个线程同时抵达屏障时，屏障被打破，线程执行后面逻辑代码。与此同时，循环截取后面的三个线程，依次循环。</p>
+<p>​        <strong>CyclicBarrier</strong>使用一个重入锁实现。</p>
 <h3 id="3-Semaphore"><a href="#3-Semaphore" class="headerlink" title="3. Semaphore"></a>3. Semaphore</h3><p>​        示例代码如下：</p>
 <pre><code>class Foo {
 
@@ -649,7 +649,39 @@ finished
  我是第 6 个 start execute
  我是第 9 个 start execute</code></pre><p>​        <strong>Semaphore</strong>是一个计数信号量，常用于限制可以访问某些资源线程数目。</p>
 <p>​        以上示例代码，每个2s,打印三行数据，即第1,2,3线程，执行semaphore.acquire()先进来，然后置于睡眠状态，4进来时，semaphore并未执行release（）方法，故而会阻塞，接着1,2,3线程依次执行release(),4,5,6线程进入睡眠状态，依此循环，保证限制线程执行的数目为3条。</p>
-<h3 id="4-总结"><a href="#4-总结" class="headerlink" title="4. 总结"></a>4. 总结</h3><ul>
+<p>​        <strong>注意：</strong>当semaphore的值为0时，表明当前资源已经耗尽，需要先进行release才能再acquire。故当初始值设为0时，需要先执行release，否则线程将会一直阻塞。经典案例，Leecode的交替打印，代码如下：</p>
+<pre><code>class FooBar {
+    private int n;
+    private Semaphore foo = new Semaphore(1);
+    private Semaphore bar = new Semaphore(0);
+
+    public FooBar(int n) {
+        this.n = n;
+    }
+
+    public void foo(Runnable printFoo) throws InterruptedException {
+        for (int i = 0; i &lt; n; i++) {
+            // printFoo.run() outputs "foo". Do not change or remove this line.
+            //获取后foo变0，所以下次不能重复执行
+            foo.acquire();
+            printFoo.run(); 
+            //执行后，bar变1
+            bar.release();
+        }
+    }
+
+    public void bar(Runnable printBar) throws InterruptedException {
+        for (int i = 0; i &lt; n; i++) {
+            // printBar.run() outputs "bar". Do not change or remove this line.
+            //只有当bar变1的时候才能执行，故在首次后执行，执行后变0，所以下次不能重复执行
+            bar.acquire();
+            printBar.run();
+            //执行后，foo变1
+            foo.release();
+        }
+    }
+}</code></pre><p>执行结果如下：</p>
+<pre><code>foobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobar</code></pre><h3 id="4-总结"><a href="#4-总结" class="headerlink" title="4. 总结"></a>4. 总结</h3><ul>
 <li><strong>CountDownLatch</strong>为计数器，设定初始值，当数值内所有线程执行完毕，才是执行接下来的逻辑。</li>
 <li><strong>CyclicBarrier</strong>为屏障，设定初始值，当数值内所有线程到达指定位置，才进行屏障移除，但可重复。</li>
 <li><strong>Semaphone</strong>为计数信号量，设定初始值，每次线程获取减一，释放加一，其他线程要执行，必须等待令牌释放，即固定了同时只能有指定值个线程在处理资源任务。</li>
