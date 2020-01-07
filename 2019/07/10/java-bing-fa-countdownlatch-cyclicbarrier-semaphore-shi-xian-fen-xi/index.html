@@ -4,10 +4,9 @@
 
 <head><meta name="generator" content="Hexo 3.9.0">
     <meta charset="utf-8">
-    <meta name="keywords" content="ActiveMQ：存储方案, Shelton_Lee">
-    <meta name="description" content="1.前言  上文已经学习了ActiveMQ的存储分为两种：持久化和非持久化，其中持久化的介质可以是磁盘文件系统，也可以是其内置数据库，或者外部的关系型数据库。
-2.持久化存储
-发布订阅模式下，没有订阅者时，消息也要进行先存储再标记，但不一定">
+    <meta name="keywords" content="Java并发：CountDownLatch、CyclicBarrier、Semaphore实现分析, Shelton_Lee">
+    <meta name="description" content="1. 前言​        最近在刷LeeCode多线程相关题目时，经常会遇到一些优质的解答使用了J.U.C包中的三个同步工具类配合。所以在此进行整理，方便日后开发中使用。
+2. CountDownLatch​        示例代码如下：">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <meta name="renderer" content="webkit|ie-stand|ie-comp">
@@ -15,7 +14,7 @@
     <meta name="format-detection" content="telephone=no">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <title>ActiveMQ：存储方案 | Shelton_Lee</title>
+    <title>Java并发：CountDownLatch、CyclicBarrier、Semaphore实现分析 | Shelton_Lee</title>
     <link rel="icon" type="image/png" href="/favicon.png">
 
     <link rel="stylesheet" type="text/css" href="/libs/awesome/css/font-awesome.min.css">
@@ -262,13 +261,13 @@
 
 
 
-<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/15.jpg')">
+<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/12.jpg')">
     <div class="container">
         <div class="row">
             <div class="col s12 m12 l12">
                 <div class="brand">
                     <div class="description center-align post-title">
-                        ActiveMQ：存储方案
+                        Java并发：CountDownLatch、CyclicBarrier、Semaphore实现分析
                     </div>
                 </div>
             </div>
@@ -379,12 +378,12 @@
                     
                     <div class="article-tag">
                         
-                            <a href="/tags/ActiveMQ/" target="_blank">
-                                <span class="chip bg-color">ActiveMQ</span>
+                            <a href="/tags/多线程/" target="_blank">
+                                <span class="chip bg-color">多线程</span>
                             </a>
                         
-                            <a href="/tags/消息中间件/" target="_blank">
-                                <span class="chip bg-color">消息中间件</span>
+                            <a href="/tags/并发/" target="_blank">
+                                <span class="chip bg-color">并发</span>
                             </a>
                         
                     </div>
@@ -395,8 +394,8 @@
                     <div class="post-cate">
                         <i class="fa fa-bookmark fa-fw icon-category"></i>
                         
-                            <a href="/categories/架构/" class="post-category" target="_blank">
-                                架构
+                            <a href="/categories/java/" class="post-category" target="_blank">
+                                java
                             </a>
                         
                     </div>
@@ -407,7 +406,7 @@
             <div class="post-info">
                 <div class="post-date info-break-policy">
                     <i class="fa fa-calendar-minus-o fa-fw"></i>发布日期:&nbsp;&nbsp;
-                    2019-01-20
+                    2019-07-10
                 </div>
 
                 
@@ -423,109 +422,238 @@
         <hr class="clearfix">
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <h1 id="1-前言"><a href="#1-前言" class="headerlink" title="1.前言"></a>1.前言</h1><p>  上文已经学习了ActiveMQ的存储分为两种：持久化和非持久化，其中持久化的介质可以是<strong>磁盘文件系统</strong>，也可以是其<strong>内置数据库</strong>，或者外部的<strong>关系型数据库</strong>。</p>
-<h1 id="2-持久化存储"><a href="#2-持久化存储" class="headerlink" title="2.持久化存储"></a>2.持久化存储</h1><ul>
-<li>发布订阅模式下，没有订阅者时，消息也要进行先存储再标记，但不一定进入物理磁盘。</li>
-<li>事务没有提交的情况下，消息依旧会被服务端持久化，但没有进入到具体的队列之中。</li>
-<li>服务端持久化消息的行为，可以设置为异步，持久化完成会告知服务端。</li>
-<li>持久化数据的删除，只有在消息被通知已经被消费时，才会被移除。<h2 id="2-1-配置介绍"><a href="#2-1-配置介绍" class="headerlink" title="2.1 配置介绍"></a>2.1 配置介绍</h2>  ActiveMQ每一个服务节点都是一个独立的进程。</li>
-</ul>
-<table>
-<thead>
-<tr>
-<th>名称</th>
-<th>介绍</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>systemUsage</td>
-<td>表示进程级别的容量设置</td>
-</tr>
-<tr>
-<td>memoryUsage</td>
-<td>子标记设置节点的“可用内存限制”，内存容量供所有队列使用</td>
-</tr>
-<tr>
-<td>storeUsage</td>
-<td>标记节点的用于存储“持久化消息”的“可用磁盘空间”，采用数据库存储方案，该参数无作用</td>
-</tr>
-<tr>
-<td>tempUsage</td>
-<td>设置“temp store”的可用磁盘空间限制</td>
-</tr>
-</tbody></table>
-<h1 id="3-存储方案"><a href="#3-存储方案" class="headerlink" title="3.存储方案"></a>3.存储方案</h1><h2 id="3-1-KahaDB"><a href="#3-1-KahaDB" class="headerlink" title="3.1 KahaDB"></a>3.1 KahaDB</h2><h3 id="3-1-1-基本结构"><a href="#3-1-1-基本结构" class="headerlink" title="3.1.1 基本结构"></a>3.1.1 基本结构</h3><p>emsp;emsp;KahaDB基于文件系统，支持事务，是目前ActiveMQ默认的持久化存储方案。<br>基本元素：</p>
-<ul>
-<li><p>Metadata Cache：用于在内存中检索消息的存储位置</p>
-</li>
-<li><p>Data log：记录消息内容，默认大小为32M，当其内部所有消息被成功消费后，该文件会在Metadata Cache中被标记为删除，在下一个checkpoint周期进行删除操作。Data log文件采用顺序写的方式操作，为保证物理上的连接，文件需要进行区域预占。</p>
-</li>
-<li><p>Metadata Store：在磁盘上检索消息存储位置。内存中没有被处理的消息索引会以一定周期，同步到Metadata Store中。</p>
-</li>
-<li><p>redo文件：用于系统异常关闭后恢复Btree结构</p>
-<h3 id="3-1-2-配置KahaDB"><a href="#3-1-2-配置KahaDB" class="headerlink" title="3.1.2 配置KahaDB"></a>3.1.2 配置KahaDB</h3><p>  ActiveMQ会默认启动KahaDB。</p>
-<pre><code>&lt;broker xmlns="http://activemq.apache.org/schema/core"  brokerName="localhost" dataDirectory="${activemq.data}"&gt;
-  ......
-  &lt;persistenceAdapter&gt;
-      &lt;kahaDB directory="${activemq.data}/kahadb" journalMaxFileLength="64mb" indexWriteBatchSize="500"/&gt;
-  &lt;/persistenceAdapter&gt;
-  ......
-&lt;/broker&gt;</code></pre></li>
-<li><p>journalMaxFileLength：表示设置后的信息文件大小</p>
-</li>
-<li><p>indexWriteBatchSize：表示Metadata Cache 和 Metadata Store进行checkpoint同步的上限</p>
-</li>
-</ul>
-<h2 id="3-2-LevelDB"><a href="#3-2-LevelDB" class="headerlink" title="3.2 LevelDB"></a>3.2 LevelDB</h2><h3 id="3-2-1-基本结构"><a href="#3-2-1-基本结构" class="headerlink" title="3.2.1 基本结构"></a>3.2.1 基本结构</h3><p>  核心的设计算法是<strong>跳跃表</strong>，核心操作策略是对磁盘上的数据日志结构进行归并（LSM）。</p>
-<p>  结构元素如下：</p>
-<table>
-<thead>
-<tr>
-<th>名称</th>
-<th>简介</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>Log 文件</td>
-<td>新的消息进入时，直接写log文件目的是系统异常时能够进行数据的恢复，采用预占磁盘空间的形式顺序写入，可设置为异步，有丢失数据风险</td>
-</tr>
-<tr>
-<td>MemTable//Immutable</td>
-<td>新的消息进入时，会写入MemTable，内部数据组织结构就是跳跃表。当内部数据大于一定参数值时，会被标记为Immutable，开启一个新的MemTable,Imuutable的“删除”数据会被剔除，其余可能压缩写入到.sst文件中</td>
-</tr>
-<tr>
-<td>SStable</td>
-<td>位于硬盘，后缀为.sst，默认大小为2M,因其按照数据的key排序随机写，固无需预占磁盘空间<br>SSTable文件也分层次，每层为上层的十倍，某曾达到最大值时，选取一个文件做Compact操作<br>读写SSTable的最小单元是Block，大小为4KB，最后的Index Block指明每SSTable一个Data Block的起始位置<br>LevelDB的内存区域，存在Block Cache区域，存储众多的Index Block</td>
-</tr>
-<tr>
-<td>Manifest</td>
-<td>该文件记录sst文件的关键信息，包括：某个.sst文件属于哪一个Level，最小key值是多少，最大key值是多少等</td>
-</tr>
-</tbody></table>
-<h3 id="3-2-2-配置LevelDB"><a href="#3-2-2-配置LevelDB" class="headerlink" title="3.2.2 配置LevelDB"></a>3.2.2 配置LevelDB</h3><pre><code>&lt;persistenceAdapter&gt;
-    &lt;levelDB directory="${activemq.data}/levelDB" logSize="52428800" sync="false"/&gt;
-&lt;/persistenceAdapter&gt;</code></pre><ul>
-<li>directory：LevelDB的结构文件所放置的目录位置</li>
-<li>logSize：默认大小为100M，采用预占用磁盘，即一旦消息进入，就会有100MB被预先占用。</li>
-<li>sync：异步写log，异步在内存区域向Memtable写入位置索引。<h2 id="3-3-关系型数据库"><a href="#3-3-关系型数据库" class="headerlink" title="3.3 关系型数据库"></a>3.3 关系型数据库</h2>  ActiveMQ支持使用关系型数据库进行持久化存储–通过JDBC实现数据库的连接。<br>mysql数据库配置如下：</li>
-</ul>
-<pre><code>&lt;broker&gt;
-     &lt;persistenceAdapter&gt;
-        &lt;jdbcPersistenceAdapter dataSource="#mysql_datasource" createTablesOnStartup="true"/&gt;
-    &lt;/persistenceAdapter&gt;
-&lt;/broker&gt;
+                <h3 id="1-前言"><a href="#1-前言" class="headerlink" title="1. 前言"></a>1. 前言</h3><p>​        最近在刷LeeCode多线程相关题目时，经常会遇到一些优质的解答使用了J.U.C包中的三个同步工具类配合。所以在此进行整理，方便日后开发中使用。</p>
+<h3 id="2-CountDownLatch"><a href="#2-CountDownLatch" class="headerlink" title="2. CountDownLatch"></a>2. CountDownLatch</h3><p>​        示例代码如下：</p>
+<pre><code>class Foo {
+
+    public Foo() {
+
+    }
+
+    public static void main(String[] args) {
+        Foo foo = new Foo();
+        try {
+            foo.execute();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void execute() throws Exception{
+        CountDownLatch countDownLatch = new CountDownLatch(3);
+
+        for (int i = 0; i &lt; 10; i++){
+            Thread t = new Thread(new TestRunner(countDownLatch));
+            t.setName(" 我是第 " + i +" 个");
+            t.start();
+        }
+        countDownLatch.await();
+        System.out.println("finished");
+    }
 
 
+    class TestRunner implements Runnable{
 
-&lt;bean id="mysql_datasource" class="com.mchange.v2.c3p0.ComboPooledDataSource"&gt;
-  &lt;property name="driverClass" value="com.mysql.jdbc.Driver"/&gt;
-  &lt;property name="jdbcUrl" value="jdbc:mysql://localhost:3306/activemqdb?relaxAutoCommit=true&amp;amp;useUnicode=true&amp;amp;characterEncoding=utf-8"/&gt;
-  &lt;property name="user" value="root"/&gt;
-  &lt;property name="password" value="123456"/&gt;
-  &lt;property name="minPoolSize" value="10"/&gt;
-  &lt;property name="maxPoolSize" value="30"/&gt;
-  &lt;property name="initialPoolSize" value="10"/&gt;
-&lt;/bean&gt;</code></pre><p><strong>备注：</strong>使用关系型数据库，需要将相关jar包放置到安装路径下的./lib目录下。</p>
+        private CountDownLatch countDownLatch;
+
+        public TestRunner(CountDownLatch countDownLatch){
+            this.countDownLatch = countDownLatch;
+        }
+
+        @Override
+        public void run() {
+            try {
+                Thread.sleep(1000);
+                System.out.println(Thread.currentThread().getName() + " start execute");
+
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }finally {
+                countDownLatch.countDown();
+            }
+
+        }
+    }
+
+}</code></pre><p>执行结果如下：</p>
+<pre><code>我是第 0 个 start execute
+ 我是第 9 个 start execute
+ 我是第 8 个 start execute
+finished
+ 我是第 7 个 start execute
+ 我是第 6 个 start execute
+ 我是第 4 个 start execute
+ 我是第 5 个 start execute
+ 我是第 3 个 start execute
+ 我是第 2 个 start execute
+ 我是第 1 个 start execute</code></pre><p>​        CountDownLatch是一个倒计时式的计数器，在初始化的时候可以通过构造参数指定所要统计的线程的数量，每当线程执行一次countDown()方法，计数器减一，当计数器的内部值变为0时，将会开始执行await()方法之后的代码，即允许指定数量的线程执行完毕之后才开始执行。</p>
+<p>​        CountDownLatch基于AQS，是一个共享锁，await()使当前线程阻塞等待。</p>
+<pre><code>// CountDownLatch aqs源码：
+‘’private static final class Sync 
+                extends AbstractQueuedSynchronizer {
+    Sync(int count) {
+        setState(count);
+    }
+    int getCount() {
+        return getState();
+    }
+    //加锁
+    protected int tryAcquireShared(int acquires) {
+        return (getState() == 0) ? 1 : -1;
+    }
+    //解锁
+    protected boolean tryReleaseShared(int releases) {
+        for (;;) {
+            int c = getState();
+            if (c == 0)
+                return false;
+            int nextc = c-1;
+            if (compareAndSetState(c, nextc))
+                return nextc == 0;
+        }
+    }
+}</code></pre><ul>
+<li>await()调用tryAcquireShared(1)方法获取锁，根据共享锁的实现返回值小于0时线程会被阻塞等待，也就是只有当state==0,才会成功解锁。</li>
+<li>countDown()调用tryReleaseShared(1)方法进行解锁，当state为0时，共享锁才算完全释放，会唤醒队列等待的线程。</li>
+<li>CountDownLatch没有复位操作，当state的值为0时，再调用await()就不会阻塞线程了，所以CountDownLatch只能使用一次。</li>
+</ul>
+<h3 id="3-CyclicBarrier"><a href="#3-CyclicBarrier" class="headerlink" title="3. CyclicBarrier"></a>3. CyclicBarrier</h3><p>​        示例代码如下：</p>
+<pre><code>class Foo {
+
+    public Foo() {
+
+    }
+
+    public static void main(String[] args) {
+        Foo foo = new Foo();
+        try {
+            foo.execute();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void execute() throws Exception{
+        CyclicBarrier barrier = new CyclicBarrier(3);
+
+        for (int i = 0; i &lt; 10; i++){
+            Thread t = new Thread(new TestRunner(barrier));
+            t.setName(" 我是第 " + i +" 个");
+            t.start();
+        }
+        System.out.println("finished");
+    }
+
+
+    class TestRunner implements Runnable{
+
+        private CyclicBarrier barrier;
+
+        public TestRunner(CyclicBarrier barrier){
+            this.barrier = barrier;
+        }
+
+        @Override
+        public void run() {
+            try {
+                System.out.println(Thread.currentThread().getName() + " start execute");
+                barrier.await();
+                System.out.println("我朋友他好了");
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+}</code></pre><p>输出结果如下：</p>
+<pre><code>finished
+ 我是第 0 个 start execute
+ 我是第 1 个 start execute
+ 我是第 2 个 start execute
+我朋友他好了
+我朋友他好了
+我朋友他好了
+ 我是第 3 个 start execute
+ 我是第 4 个 start execute
+ 我是第 5 个 start execute
+我朋友他好了
+我朋友他好了
+我朋友他好了
+ 我是第 6 个 start execute
+ 我是第 7 个 start execute
+ 我是第 8 个 start execute
+我朋友他好了
+我朋友他好了
+我朋友他好了
+ 我是第 9 个 start execute</code></pre><p>​        CyclicBarrier是可循环的同步屏障，如上示例，构造函数赋值为3，所以每次屏障会拦截三个线程，待三个线程同时抵达屏障时，屏障被打破，线程执行后面逻辑代码。与此同时，循环截取后面的三个线程，依次循环。</p>
+<p>​        CyclicBarrier使用一个重入锁实现。</p>
+<h3 id="3-Semaphore"><a href="#3-Semaphore" class="headerlink" title="3. Semaphore"></a>3. Semaphore</h3><p>​        示例代码如下：</p>
+<pre><code>class Foo {
+
+    public Foo() {
+
+    }
+
+    public static void main(String[] args) {
+        Foo foo = new Foo();
+        try {
+            foo.execute();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void execute() throws Exception{
+        Semaphore semaphore = new Semaphore(3);
+
+        for (int i = 0; i &lt; 10; i++){
+            Thread t = new Thread(new TestRunner(semaphore));
+            t.setName(" 我是第 " + i +" 个");
+            t.start();
+        }
+        System.out.println("finished");
+    }
+
+
+    class TestRunner implements Runnable{
+
+        private Semaphore semaphore;
+
+        public TestRunner(Semaphore _semaphore){
+            this.semaphore = _semaphore;
+        }
+
+        @Override
+        public void run() {
+            try {
+                semaphore.acquire();
+                System.out.println(Thread.currentThread().getName() + " start execute");
+                Thread.sleep(2000);
+                semaphore.release();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+}</code></pre><p>执行结果如下：</p>
+<pre><code>finished
+ 我是第 0 个 start execute
+ 我是第 1 个 start execute
+ 我是第 2 个 start execute
+ 我是第 3 个 start execute
+ 我是第 4 个 start execute
+ 我是第 5 个 start execute
+ 我是第 7 个 start execute
+ 我是第 8 个 start execute
+ 我是第 6 个 start execute
+ 我是第 9 个 start execute</code></pre><p>​        <strong>Semaphore</strong>是一个计数信号量，常用于限制可以访问某些资源线程数目。</p>
+<p>​        以上示例代码，每个2s,打印三行数据，即第1,2,3线程，执行semaphore.acquire()先进来，然后置于睡眠状态，4进来时，semaphore并未执行release（）方法，故而会阻塞，接着1,2,3线程依次执行release(),4,5,6线程进入睡眠状态，依此循环，保证限制线程执行的数目为3条。</p>
+<h3 id="4-总结"><a href="#4-总结" class="headerlink" title="4. 总结"></a>4. 总结</h3><ul>
+<li><strong>CountDownLatch</strong>为计数器，设定初始值，当数值内所有线程执行完毕，才是执行接下来的逻辑。</li>
+<li><strong>CyclicBarrier</strong>为屏障，设定初始值，当数值内所有线程到达指定位置，才进行屏障移除，但可重复。</li>
+<li><strong>Semaphone</strong>为计数信号量，设定初始值，每次线程获取减一，释放加一，其他线程要执行，必须等待令牌释放，即固定了同时只能有指定值个线程在处理资源任务。</li>
+</ul>
 <script>
         document.querySelectorAll('.github-emoji')
           .forEach(el => {
@@ -702,9 +830,9 @@
             <br/>
             <span xmlns:dct="http://purl.org/dc/terms/" href="http://purl.org/dc/dcmitype/Text"
                   property="dct:title" rel="dct:type">
-                    《ActiveMQ：存储方案》
+                    《Java并发：CountDownLatch、CyclicBarrier、Semaphore实现分析》
                 </span> 由
-            <a xmlns:cc="http://creativecommons.org/ns#" href="/2019/01/20/activemq-cun-chu-fang-an/" property="cc:attributionName"
+            <a xmlns:cc="http://creativecommons.org/ns#" href="/2019/07/10/java-bing-fa-countdownlatch-cyclicbarrier-semaphore-shi-xian-fen-xi/" property="cc:attributionName"
                rel="cc:attributionURL">
                 Shelton Lee
             </a> 采用
@@ -748,38 +876,32 @@
             <div class="article-badge left-badge text-color">
                 <i class="fa fa-chevron-left"></i>&nbsp;上一篇</div>
             <div class="card">
-                <a href="/2019/01/27/activemq-an-zhuang/">
+                <a href="/2019/07/13/java-bing-fa-an-quan-dui-lie/">
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/12.jpg" class="responsive-img" alt="ActiveMQ：安装">
+                        <img src="/medias/featureimages/12.jpg" class="responsive-img" alt="Java并发：安全队列">
                         
-                        <span class="card-title">ActiveMQ：安装</span>
+                        <span class="card-title">Java并发：安全队列</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
                     <div class="summary block-with-text">
                         
-                            前言   ActiveMQ安装较为简单, 下载的官网：ActiveMQ
-ActiveMQ的安装
-解压包
-
-tar -zxvf apache-activemq-5.13.2-bin.tar.gz  
-配置环境变量
-
-vim /etc/prof
+                            1. 前言​        多线程编程中很多地方都是用到了安全队列，故简单做一个总结概括，方便后面查阅。
+​        队列这种数据结构不必做过多解释，安全队列的目的在于在多线程中存在消费者生产者模式，即多个生产者（生产者线程）生产东西
                         
                     </div>
                     <div class="publish-info">
                         <span class="publish-date">
-                            <i class="fa fa-clock-o fa-fw icon-date"></i>2019-01-27
+                            <i class="fa fa-clock-o fa-fw icon-date"></i>2019-07-13
                         </span>
                         <span class="publish-author">
                             
                             <i class="fa fa-bookmark fa-fw icon-category"></i>
                             
-                            <a href="/categories/中间件/" class="post-category" target="_blank">
-                                    中间件
+                            <a href="/categories/java/" class="post-category" target="_blank">
+                                    java
                                 </a>
                             
                             
@@ -789,16 +911,16 @@ vim /etc/prof
                 
                 <div class="card-action article-tags">
                     
-                    <a href="/tags/ActiveMQ/" target="_blank">
-                        <span class="chip bg-color">ActiveMQ</span>
+                    <a href="/tags/多线程/" target="_blank">
+                        <span class="chip bg-color">多线程</span>
                     </a>
                     
-                    <a href="/tags/消息中间件/" target="_blank">
-                        <span class="chip bg-color">消息中间件</span>
+                    <a href="/tags/并发/" target="_blank">
+                        <span class="chip bg-color">并发</span>
                     </a>
                     
-                    <a href="/tags/软件安装/" target="_blank">
-                        <span class="chip bg-color">软件安装</span>
+                    <a href="/tags/数据结构/" target="_blank">
+                        <span class="chip bg-color">数据结构</span>
                     </a>
                     
                 </div>
@@ -812,41 +934,33 @@ vim /etc/prof
                 下一篇&nbsp;<i class="fa fa-chevron-right"></i>
             </div>
             <div class="card">
-                <a href="/2019/01/13/activemq-ji-ben-yuan-li/">
+                <a href="/2019/07/07/java-bing-fa-synchronized-he-volatile/">
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/1.jpg" class="responsive-img" alt="ActiveMQ：基本原理">
+                        <img src="/medias/featureimages/17.jpg" class="responsive-img" alt="Java并发：Synchronized 和 volatile">
                         
-                        <span class="card-title">ActiveMQ：基本原理</span>
+                        <span class="card-title">Java并发：Synchronized 和 volatile</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
                     <div class="summary block-with-text">
                         
-                            1.前言  ActiveMQ是Apache软件基金会的开源产品，支持AMQP协议、MQTT协议、Openwire协议和Stomp协议等多种消息协议,并且支持JMS API接口规范。
-2. 基本参数
-
-
-参数名称
-参数介绍
-
-
-
-stop
-停
+                            1.前言​        synchronized作为Java的线程安全相关的关键字可以修饰的地方包括：代码块、对象、方法、类以及静态方法。
+​        volatile则一般用来修饰属性。
+2. Synchronized2.1 代码
                         
                     </div>
                     <div class="publish-info">
                             <span class="publish-date">
-                                <i class="fa fa-clock-o fa-fw icon-date"></i>2019-01-13
+                                <i class="fa fa-clock-o fa-fw icon-date"></i>2019-07-07
                             </span>
                         <span class="publish-author">
                             
                             <i class="fa fa-bookmark fa-fw icon-category"></i>
                             
-                            <a href="/categories/架构/" class="post-category" target="_blank">
-                                    架构
+                            <a href="/categories/java/" class="post-category" target="_blank">
+                                    java
                                 </a>
                             
                             
@@ -856,12 +970,12 @@ stop
                 
                 <div class="card-action article-tags">
                     
-                    <a href="/tags/ActiveMQ/" target="_blank">
-                        <span class="chip bg-color">ActiveMQ</span>
+                    <a href="/tags/多线程/" target="_blank">
+                        <span class="chip bg-color">多线程</span>
                     </a>
                     
-                    <a href="/tags/消息中间件/" target="_blank">
-                        <span class="chip bg-color">消息中间件</span>
+                    <a href="/tags/并发/" target="_blank">
+                        <span class="chip bg-color">并发</span>
                     </a>
                     
                 </div>
