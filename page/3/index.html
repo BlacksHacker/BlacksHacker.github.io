@@ -296,6 +296,73 @@ $('.bg-cover').css('background-image', 'url(/medias/banner/' + new Date().getDay
             
             <div class="article col s12 m6 l4" data-aos="zoom-in">
                 <div class="card">
+                    <a href="/2019/04/12/redis-zi-fu-chuan-lei-xing/">
+                        <div class="card-image">
+                            
+                            
+                            <img src="/medias/featureimages/4.jpg" class="responsive-img" alt="Redis：字符串类型">
+                            
+                            <span class="card-title">Redis：字符串类型</span>
+                        </div>
+                    </a>
+
+                    <div class="card-content article-content">
+                        <div class="summary block-with-text">
+                            
+                                1.1 数据结构
+1.2 常用命令
+设置值
+set key value 
+用于新加(键必须不存在)
+setnx key value
+
+
+获取值
+get key
+批量设置值
+mset key value [key value ...]
+批量获
+                            
+                        </div>
+                        <div class="publish-info">
+                            <span class="publish-date">
+                                <i class="fa fa-clock-o fa-fw icon-date"></i>2019-04-12
+                            </span>
+                            <span class="publish-author">
+                                
+                                <i class="fa fa-bookmark fa-fw icon-category"></i>
+                                
+                                <a href="/categories/数据库/" class="post-category" target="_blank">
+                                    数据库
+                                </a>
+                                
+                                
+                            </span>
+                        </div>
+                    </div>
+
+                    
+                    <div class="card-action article-tags">
+                        
+                        <a href="/tags/数据库/" target="_blank">
+                            <span class="chip bg-color">数据库</span>
+                        </a>
+                        
+                        <a href="/tags/Redis/" target="_blank">
+                            <span class="chip bg-color">Redis</span>
+                        </a>
+                        
+                        <a href="/tags/缓存/" target="_blank">
+                            <span class="chip bg-color">缓存</span>
+                        </a>
+                        
+                    </div>
+                    
+                </div>
+            </div>
+            
+            <div class="article col s12 m6 l4" data-aos="zoom-in">
+                <div class="card">
                     <a href="/2019/04/06/redis-you-xu-ji-he-lei-xing/">
                         <div class="card-image">
                             
@@ -600,31 +667,28 @@ sadd key element
             
             <div class="article col s12 m6 l4" data-aos="zoom-in">
                 <div class="card">
-                    <a href="/2019/03/16/redis-ji-chu-jie-shao/">
+                    <a href="/2019/03/16/redis-ha-xi-lei-xing/">
                         <div class="card-image">
                             
                             
-                            <img src="/medias/featureimages/9.jpg" class="responsive-img" alt="Redis：基础介绍">
+                            <img src="/medias/featureimages/21.jpg" class="responsive-img" alt="Redis：哈希类型">
                             
-                            <span class="card-title">Redis：基础介绍</span>
+                            <span class="card-title">Redis：哈希类型</span>
                         </div>
                     </a>
 
                     <div class="card-content article-content">
                         <div class="summary block-with-text">
                             
-                                1. 全局命令
-查看所有键
-keys *    
-键总数
-dbsize
-检查键是否存在
-exists key 
-删除键(支持删除多个)
-del key
-键过期
-expire key seconds
-键过期剩余时间(-1 : 没有过期时间， 
+                                1. 数据结构
+​        哈希类型的值可以是字符串，数字，哈希，但键只能是字符串
+2. 常用命令
+设置值(可以给一个键设置多次，即设置多个值)
+hest key field value
+获取值
+hget key field
+删除值
+
                             
                         </div>
                         <div class="publish-info">
@@ -666,28 +730,31 @@ expire key seconds
             
             <div class="article col s12 m6 l4" data-aos="zoom-in">
                 <div class="card">
-                    <a href="/2019/03/16/redis-ha-xi-lei-xing/">
+                    <a href="/2019/03/16/redis-ji-chu-jie-shao/">
                         <div class="card-image">
                             
                             
-                            <img src="/medias/featureimages/21.jpg" class="responsive-img" alt="Redis：哈希类型">
+                            <img src="/medias/featureimages/9.jpg" class="responsive-img" alt="Redis：基础介绍">
                             
-                            <span class="card-title">Redis：哈希类型</span>
+                            <span class="card-title">Redis：基础介绍</span>
                         </div>
                     </a>
 
                     <div class="card-content article-content">
                         <div class="summary block-with-text">
                             
-                                1. 数据结构
-​        哈希类型的值可以是字符串，数字，哈希，但键只能是字符串
-2. 常用命令
-设置值(可以给一个键设置多次，即设置多个值)
-hest key field value
-获取值
-hget key field
-删除值
-
+                                1. 全局命令
+查看所有键
+keys *    
+键总数
+dbsize
+检查键是否存在
+exists key 
+删除键(支持删除多个)
+del key
+键过期
+expire key seconds
+键过期剩余时间(-1 : 没有过期时间， 
                             
                         </div>
                         <div class="publish-info">
@@ -931,56 +998,6 @@ mv apache-tomcat-8.5.45
                         <div class="publish-info">
                             <span class="publish-date">
                                 <i class="fa fa-clock-o fa-fw icon-date"></i>2019-02-16
-                            </span>
-                            <span class="publish-author">
-                                
-                                <i class="fa fa-bookmark fa-fw icon-category"></i>
-                                
-                                <a href="/categories/架构/" class="post-category" target="_blank">
-                                    架构
-                                </a>
-                                
-                                
-                            </span>
-                        </div>
-                    </div>
-
-                    
-                    <div class="card-action article-tags">
-                        
-                        <a href="/tags/Nginx/" target="_blank">
-                            <span class="chip bg-color">Nginx</span>
-                        </a>
-                        
-                    </div>
-                    
-                </div>
-            </div>
-            
-            <div class="article col s12 m6 l4" data-aos="zoom-in">
-                <div class="card">
-                    <a href="/2019/02/08/nginx-an-zhuang-yu-pei-zhi-wen-jian-xiang-jie/">
-                        <div class="card-image">
-                            
-                            
-                            <img src="/medias/featureimages/17.jpg" class="responsive-img" alt="Nginx：安装与配置文件详解">
-                            
-                            <span class="card-title">Nginx：安装与配置文件详解</span>
-                        </div>
-                    </a>
-
-                    <div class="card-content article-content">
-                        <div class="summary block-with-text">
-                            
-                                1.Nginx–Liunx安装1. 安装nginx环境1 yum install gcc-c++
-2 yum install -y pcre pcre-devel
-3 yum install -y zlib zlib-devel
-4 yum
-                            
-                        </div>
-                        <div class="publish-info">
-                            <span class="publish-date">
-                                <i class="fa fa-clock-o fa-fw icon-date"></i>2019-02-08
                             </span>
                             <span class="publish-author">
                                 
