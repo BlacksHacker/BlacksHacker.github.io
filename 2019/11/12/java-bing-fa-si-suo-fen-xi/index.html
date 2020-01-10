@@ -4,13 +4,8 @@
 
 <head><meta name="generator" content="Hexo 3.9.0">
     <meta charset="utf-8">
-    <meta name="keywords" content="基于前后端分离的API设计思路整理（二）, Shelton_Lee">
-    <meta name="description" content="1. 前言​        前一篇主要介绍了接口的顶层分派器的设计思路，但本质上业务逻辑的处理还是要由底层的接口具体实现类来进行处理，这篇主要记录一下具体接口实现类的架构体系。
-2. 接口实现类架构
-接口继承与实现关系
-
-
-ApiCompo">
+    <meta name="keywords" content="Java并发：死锁分析, Shelton_Lee">
+    <meta name="description" content="1. 前言​        Java中的加锁机制能够保证线程安全，但是过度使用加锁，可能会导致顺序死锁。当面对一些共享资源时，通过加锁的行为，可能会导致资源死锁。死锁的本质就是。一个线程持有A锁,等待B锁释放，一个线程持有B锁，等待A锁释放">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <meta name="renderer" content="webkit|ie-stand|ie-comp">
@@ -18,7 +13,7 @@ ApiCompo">
     <meta name="format-detection" content="telephone=no">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <title>基于前后端分离的API设计思路整理（二） | Shelton_Lee</title>
+    <title>Java并发：死锁分析 | Shelton_Lee</title>
     <link rel="icon" type="image/png" href="/favicon.png">
 
     <link rel="stylesheet" type="text/css" href="/libs/awesome/css/font-awesome.min.css">
@@ -265,13 +260,13 @@ ApiCompo">
 
 
 
-<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/9.jpg')">
+<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/13.jpg')">
     <div class="container">
         <div class="row">
             <div class="col s12 m12 l12">
                 <div class="brand">
                     <div class="description center-align post-title">
-                        基于前后端分离的API设计思路整理（二）
+                        Java并发：死锁分析
                     </div>
                 </div>
             </div>
@@ -382,8 +377,12 @@ ApiCompo">
                     
                     <div class="article-tag">
                         
-                            <a href="/tags/架构设计/" target="_blank">
-                                <span class="chip bg-color">架构设计</span>
+                            <a href="/tags/多线程/" target="_blank">
+                                <span class="chip bg-color">多线程</span>
+                            </a>
+                        
+                            <a href="/tags/并发/" target="_blank">
+                                <span class="chip bg-color">并发</span>
                             </a>
                         
                     </div>
@@ -394,8 +393,8 @@ ApiCompo">
                     <div class="post-cate">
                         <i class="fa fa-bookmark fa-fw icon-category"></i>
                         
-                            <a href="/categories/架构设计/" class="post-category" target="_blank">
-                                架构设计
+                            <a href="/categories/java/" class="post-category" target="_blank">
+                                java
                             </a>
                         
                     </div>
@@ -406,7 +405,7 @@ ApiCompo">
             <div class="post-info">
                 <div class="post-date info-break-policy">
                     <i class="fa fa-calendar-minus-o fa-fw"></i>发布日期:&nbsp;&nbsp;
-                    2019-10-06
+                    2019-11-12
                 </div>
 
                 
@@ -422,35 +421,45 @@ ApiCompo">
         <hr class="clearfix">
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <h3 id="1-前言"><a href="#1-前言" class="headerlink" title="1. 前言"></a>1. 前言</h3><p>​        前一篇主要介绍了接口的顶层分派器的设计思路，但本质上业务逻辑的处理还是要由底层的接口具体实现类来进行处理，这篇主要记录一下具体接口实现类的架构体系。</p>
-<h3 id="2-接口实现类架构"><a href="#2-接口实现类架构" class="headerlink" title="2. 接口实现类架构"></a>2. 接口实现类架构</h3><ul>
-<li><p>接口继承与实现关系</p>
-<p><img src="/2019/10/06/qian-hou-duan-fen-chi-de-api-she-ji-si-lu-zheng-li-er/%E7%BB%93%E6%9E%84%E8%AE%BE%E8%AE%A1%E6%9E%B6%E6%9E%84%E5%9B%BE.png" alt></p>
+                <h3 id="1-前言"><a href="#1-前言" class="headerlink" title="1. 前言"></a>1. 前言</h3><p>​        Java中的加锁机制能够保证线程安全，但是过度使用加锁，可能会导致顺序死锁。当面对一些共享资源时，通过加锁的行为，可能会导致资源死锁。死锁的本质就是。一个线程持有A锁,等待B锁释放，一个线程持有B锁，等待A锁释放，两个线程互相等待对方，从而造成死锁。</p>
+<h3 id="2-死锁"><a href="#2-死锁" class="headerlink" title="2. 死锁"></a>2. 死锁</h3><p>​        JVM面对死锁没有相应的处理方法，只能等待服务进行重启。</p>
+<p>​        数据库系统在面对死锁时，将会进行检测，并且选择一个牺牲者放弃事务，保证其他事务的能够顺利完成。</p>
+<p>​        死锁的发生存在偶然性，一般存在于高负载情况下，发生 条件大致分为三种情况。</p>
 <ul>
-<li><p><strong>ApiComponent（interface）</strong>作为最顶层的接口定义了具体接口所要实现的方法</p>
-<p><img src="/2019/10/06/qian-hou-duan-fen-chi-de-api-she-ji-si-lu-zheng-li-er/%E9%A1%B6%E5%B1%82%E6%8E%A5%E5%8F%A3.png" alt></p>
+<li><p><strong>锁顺序死锁</strong></p>
+<p><strong><em>描述</em></strong>：锁顺序死锁一般直接表现在代码中，多个锁进行嵌套调用，并且调用锁的顺序在代码层面上就是不同的，定而肯定会发生死锁，（比如 一个方法逻辑是是先锁A，再锁B，另一个方法是先锁B，再锁A。两线程分别调用时，将造成死锁）。</p>
+<p><strong><em>解决方法：</em></strong>保证在代码编写层面 加锁的顺序一致性。</p>
 </li>
-<li><p><strong>MyAPiComponent（interface）</strong>继承了接口<strong>ApiComponent</strong>,扩展了方法,其目的是为了保证基类<strong>ApiComponentBase</strong>内部方法的干净。</p>
-<p><img src="/2019/10/06/qian-hou-duan-fen-chi-de-api-she-ji-si-lu-zheng-li-er/MyApiComponent.png" alt></p>
+<li><p><strong>动态的锁顺序死锁</strong></p>
+<p><strong><em>描述</em></strong>：动态死锁是指，如果方法中加的锁用的是形参，如果两个相同类型的形参调换顺序，同样本质上就是锁的顺序不一致，会导致死锁的发生。</p>
+<p><strong><em>解决方法：</em></strong>可以通过System.identityHashCode()方法获取形参的哈希码，通过判断哈希码的大小来控制加锁的顺序，当然如果形参存在可比对性主键，同样也可以。为防止两个对象拥有相同的哈希码，因而造成死锁，可以选择“加时赛”锁，即定义一个属性级别的锁，获取其他锁之前，先获取该锁，这样保证，多线程情况下，只有单个线程会进入顺序锁，防止死锁的发生。</p>
 </li>
-<li><p><strong>ApiValidateAndHelpBase</strong>类的作用主要包括提供 <strong>登陆权限验证</strong>，<strong>接口入参格式验证</strong>等功能。</p>
-</li>
-<li><p><strong>ApiComponentBase（abstract）</strong> 是所有接口类的基类，继承了<strong>ApiValidateAndHelpBase</strong>实现了<strong>ApiComponent 和 MyApiComponent</strong>的部分方法：</p>
-<ul>
-<li><strong>doService()</strong>  在该方法的主要目的在具体的接口实现类(<strong>myDoService</strong>)的上一层做一些公共的操作和处理</li>
-<li><strong>getId()</strong> 返回具体实现类的类路径作为唯一主键ID</li>
-<li><strong>help()</strong> 通过调用功能类(<strong>ApiValidateAndHelpBase</strong>)的方法  返回对应具体实现类的注解帮助</li>
-</ul>
-</li>
-<li><p><strong>ProjectSaveApi</strong> 对应具体的接口业务处理层，内部方法结构如下：</p>
-<p><img src="/2019/10/06/qian-hou-duan-fen-chi-de-api-she-ji-si-lu-zheng-li-er/%E6%8E%A5%E5%8F%A3%E5%AE%9E%E7%8E%B0%E7%B1%BB.png" alt></p>
-<p><strong>getToken()</strong>是用来设置接口实现类的唯一主键路径</p>
-<p><strong>myDoService()</strong>用于进行业务处理 </p>
-<p><strong>总结</strong>： <strong>整套接口的架构使用了设计模式–模板模式，通过子类父调的方式实现了对公共层的抽取和处理。</strong></p>
+<li><p><strong>协作对象之间发生死锁</strong></p>
+<p><strong><em>描述：</em></strong>这种情况下发生死锁时，多个锁不一定是在同一个方法中获取，而是在不同的类调用中。在外层方法调用过程中，可能出现代码执行顺序的不同，导致获取锁的顺序不同，进而发生了死锁。</p>
+<p>​    <em>如果在持有锁时调用某个外部方法，那么将出现活跃性问题。在这个外部方法中可能会获取其他锁（可能发生死锁），或者阻塞时间过长，导致其他线程无法及时获得当前被持有的锁。</em></p>
+<p><strong><em>解决方法</em></strong>：开放调用，即在调用某个方法时，不需要去持有锁，则称为开放调用。针对上述问题，如果代码中存在不同的调用顺序，则可以将其中的一个调用逻辑进行修改调整，对一种顺序中的对象进行拷贝，保证不同顺序的调用不为同一个对象。</p>
 </li>
 </ul>
+<h3 id="3-死锁的诊断和避免"><a href="#3-死锁的诊断和避免" class="headerlink" title="3. 死锁的诊断和避免"></a>3. 死锁的诊断和避免</h3><ul>
+<li><p><strong>支持定时锁</strong></p>
+<p>显示锁不同于内置锁，可以设置锁的获取等待时间，如果发生死锁，定时锁可以保证获取锁的线程不会一直阻塞下去，会进行资源的释放，保证其他线程的顺利执行。</p>
+</li>
+<li><p><strong>通过线程转储信息分析死锁</strong></p>
+<p>对于内置锁，JVM支持通过线程转储来帮助开发者来识别死锁，包括关于死锁发生的详细信息，jdk1.6之后虽然支持显示锁，但返回的相关信息很少。</p>
 </li>
 </ul>
+<h3 id="4-其他问题"><a href="#4-其他问题" class="headerlink" title="4. 其他问题"></a>4. 其他问题</h3><ul>
+<li><p><strong>饥饿</strong></p>
+<p>在Java程序中，如果对线程的优先级使用不当，或者在持有锁时，执行一些无法结束的结构，像无限循环、无限制等待资源等，导致锁不能释放，其他线程无法获取到该锁。</p>
+<p><em>要避免使用线程优先级，会增加平台依赖性，并导致活跃性问题，大多数并发程序中，都可以使用默认的线程优先级</em></p>
+</li>
+<li><p><strong>糟糕的响应性能</strong></p>
+<p>不良锁的管理，可能导致一个线程长时间占有锁，导致其他线程的阻塞。</p>
+</li>
+<li><p><strong>活锁</strong></p>
+</li>
+</ul>
+<p>​        活锁不会阻塞线程，但也不能继续执行，线程会不断重复相同的动作，并不断失败。通常发生在处理事务消息的机制中，失败回滚，失败回滚，不断重复循环。在并发程序中，通过等待随机长度的时间和回退可以有效避免活锁的发生。</p>
 <script>
         document.querySelectorAll('.github-emoji')
           .forEach(el => {
@@ -627,9 +636,9 @@ ApiCompo">
             <br/>
             <span xmlns:dct="http://purl.org/dc/terms/" href="http://purl.org/dc/dcmitype/Text"
                   property="dct:title" rel="dct:type">
-                    《基于前后端分离的API设计思路整理（二）》
+                    《Java并发：死锁分析》
                 </span> 由
-            <a xmlns:cc="http://creativecommons.org/ns#" href="/2019/10/06/qian-hou-duan-fen-chi-de-api-she-ji-si-lu-zheng-li-er/" property="cc:attributionName"
+            <a xmlns:cc="http://creativecommons.org/ns#" href="/2019/11/12/java-bing-fa-si-suo-fen-xi/" property="cc:attributionName"
                rel="cc:attributionURL">
                 Shelton Lee
             </a> 采用
@@ -669,47 +678,52 @@ ApiCompo">
 <article id="prenext-posts" class="prev-next articles">
     <div class="row article-row">
         
-        <div class="article col s12 m6" data-aos="fade-up">
+        <div class="article col s12 m6" data-aos="fade-up" data-aos="fade-up">
             <div class="article-badge left-badge text-color">
-                <i class="fa fa-chevron-left"></i>&nbsp;上一篇</div>
+                <i class="fa fa-dot-circle-o"></i>&nbsp;本篇
+            </div>
             <div class="card">
-                <a href="/2019/10/13/ji-yu-qian-hou-duan-fen-chi-de-api-she-ji-si-lu-zheng-li-san/">
+                <a href="/2019/11/12/java-bing-fa-si-suo-fen-xi/">
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/4.jpg" class="responsive-img" alt="基于前后端分离的API设计思路整理（三）">
+                        <img src="/medias/featureimages/13.jpg" class="responsive-img" alt="Java并发：死锁分析">
                         
-                        <span class="card-title">基于前后端分离的API设计思路整理（三）</span>
+                        <span class="card-title">Java并发：死锁分析</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
                     <div class="summary block-with-text">
                         
-                            1. 前言​        上一篇主要记录了接口处理具体的实现类的架构设计，其中使用到了模板模式的设计模式，本篇重点记录一下基于注解的关于接口请求参数的验证机制和基于Spring 的类启动加载机制，为以后开发做好知识储备。
-2. 注解接口验
+                            1. 前言​        Java中的加锁机制能够保证线程安全，但是过度使用加锁，可能会导致顺序死锁。当面对一些共享资源时，通过加锁的行为，可能会导致资源死锁。死锁的本质就是。一个线程持有A锁,等待B锁释放，一个线程持有B锁，等待A锁释放
                         
                     </div>
                     <div class="publish-info">
-                        <span class="publish-date">
-                            <i class="fa fa-clock-o fa-fw icon-date"></i>2019-10-13
-                        </span>
+                            <span class="publish-date">
+                                <i class="fa fa-clock-o fa-fw icon-date"></i>2019-11-12
+                            </span>
                         <span class="publish-author">
                             
                             <i class="fa fa-bookmark fa-fw icon-category"></i>
                             
-                            <a href="/categories/架构设计/" class="post-category" target="_blank">
-                                    架构设计
+                            <a href="/categories/java/" class="post-category" target="_blank">
+                                    java
                                 </a>
                             
                             
                         </span>
                     </div>
                 </div>
+
                 
                 <div class="card-action article-tags">
                     
-                    <a href="/tags/架构设计/" target="_blank">
-                        <span class="chip bg-color">架构设计</span>
+                    <a href="/tags/多线程/" target="_blank">
+                        <span class="chip bg-color">多线程</span>
+                    </a>
+                    
+                    <a href="/tags/并发/" target="_blank">
+                        <span class="chip bg-color">并发</span>
                     </a>
                     
                 </div>
@@ -723,31 +737,31 @@ ApiCompo">
                 下一篇&nbsp;<i class="fa fa-chevron-right"></i>
             </div>
             <div class="card">
-                <a href="/2019/10/01/qian-hou-duan-fen-chi-de-api-she-ji-si-lu-zheng-li-yi/">
+                <a href="/2019/11/03/java-bing-fa-reentrantlock/">
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/13.jpg" class="responsive-img" alt="基于前后端分离的API设计思路整理（一）">
+                        <img src="/medias/featureimages/19.jpg" class="responsive-img" alt="Java并发：ReentrantLock">
                         
-                        <span class="card-title">基于前后端分离的API设计思路整理（一）</span>
+                        <span class="card-title">Java并发：ReentrantLock</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
                     <div class="summary block-with-text">
                         
-                            1. 前言​        年初公司开始启动新的项目开发，决定新项目不再采用旧的传统的MVC一体系模式，要做到前后端分离。以往的后端接口都是以一个controller类为单位进行集成，即对应不同接口的处理方式都是该controller类的方
+                            1. 前言​        在并发机制中，我们控制关于共享对象的访问，最常用的机制是synchronized和volatile。但在JDK5.0之后，增加了一种新的机制，ReentrantLock,显示锁。显示锁出现的目的并不是取代内置锁，
                         
                     </div>
                     <div class="publish-info">
                             <span class="publish-date">
-                                <i class="fa fa-clock-o fa-fw icon-date"></i>2019-10-01
+                                <i class="fa fa-clock-o fa-fw icon-date"></i>2019-11-03
                             </span>
                         <span class="publish-author">
                             
                             <i class="fa fa-bookmark fa-fw icon-category"></i>
                             
-                            <a href="/categories/架构设计/" class="post-category" target="_blank">
-                                    架构设计
+                            <a href="/categories/java/" class="post-category" target="_blank">
+                                    java
                                 </a>
                             
                             
@@ -757,8 +771,12 @@ ApiCompo">
                 
                 <div class="card-action article-tags">
                     
-                    <a href="/tags/架构设计/" target="_blank">
-                        <span class="chip bg-color">架构设计</span>
+                    <a href="/tags/多线程/" target="_blank">
+                        <span class="chip bg-color">多线程</span>
+                    </a>
+                    
+                    <a href="/tags/并发/" target="_blank">
+                        <span class="chip bg-color">并发</span>
                     </a>
                     
                 </div>

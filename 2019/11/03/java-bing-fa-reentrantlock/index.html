@@ -714,30 +714,29 @@
 <article id="prenext-posts" class="prev-next articles">
     <div class="row article-row">
         
-        <div class="article col s12 m6" data-aos="fade-up" data-aos="fade-up">
+        <div class="article col s12 m6" data-aos="fade-up">
             <div class="article-badge left-badge text-color">
-                <i class="fa fa-dot-circle-o"></i>&nbsp;本篇
-            </div>
+                <i class="fa fa-chevron-left"></i>&nbsp;上一篇</div>
             <div class="card">
-                <a href="/2019/11/03/java-bing-fa-reentrantlock/">
+                <a href="/2019/11/12/java-bing-fa-si-suo-fen-xi/">
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/19.jpg" class="responsive-img" alt="Java并发：ReentrantLock">
+                        <img src="/medias/featureimages/13.jpg" class="responsive-img" alt="Java并发：死锁分析">
                         
-                        <span class="card-title">Java并发：ReentrantLock</span>
+                        <span class="card-title">Java并发：死锁分析</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
                     <div class="summary block-with-text">
                         
-                            1. 前言​        在并发机制中，我们控制关于共享对象的访问，最常用的机制是synchronized和volatile。但在JDK5.0之后，增加了一种新的机制，ReentrantLock,显示锁。显示锁出现的目的并不是取代内置锁，
+                            1. 前言​        Java中的加锁机制能够保证线程安全，但是过度使用加锁，可能会导致顺序死锁。当面对一些共享资源时，通过加锁的行为，可能会导致资源死锁。死锁的本质就是。一个线程持有A锁,等待B锁释放，一个线程持有B锁，等待A锁释放
                         
                     </div>
                     <div class="publish-info">
-                            <span class="publish-date">
-                                <i class="fa fa-clock-o fa-fw icon-date"></i>2019-11-03
-                            </span>
+                        <span class="publish-date">
+                            <i class="fa fa-clock-o fa-fw icon-date"></i>2019-11-12
+                        </span>
                         <span class="publish-author">
                             
                             <i class="fa fa-bookmark fa-fw icon-category"></i>
@@ -750,7 +749,6 @@
                         </span>
                     </div>
                 </div>
-
                 
                 <div class="card-action article-tags">
                     
