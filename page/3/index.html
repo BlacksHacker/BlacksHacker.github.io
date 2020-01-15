@@ -296,6 +296,62 @@ $('.bg-cover').css('background-image', 'url(/medias/banner/' + new Date().getDay
             
             <div class="article col s12 m6 l4" data-aos="zoom-in">
                 <div class="card">
+                    <a href="/2019/06/08/java-bing-fa-liu-shi-shu-ju-chu-li/">
+                        <div class="card-image">
+                            
+                            
+                            <img src="/medias/featureimages/13.jpg" class="responsive-img" alt="Java并发：流式数据处理">
+                            
+                            <span class="card-title">Java并发：流式数据处理</span>
+                        </div>
+                    </a>
+
+                    <div class="card-content article-content">
+                        <div class="summary block-with-text">
+                            
+                                1. 前言​            采用JSONWriter + 多线程 + 安全队列 + CountDownLatch实现 Http请求下，请求边处理边以流的形式将结果进行返回。
+2. 代码public void execute(JSON
+                            
+                        </div>
+                        <div class="publish-info">
+                            <span class="publish-date">
+                                <i class="fa fa-clock-o fa-fw icon-date"></i>2019-06-08
+                            </span>
+                            <span class="publish-author">
+                                
+                                <i class="fa fa-bookmark fa-fw icon-category"></i>
+                                
+                                <a href="/categories/java/" class="post-category" target="_blank">
+                                    java
+                                </a>
+                                
+                                
+                            </span>
+                        </div>
+                    </div>
+
+                    
+                    <div class="card-action article-tags">
+                        
+                        <a href="/tags/多线程/" target="_blank">
+                            <span class="chip bg-color">多线程</span>
+                        </a>
+                        
+                        <a href="/tags/并发/" target="_blank">
+                            <span class="chip bg-color">并发</span>
+                        </a>
+                        
+                        <a href="/tags/数据流/" target="_blank">
+                            <span class="chip bg-color">数据流</span>
+                        </a>
+                        
+                    </div>
+                    
+                </div>
+            </div>
+            
+            <div class="article col s12 m6 l4" data-aos="zoom-in">
+                <div class="card">
                     <a href="/2019/06/02/java-bing-fa-threadlocal/">
                         <div class="card-image">
                             
@@ -718,28 +774,31 @@ sadd key element
             
             <div class="article col s12 m6 l4" data-aos="zoom-in">
                 <div class="card">
-                    <a href="/2019/03/16/redis-ha-xi-lei-xing/">
+                    <a href="/2019/03/16/redis-ji-chu-jie-shao/">
                         <div class="card-image">
                             
                             
-                            <img src="/medias/featureimages/21.jpg" class="responsive-img" alt="Redis：哈希类型">
+                            <img src="/medias/featureimages/9.jpg" class="responsive-img" alt="Redis：基础介绍">
                             
-                            <span class="card-title">Redis：哈希类型</span>
+                            <span class="card-title">Redis：基础介绍</span>
                         </div>
                     </a>
 
                     <div class="card-content article-content">
                         <div class="summary block-with-text">
                             
-                                1. 数据结构
-​        哈希类型的值可以是字符串，数字，哈希，但键只能是字符串
-2. 常用命令
-设置值(可以给一个键设置多次，即设置多个值)
-hest key field value
-获取值
-hget key field
-删除值
-
+                                1. 全局命令
+查看所有键
+keys *    
+键总数
+dbsize
+检查键是否存在
+exists key 
+删除键(支持删除多个)
+del key
+键过期
+expire key seconds
+键过期剩余时间(-1 : 没有过期时间， 
                             
                         </div>
                         <div class="publish-info">
@@ -781,31 +840,28 @@ hget key field
             
             <div class="article col s12 m6 l4" data-aos="zoom-in">
                 <div class="card">
-                    <a href="/2019/03/16/redis-ji-chu-jie-shao/">
+                    <a href="/2019/03/16/redis-ha-xi-lei-xing/">
                         <div class="card-image">
                             
                             
-                            <img src="/medias/featureimages/9.jpg" class="responsive-img" alt="Redis：基础介绍">
+                            <img src="/medias/featureimages/21.jpg" class="responsive-img" alt="Redis：哈希类型">
                             
-                            <span class="card-title">Redis：基础介绍</span>
+                            <span class="card-title">Redis：哈希类型</span>
                         </div>
                     </a>
 
                     <div class="card-content article-content">
                         <div class="summary block-with-text">
                             
-                                1. 全局命令
-查看所有键
-keys *    
-键总数
-dbsize
-检查键是否存在
-exists key 
-删除键(支持删除多个)
-del key
-键过期
-expire key seconds
-键过期剩余时间(-1 : 没有过期时间， 
+                                1. 数据结构
+​        哈希类型的值可以是字符串，数字，哈希，但键只能是字符串
+2. 常用命令
+设置值(可以给一个键设置多次，即设置多个值)
+hest key field value
+获取值
+hget key field
+删除值
+
                             
                         </div>
                         <div class="publish-info">
@@ -968,58 +1024,6 @@ make
                         
                         <a href="/tags/缓存/" target="_blank">
                             <span class="chip bg-color">缓存</span>
-                        </a>
-                        
-                    </div>
-                    
-                </div>
-            </div>
-            
-            <div class="article col s12 m6 l4" data-aos="zoom-in">
-                <div class="card">
-                    <a href="/2019/02/24/tomcat-linux-duo-an-zhuang-pei-zhi/">
-                        <div class="card-image">
-                            
-                            
-                            <img src="/medias/featureimages/23.jpg" class="responsive-img" alt="Tomcat：Linux多安装配置">
-                            
-                            <span class="card-title">Tomcat：Linux多安装配置</span>
-                        </div>
-                    </a>
-
-                    <div class="card-content article-content">
-                        <div class="summary block-with-text">
-                            
-                                1.环境搭建  关于jdk环境的安装详见
-2. tomcat安装配置
-解压压缩包tar -zxvf apache-tomcat-8.5.45.tar.gz
-将解压后的tomcat文件夹重命名
-
-mv apache-tomcat-8.5.45
-                            
-                        </div>
-                        <div class="publish-info">
-                            <span class="publish-date">
-                                <i class="fa fa-clock-o fa-fw icon-date"></i>2019-02-24
-                            </span>
-                            <span class="publish-author">
-                                
-                                <i class="fa fa-bookmark fa-fw icon-category"></i>
-                                
-                                <a href="/categories/软件安装/" class="post-category" target="_blank">
-                                    软件安装
-                                </a>
-                                
-                                
-                            </span>
-                        </div>
-                    </div>
-
-                    
-                    <div class="card-action article-tags">
-                        
-                        <a href="/tags/Tomcat/" target="_blank">
-                            <span class="chip bg-color">Tomcat</span>
                         </a>
                         
                     </div>
