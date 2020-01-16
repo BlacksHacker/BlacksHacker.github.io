@@ -10,10 +10,11 @@
 2. 常用命令
 设置值(可以给一个键设置多次，即设置多个值)
 hest key field value
+
 获取值
 hget key field
-删除值
-">
+
+删除">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <meta name="renderer" content="webkit|ie-stand|ie-comp">
@@ -437,29 +438,40 @@ hget key field
 <p>​        哈希类型的值可以是字符串，数字，哈希，但键只能是字符串</p>
 <h3 id="2-常用命令"><a href="#2-常用命令" class="headerlink" title="2. 常用命令"></a>2. 常用命令</h3><ul>
 <li><p>设置值(可以给一个键设置多次，即设置多个值)</p>
-<pre><code>hest key field value</code></pre></li>
+<pre class=" language-shell"><code class="language-shell">hest key field value</code></pre>
+</li>
 <li><p>获取值</p>
-<pre><code>hget key field</code></pre></li>
+<pre class=" language-shell"><code class="language-shell">hget key field</code></pre>
+</li>
 <li><p>删除值</p>
-<pre><code>hdel key field[field ...]</code></pre></li>
+<pre class=" language-shell"><code class="language-shell">hdel key field[field ...]</code></pre>
+</li>
 <li><p>计算field个数</p>
-<pre><code>hlen key </code></pre></li>
+<pre class=" language-shell"><code class="language-shell">hlen key </code></pre>
+</li>
 <li><p>批量设置或获取filed-value</p>
-<pre><code>hmget key field
-hmset key field value [field value ...]</code></pre></li>
+<pre class=" language-shell"><code class="language-shell">hmget key field
+hmset key field value [field value ...]</code></pre>
+</li>
 <li><p>判断是否存在</p>
-<pre><code>hexists key field</code></pre></li>
+<pre class=" language-shell"><code class="language-shell">hexists key field</code></pre>
+</li>
 <li><p>获取所有field</p>
-<pre><code>hkeys key</code></pre></li>
+<pre class=" language-shell"><code class="language-shell">hkeys key</code></pre>
+</li>
 <li><p>获取所有value</p>
-<pre><code>hvals key</code></pre></li>
+<pre class=" language-shell"><code class="language-shell">hvals key</code></pre>
+</li>
 <li><p>获取所有的field-value（元素太多可能造成阻塞，建议使用hscan渐进式遍历）</p>
-<pre><code>hgetall key</code></pre></li>
+<pre class=" language-shell"><code class="language-shell">hgetall key</code></pre>
+</li>
 <li><p>计数</p>
-<pre><code>hincrby key field
-hincrbyfloat key field</code></pre></li>
+<pre class=" language-shell"><code class="language-shell">hincrby key field
+hincrbyfloat key field</code></pre>
+</li>
 <li><p>计算value的字符串长度</p>
-<pre><code>hstrlen key field</code></pre></li>
+<pre class=" language-shell"><code class="language-shell">hstrlen key field</code></pre>
+</li>
 </ul>
 <h3 id="3-内部编码"><a href="#3-内部编码" class="headerlink" title="3.内部编码"></a>3.内部编码</h3><p>​        哈希类型的内部编码有两种：</p>
 <ul>
@@ -739,15 +751,20 @@ hincrbyfloat key field</code></pre></li>
                             1. 全局命令
 查看所有键
 keys *    
+
 键总数
 dbsize
+
 检查键是否存在
 exists key 
+
 删除键(支持删除多个)
 del key
+
 键过期
 expire key seconds
-键过期剩余时间(-1 : 没有过期时间， 
+
+键过期剩余时间(-1 : 没有过
                         
                     </div>
                     <div class="publish-info">

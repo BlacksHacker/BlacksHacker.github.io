@@ -747,11 +747,13 @@
 <h4 id="2-4-常见问题汇总"><a href="#2-4-常见问题汇总" class="headerlink" title="2.4 常见问题汇总"></a>2.4 常见问题汇总</h4><ol>
 <li><p>在AOP增强过程中，一个类的两个方法A,B都通过AOP进行了增强，但当A调用B时，不会触发B的增强代码。</p>
 <p><strong>原因</strong>：通过AOP进行增强时，所本质是基于动态代理技术，当外部调用方法A时，本质是代理对象进行调用，所以A方法会得到增强，当A调用B方法时，当前的对象并非代理对象，所以要重新获取代理对象。</p>
-<pre><code>Object proxy = AopContent.currentProxy();
+<pre class=" language-java"><code class="language-java">Object proxy <span class="token operator">=</span> AopContent<span class="token punctuation">.</span><span class="token function">currentProxy</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 
-//补充：获取当前的被代理类
-Class&lt;?&gt; targetClass = AopUtils.getTargetClass(proxy)</code></pre><p><strong>注意：</strong> 在Spring的配置文件中要进行一下设置，目的是可以通过AopContent拿到代理</p>
-<pre><code>&lt;aop:aspectj-autoproxy expose-proxy="true"&gt;&lt;/aop:aspectj-autoproxy&gt;</code></pre></li>
+<span class="token comment" spellcheck="true">//补充：获取当前的被代理类</span>
+Class<span class="token operator">&lt;</span><span class="token operator">?</span><span class="token operator">></span> targetClass <span class="token operator">=</span> AopUtils<span class="token punctuation">.</span><span class="token function">getTargetClass</span><span class="token punctuation">(</span>proxy<span class="token punctuation">)</span></code></pre>
+<p><strong>注意：</strong> 在Spring的配置文件中要进行一下设置，目的是可以通过AopContent拿到代理</p>
+<pre class=" language-xml"><code class="language-xml"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span><span class="token namespace">aop:</span>aspectj-autoproxy</span> <span class="token attr-name">expose-proxy</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>true<span class="token punctuation">"</span></span><span class="token punctuation">></span></span><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span><span class="token namespace">aop:</span>aspectj-autoproxy</span><span class="token punctuation">></span></span></code></pre>
+</li>
 </ol>
 </li>
 </ul>

@@ -468,34 +468,35 @@
 </li>
 </ul>
 <p>使用读写锁自定义实现线程安全的Map:</p>
-<pre><code>public class ReadWriteMap&lt;K,V&gt;{
-    private final Map&lt;K, V&gt; map;
-    private final ReadWriteLock lock = new ReentrantReadWriteLock();
-    private final Lock r = lock.readLock();
-    private final Lock w = lock.writeLock();
+<pre class=" language-java"><code class="language-java"><span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">ReadWriteMap</span><span class="token operator">&lt;</span>K<span class="token punctuation">,</span>V<span class="token operator">></span><span class="token punctuation">{</span>
+    <span class="token keyword">private</span> <span class="token keyword">final</span> Map<span class="token operator">&lt;</span>K<span class="token punctuation">,</span> V<span class="token operator">></span> map<span class="token punctuation">;</span>
+    <span class="token keyword">private</span> <span class="token keyword">final</span> ReadWriteLock lock <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">ReentrantReadWriteLock</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">private</span> <span class="token keyword">final</span> Lock r <span class="token operator">=</span> lock<span class="token punctuation">.</span><span class="token function">readLock</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">private</span> <span class="token keyword">final</span> Lock w <span class="token operator">=</span> lock<span class="token punctuation">.</span><span class="token function">writeLock</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 
-    public ReadWriteMap(Map&lt;K, V&gt; map){
-        this.map = map;
-    }
+    <span class="token keyword">public</span> <span class="token function">ReadWriteMap</span><span class="token punctuation">(</span>Map<span class="token operator">&lt;</span>K<span class="token punctuation">,</span> V<span class="token operator">></span> map<span class="token punctuation">)</span><span class="token punctuation">{</span>
+        <span class="token keyword">this</span><span class="token punctuation">.</span>map <span class="token operator">=</span> map<span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
 
-    public V put(K key, V value){
-        w.lock();
-        try{
-            return map.put(key, value);
-        }finally{
-            w.unlock();
-        }
-    }
+    <span class="token keyword">public</span> V <span class="token function">put</span><span class="token punctuation">(</span>K key<span class="token punctuation">,</span> V value<span class="token punctuation">)</span><span class="token punctuation">{</span>
+        w<span class="token punctuation">.</span><span class="token function">lock</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">try</span><span class="token punctuation">{</span>
+            <span class="token keyword">return</span> map<span class="token punctuation">.</span><span class="token function">put</span><span class="token punctuation">(</span>key<span class="token punctuation">,</span> value<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token punctuation">}</span><span class="token keyword">finally</span><span class="token punctuation">{</span>
+            w<span class="token punctuation">.</span><span class="token function">unlock</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span>
 
-    public V get(Object key){
-        r.lock():
-        try{
-            return map.get(key);
-        }finally{
-            r.unlock();
-        }
-    }
-}</code></pre><p>​        读-写锁允许多个线程并发地访问被保护的对象，当访问以读取操作为主的数据结构时，可提高程序的可伸缩性。</p>
+    <span class="token keyword">public</span> V <span class="token function">get</span><span class="token punctuation">(</span>Object key<span class="token punctuation">)</span><span class="token punctuation">{</span>
+        r<span class="token punctuation">.</span><span class="token function">lock</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">:</span>
+        <span class="token keyword">try</span><span class="token punctuation">{</span>
+            <span class="token keyword">return</span> map<span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span>key<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token punctuation">}</span><span class="token keyword">finally</span><span class="token punctuation">{</span>
+            r<span class="token punctuation">.</span><span class="token function">unlock</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span></code></pre>
+<p>​        读-写锁允许多个线程并发地访问被保护的对象，当访问以读取操作为主的数据结构时，可提高程序的可伸缩性。</p>
 <script>
         document.querySelectorAll('.github-emoji')
           .forEach(el => {

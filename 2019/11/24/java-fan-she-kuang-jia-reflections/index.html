@@ -4,13 +4,10 @@
 
 <head><meta name="generator" content="Hexo 3.9.0">
     <meta charset="utf-8">
-    <meta name="keywords" content="基于前后端分离的API设计思路整理（二）, Shelton_Lee">
-    <meta name="description" content="1. 前言​        前一篇主要介绍了接口的顶层分派器的设计思路，但本质上业务逻辑的处理还是要由底层的接口具体实现类来进行处理，这篇主要记录一下具体接口实现类的架构体系。
-2. 接口实现类架构
-接口继承与实现关系
-
-
-ApiCompo">
+    <meta name="keywords" content="Java：反射框架 Reflections, Shelton_Lee">
+    <meta name="description" content="1. 类介绍​        Reflections通过classpath，索引元数据，并且允许在运行时查询这些元数据。
+1.1 maven坐标&amp;lt;dependency&gt;
+  &amp;lt;groupId&gt;org.reflections&amp;lt">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <meta name="renderer" content="webkit|ie-stand|ie-comp">
@@ -18,7 +15,7 @@ ApiCompo">
     <meta name="format-detection" content="telephone=no">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <title>基于前后端分离的API设计思路整理（二） | Shelton_Lee</title>
+    <title>Java：反射框架 Reflections | Shelton_Lee</title>
     <link rel="icon" type="image/png" href="/favicon.png">
 
     <link rel="stylesheet" type="text/css" href="/libs/awesome/css/font-awesome.min.css">
@@ -265,13 +262,13 @@ ApiCompo">
 
 
 
-<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/9.jpg')">
+<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/1.jpg')">
     <div class="container">
         <div class="row">
             <div class="col s12 m12 l12">
                 <div class="brand">
                     <div class="description center-align post-title">
-                        基于前后端分离的API设计思路整理（二）
+                        Java：反射框架 Reflections
                     </div>
                 </div>
             </div>
@@ -382,8 +379,8 @@ ApiCompo">
                     
                     <div class="article-tag">
                         
-                            <a href="/tags/架构设计/" target="_blank">
-                                <span class="chip bg-color">架构设计</span>
+                            <a href="/tags/java工具类/" target="_blank">
+                                <span class="chip bg-color">java工具类</span>
                             </a>
                         
                     </div>
@@ -394,8 +391,8 @@ ApiCompo">
                     <div class="post-cate">
                         <i class="fa fa-bookmark fa-fw icon-category"></i>
                         
-                            <a href="/categories/架构设计/" class="post-category" target="_blank">
-                                架构设计
+                            <a href="/categories/java/" class="post-category" target="_blank">
+                                java
                             </a>
                         
                     </div>
@@ -406,7 +403,7 @@ ApiCompo">
             <div class="post-info">
                 <div class="post-date info-break-policy">
                     <i class="fa fa-calendar-minus-o fa-fw"></i>发布日期:&nbsp;&nbsp;
-                    2019-10-06
+                    2019-11-24
                 </div>
 
                 
@@ -422,33 +419,42 @@ ApiCompo">
         <hr class="clearfix">
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <h3 id="1-前言"><a href="#1-前言" class="headerlink" title="1. 前言"></a>1. 前言</h3><p>​        前一篇主要介绍了接口的顶层分派器的设计思路，但本质上业务逻辑的处理还是要由底层的接口具体实现类来进行处理，这篇主要记录一下具体接口实现类的架构体系。</p>
-<h3 id="2-接口实现类架构"><a href="#2-接口实现类架构" class="headerlink" title="2. 接口实现类架构"></a>2. 接口实现类架构</h3><ul>
-<li><p>接口继承与实现关系</p>
-<p><img src="/2019/10/06/qian-hou-duan-fen-chi-de-api-she-ji-si-lu-zheng-li-er/%E7%BB%93%E6%9E%84%E8%AE%BE%E8%AE%A1%E6%9E%B6%E6%9E%84%E5%9B%BE.png" alt></p>
+                <h3 id="1-类介绍"><a href="#1-类介绍" class="headerlink" title="1. 类介绍"></a>1. 类介绍</h3><p>​        Reflections通过classpath，索引元数据，并且允许在运行时查询这些元数据。</p>
+<h5 id="1-1-maven坐标"><a href="#1-1-maven坐标" class="headerlink" title="1.1 maven坐标"></a>1.1 maven坐标</h5><pre class=" language-java"><code class="language-java"><span class="token operator">&lt;</span>dependency<span class="token operator">></span>
+  <span class="token operator">&lt;</span>groupId<span class="token operator">></span>org<span class="token punctuation">.</span>reflections<span class="token operator">&lt;</span><span class="token operator">/</span>groupId<span class="token operator">></span>
+  <span class="token operator">&lt;</span>artifactId<span class="token operator">></span>reflections<span class="token operator">&lt;</span><span class="token operator">/</span>artifactId<span class="token operator">></span>
+  <span class="token operator">&lt;</span>version<span class="token operator">></span><span class="token number">0.9</span><span class="token punctuation">.</span><span class="token number">10</span><span class="token operator">&lt;</span><span class="token operator">/</span>version<span class="token operator">></span>
+<span class="token operator">&lt;</span><span class="token operator">/</span>dependency<span class="token operator">></span></code></pre>
+<h5 id="1-2-构造方法"><a href="#1-2-构造方法" class="headerlink" title="1.2 构造方法"></a>1.2 构造方法</h5><pre class=" language-java"><code class="language-java"><span class="token comment" spellcheck="true">//"cn." 表示会扫描的包的路径，后面的参数指定要扫描的范围，参数是扫描器</span>
+Reflections reflections <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Reflections</span><span class="token punctuation">(</span><span class="token string">"cn.*"</span><span class="token punctuation">,</span> <span class="token keyword">new</span> <span class="token class-name">MethodAnnotationsScanner</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token keyword">new</span> <span class="token class-name">TypeAnnotationsScanner</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token keyword">new</span> <span class="token class-name">SubTypesScanner</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token keyword">new</span> <span class="token class-name">MethodParameterScanner</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
 <ul>
-<li><p><strong>ApiComponent（interface）</strong>作为最顶层的接口定义了具体接口所要实现的方法</p>
-<p><img src="/2019/10/06/qian-hou-duan-fen-chi-de-api-she-ji-si-lu-zheng-li-er/%E9%A1%B6%E5%B1%82%E6%8E%A5%E5%8F%A3.png" alt></p>
-</li>
-<li><p><strong>MyAPiComponent（interface）</strong>继承了接口<strong>ApiComponent</strong>,扩展了方法,其目的是为了保证基类<strong>ApiComponentBase</strong>内部方法的干净。</p>
-<p><img src="/2019/10/06/qian-hou-duan-fen-chi-de-api-she-ji-si-lu-zheng-li-er/MyApiComponent.png" alt></p>
-</li>
-<li><p><strong>ApiValidateAndHelpBase</strong>类的作用主要包括提供 <strong>登陆权限验证</strong>，<strong>接口入参格式验证</strong>等功能。</p>
-</li>
-<li><p><strong>ApiComponentBase（abstract）</strong> 是所有接口类的基类，继承了<strong>ApiValidateAndHelpBase</strong>实现了<strong>ApiComponent 和 MyApiComponent</strong>的部分方法：</p>
-<ul>
-<li><strong>doService()</strong>  在该方法的主要目的在具体的接口实现类(<strong>myDoService</strong>)的上一层做一些公共的操作和处理</li>
-<li><strong>getId()</strong> 返回具体实现类的类路径作为唯一主键ID</li>
-<li><strong>help()</strong> 通过调用功能类(<strong>ApiValidateAndHelpBase</strong>)的方法  返回对应具体实现类的注解帮助</li>
+<li><strong>SubTypesScanner()</strong> 子类扫描工具</li>
+<li><strong>SubTypesScanner()</strong> 属性注解扫描工具</li>
+<li><strong>MethodAnnotationsScanner()</strong> 方法注解扫描工具</li>
+<li><strong>MethodParameterScanner()</strong> 方法参数扫描工具</li>
 </ul>
+<h5 id="1-3-方法"><a href="#1-3-方法" class="headerlink" title="1.3 方法"></a>1.3 方法</h5><ul>
+<li><p>获取反射出的子类</p>
+<pre class=" language-java"><code class="language-java">Set<span class="token operator">&lt;</span>Class<span class="token operator">&lt;</span><span class="token operator">?</span> <span class="token keyword">extends</span> <span class="token class-name">Test</span><span class="token operator">>></span> set <span class="token operator">=</span> reflections<span class="token punctuation">.</span><span class="token function">getSubTypesOf</span><span class="token punctuation">(</span> Test<span class="token punctuation">.</span><span class="token keyword">class</span> <span class="token punctuation">)</span> <span class="token punctuation">;</span></code></pre>
 </li>
-<li><p><strong>ProjectSaveApi</strong> 对应具体的接口业务处理层，内部方法结构如下：</p>
-<p><img src="/2019/10/06/qian-hou-duan-fen-chi-de-api-she-ji-si-lu-zheng-li-er/%E6%8E%A5%E5%8F%A3%E5%AE%9E%E7%8E%B0%E7%B1%BB.png" alt></p>
-<p><strong>getToken()</strong>是用来设置接口实现类的唯一主键路径</p>
-<p><strong>myDoService()</strong>用于进行业务处理 </p>
-<p><strong>总结</strong>： <strong>整套接口的架构使用了设计模式–模板模式，通过子类父调的方式实现了对公共层的抽取和处理。</strong></p>
+<li><p>获取反射带有指定注解的类</p>
+<pre class=" language-java"><code class="language-java">Set<span class="token operator">&lt;</span>Class<span class="token operator">&lt;</span><span class="token operator">?</span><span class="token operator">>></span> ss <span class="token operator">=</span> reflections<span class="token punctuation">.</span><span class="token function">getTypesAnnotatedWith</span><span class="token punctuation">(</span> TestAnnotation<span class="token punctuation">.</span><span class="token keyword">class</span> <span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
 </li>
-</ul>
+<li><p>获取带有特定注解的方法</p>
+<pre class=" language-java"><code class="language-java">Set<span class="token operator">&lt;</span>Method<span class="token operator">></span> methods <span class="token operator">=</span> reflections<span class="token punctuation">.</span><span class="token function">getMethodsAnnotatedWith</span><span class="token punctuation">(</span> TestMethodAnnotation<span class="token punctuation">.</span><span class="token keyword">class</span> <span class="token punctuation">)</span> <span class="token punctuation">;</span></code></pre>
+</li>
+<li><p>获取带有特定注解的字段</p>
+<pre class=" language-java"><code class="language-java">Set<span class="token operator">&lt;</span>Field<span class="token operator">></span> fields <span class="token operator">=</span> reflections<span class="token punctuation">.</span><span class="token function">getFieldsAnnotatedWith</span><span class="token punctuation">(</span> TestAutowired<span class="token punctuation">.</span><span class="token keyword">class</span> <span class="token punctuation">)</span> <span class="token punctuation">;</span></code></pre>
+</li>
+<li><p>获取带有特定参数的方法</p>
+<pre class=" language-java"><code class="language-java"> Set<span class="token operator">&lt;</span>Method<span class="token operator">></span> someMethods <span class="token operator">=</span> reflections<span class="token punctuation">.</span><span class="token function">getMethodsMatchParams</span><span class="token punctuation">(</span><span class="token keyword">long</span><span class="token punctuation">.</span><span class="token keyword">class</span><span class="token punctuation">,</span> <span class="token keyword">int</span><span class="token punctuation">.</span><span class="token keyword">class</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
+</li>
+<li><p>获取带有特定返回类型的方法</p>
+<pre class=" language-java"><code class="language-java">   Set<span class="token operator">&lt;</span>Method<span class="token operator">></span> voidMethods <span class="token operator">=</span> reflections<span class="token punctuation">.</span><span class="token function">getMethodsReturn</span><span class="token punctuation">(</span><span class="token keyword">void</span><span class="token punctuation">.</span><span class="token keyword">class</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
+</li>
+<li><p>获取带有参数注解的方法</p>
+<pre class=" language-java"><code class="language-java">Set<span class="token operator">&lt;</span>Method<span class="token operator">></span> pathParamMethods <span class="token operator">=</span>reflections<span class="token punctuation">.</span><span class="token function">getMethodsWithAnyParamAnnotated</span><span class="token punctuation">(</span> PathParam<span class="token punctuation">.</span><span class="token keyword">class</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
+<p><strong><em>备注：</em></strong>以上方法被调用后有返回值的前提是，创建reflections时，要明确加上对应的扫描器参数。</p>
 </li>
 </ul>
 <script>
@@ -627,9 +633,9 @@ ApiCompo">
             <br/>
             <span xmlns:dct="http://purl.org/dc/terms/" href="http://purl.org/dc/dcmitype/Text"
                   property="dct:title" rel="dct:type">
-                    《基于前后端分离的API设计思路整理（二）》
+                    《Java：反射框架 Reflections》
                 </span> 由
-            <a xmlns:cc="http://creativecommons.org/ns#" href="/2019/10/06/qian-hou-duan-fen-chi-de-api-she-ji-si-lu-zheng-li-er/" property="cc:attributionName"
+            <a xmlns:cc="http://creativecommons.org/ns#" href="/2019/11/24/java-fan-she-kuang-jia-reflections/" property="cc:attributionName"
                rel="cc:attributionURL">
                 Shelton Lee
             </a> 采用
@@ -669,47 +675,50 @@ ApiCompo">
 <article id="prenext-posts" class="prev-next articles">
     <div class="row article-row">
         
-        <div class="article col s12 m6" data-aos="fade-up">
+        <div class="article col s12 m6" data-aos="fade-up" data-aos="fade-up">
             <div class="article-badge left-badge text-color">
-                <i class="fa fa-chevron-left"></i>&nbsp;上一篇</div>
+                <i class="fa fa-dot-circle-o"></i>&nbsp;本篇
+            </div>
             <div class="card">
-                <a href="/2019/10/13/ji-yu-qian-hou-duan-fen-chi-de-api-she-ji-si-lu-zheng-li-san/">
+                <a href="/2019/11/24/java-fan-she-kuang-jia-reflections/">
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/4.jpg" class="responsive-img" alt="基于前后端分离的API设计思路整理（三）">
+                        <img src="/medias/featureimages/1.jpg" class="responsive-img" alt="Java：反射框架 Reflections">
                         
-                        <span class="card-title">基于前后端分离的API设计思路整理（三）</span>
+                        <span class="card-title">Java：反射框架 Reflections</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
                     <div class="summary block-with-text">
                         
-                            1. 前言​        上一篇主要记录了接口处理具体的实现类的架构设计，其中使用到了模板模式的设计模式，本篇重点记录一下基于注解的关于接口请求参数的验证机制和基于Spring 的类启动加载机制，为以后开发做好知识储备。
-2. 注解接口验
+                            1. 类介绍​        Reflections通过classpath，索引元数据，并且允许在运行时查询这些元数据。
+1.1 maven坐标&lt;dependency>
+  &lt;groupId>org.reflections&lt
                         
                     </div>
                     <div class="publish-info">
-                        <span class="publish-date">
-                            <i class="fa fa-clock-o fa-fw icon-date"></i>2019-10-13
-                        </span>
+                            <span class="publish-date">
+                                <i class="fa fa-clock-o fa-fw icon-date"></i>2019-11-24
+                            </span>
                         <span class="publish-author">
                             
                             <i class="fa fa-bookmark fa-fw icon-category"></i>
                             
-                            <a href="/categories/架构设计/" class="post-category" target="_blank">
-                                    架构设计
+                            <a href="/categories/java/" class="post-category" target="_blank">
+                                    java
                                 </a>
                             
                             
                         </span>
                     </div>
                 </div>
+
                 
                 <div class="card-action article-tags">
                     
-                    <a href="/tags/架构设计/" target="_blank">
-                        <span class="chip bg-color">架构设计</span>
+                    <a href="/tags/java工具类/" target="_blank">
+                        <span class="chip bg-color">java工具类</span>
                     </a>
                     
                 </div>
@@ -723,31 +732,32 @@ ApiCompo">
                 下一篇&nbsp;<i class="fa fa-chevron-right"></i>
             </div>
             <div class="card">
-                <a href="/2019/10/01/qian-hou-duan-fen-chi-de-api-she-ji-si-lu-zheng-li-yi/">
+                <a href="/2019/11/18/java-ji-yu-zhu-jie-de-quan-xian-yan-zheng-she-ji/">
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/13.jpg" class="responsive-img" alt="基于前后端分离的API设计思路整理（一）">
+                        <img src="/medias/featureimages/5.jpg" class="responsive-img" alt="Java：基于AOP配合注解的权限验证设计">
                         
-                        <span class="card-title">基于前后端分离的API设计思路整理（一）</span>
+                        <span class="card-title">Java：基于AOP配合注解的权限验证设计</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
                     <div class="summary block-with-text">
                         
-                            1. 前言​        年初公司开始启动新的项目开发，决定新项目不再采用旧的传统的MVC一体系模式，要做到前后端分离。以往的后端接口都是以一个controller类为单位进行集成，即对应不同接口的处理方式都是该controller类的方
+                            1.前言​        前一段时间负责了一个项目的权限验证方面的设计，主要用于限制不同的角色的不同操作权限，仅限后端控制，前端控制的目的在于隐藏不必要的操作，以达到良好的用户体验，此处暂不涉及前端，进行整理，方便日后回顾。
+2. 基于注解
                         
                     </div>
                     <div class="publish-info">
                             <span class="publish-date">
-                                <i class="fa fa-clock-o fa-fw icon-date"></i>2019-10-01
+                                <i class="fa fa-clock-o fa-fw icon-date"></i>2019-11-18
                             </span>
                         <span class="publish-author">
                             
                             <i class="fa fa-bookmark fa-fw icon-category"></i>
                             
-                            <a href="/categories/架构设计/" class="post-category" target="_blank">
-                                    架构设计
+                            <a href="/categories/java/" class="post-category" target="_blank">
+                                    java
                                 </a>
                             
                             
@@ -757,8 +767,8 @@ ApiCompo">
                 
                 <div class="card-action article-tags">
                     
-                    <a href="/tags/架构设计/" target="_blank">
-                        <span class="chip bg-color">架构设计</span>
+                    <a href="/tags/权限设计/" target="_blank">
+                        <span class="chip bg-color">权限设计</span>
                     </a>
                     
                 </div>

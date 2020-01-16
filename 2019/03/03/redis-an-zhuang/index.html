@@ -10,12 +10,14 @@
 解压安装包
 
 tar -zxvf  redis-5.0.4.tar.gz
+
 进入解压后的安装包进行编译(时间较长)
 
 make
+
 出现以上结果，表明编译成功。
 
-运行mak">
+运行m">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <meta name="renderer" content="webkit|ie-stand|ie-comp">
@@ -439,31 +441,39 @@ make
 <h1 id="1-安装Redis"><a href="#1-安装Redis" class="headerlink" title="1.安装Redis"></a>1.安装Redis</h1><ul>
 <li>解压安装包</li>
 </ul>
-<pre><code>tar -zxvf  redis-5.0.4.tar.gz</code></pre><ul>
+<pre class=" language-shell"><code class="language-shell">tar -zxvf  redis-5.0.4.tar.gz</code></pre>
+<ul>
 <li>进入解压后的安装包进行编译(时间较长)</li>
 </ul>
-<pre><code>make</code></pre><p><img src="/2019/03/03/redis-an-zhuang/1567668459576.png" alt="1567668459576"></p>
+<pre class=" language-shell"><code class="language-shell">make</code></pre>
+<p><img src="/2019/03/03/redis-an-zhuang/1567668459576.png" alt="1567668459576"></p>
 <p>出现以上结果，表明编译成功。</p>
 <ul>
 <li>运行make test 进行测试(貌似这一步可以跳过)</li>
 </ul>
-<pre><code>make test</code></pre><p>我这边报错，提示需要tcl 8.5 才能进行make test。</p>
+<pre class=" language-shell"><code class="language-shell">make test</code></pre>
+<p>我这边报错，提示需要tcl 8.5 才能进行make test。</p>
 <p><img src="/2019/03/03/redis-an-zhuang/1567668669399.png" alt="1567668669399"></p>
 <p>去官网下载了tcl8.6.9.tar.gz，在解压安装之后，但在进行tcl编译的过程中会报错，最后采用yum命令进行了tcl的安装。</p>
-<pre><code>yum install tcl</code></pre><p>再进行 make test </p>
+<pre class=" language-shell"><code class="language-shell">yum install tcl</code></pre>
+<p>再进行 make test </p>
 <ul>
 <li>进入src下进行安装</li>
 </ul>
-<pre><code>make install</code></pre><p><img src="/2019/03/03/redis-an-zhuang/1567671273931.png" alt="1567671273931"></p>
+<pre class=" language-shell"><code class="language-shell">make install</code></pre>
+<p><img src="/2019/03/03/redis-an-zhuang/1567671273931.png" alt="1567671273931"></p>
 <ul>
 <li>查看安装版本</li>
 </ul>
-<pre><code>redis-cli -v</code></pre><p><img src="/2019/03/03/redis-an-zhuang/1567671322453.png" alt="1567671322453"></p>
+<pre class=" language-shell"><code class="language-shell">redis-cli -v</code></pre>
+<p><img src="/2019/03/03/redis-an-zhuang/1567671322453.png" alt="1567671322453"></p>
 <ul>
 <li>启动redis(默认启动方式)</li>
 </ul>
-<pre><code>redis-server</code></pre><p><img src="/2019/03/03/redis-an-zhuang/1567671488856.png" alt="1567671488856"></p>
+<pre class=" language-shell"><code class="language-shell">redis-server</code></pre>
+<p><img src="/2019/03/03/redis-an-zhuang/1567671488856.png" alt="1567671488856"></p>
 <p>​            OK,安装成功！</p>
+<p>``</p>
 <script>
         document.querySelectorAll('.github-emoji')
           .forEach(el => {
@@ -768,9 +778,10 @@ make
                             1.环境搭建  关于jdk环境的安装详见
 2. tomcat安装配置
 解压压缩包tar -zxvf apache-tomcat-8.5.45.tar.gz
+
 将解压后的tomcat文件夹重命名
 
-mv apache-tomcat-8.5.45
+mv apache-tomcat-8.5.4
                         
                     </div>
                     <div class="publish-info">

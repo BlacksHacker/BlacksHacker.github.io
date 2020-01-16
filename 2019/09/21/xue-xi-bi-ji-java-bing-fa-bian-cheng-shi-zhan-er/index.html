@@ -434,47 +434,50 @@
 <p>​        翻译一下就是：执行的时候相关变量要全部修改到位（原子性），并且要让其他的线程都要看到（可见性）。</p>
 <h5 id="1-4-volatile"><a href="#1-4-volatile" class="headerlink" title="1.4 volatile"></a>1.4 volatile</h5><p>​        volatile = 可见性</p>
 <h3 id="2-发布与逸出"><a href="#2-发布与逸出" class="headerlink" title="2. 发布与逸出"></a>2. 发布与逸出</h3><p>​        <strong>发布</strong>：发布一个对象，指的是整个对象可以在当前作用域之外的代码使用。</p>
-<pre><code>public class Publish{
-    public static List&lt;String&gt; pubList;
+<pre class=" language-java"><code class="language-java"><span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">Publish</span><span class="token punctuation">{</span>
+    <span class="token keyword">public</span> <span class="token keyword">static</span> List<span class="token operator">&lt;</span>String<span class="token operator">></span> pubList<span class="token punctuation">;</span>
 
-    public void initialize(){
-        pubList = new ArrayList();
-    }
-}
-    //pubList 的作用域是initialize方法,但是作为静态属性它已经发布了。</code></pre><p>​        <strong>逸出</strong>：同样发布一个对象，但是对象还没创建好（或者该对象内部的其他对象没创建好）就发布了，即可以被调用了，比较复杂的是隐式使用this逸出。(个人认为逸出是发布中的一个问题点，不是同级或互斥关系)</p>
-<pre><code>public class ThisEscape{
-    public ThisEscape(EventSource source){
-        source.registerListener(
-            new EventListener(){
-                public void onEvent(Event e){
-                    doSomething(e);   //逸出的原因是source调用了注册方法，这里隐式的调                                        //用了this。doSomething
-                }
-            });
-        }
-    }
+    <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">initialize</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
+        pubList <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">ArrayList</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+    <span class="token comment" spellcheck="true">//pubList 的作用域是initialize方法,但是作为静态属性它已经发布了。</span></code></pre>
+<p>​        <strong>逸出</strong>：同样发布一个对象，但是对象还没创建好（或者该对象内部的其他对象没创建好）就发布了，即可以被调用了，比较复杂的是隐式使用this逸出。(个人认为逸出是发布中的一个问题点，不是同级或互斥关系)</p>
+<pre class=" language-java"><code class="language-java"><span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">ThisEscape</span><span class="token punctuation">{</span>
+    <span class="token keyword">public</span> <span class="token function">ThisEscape</span><span class="token punctuation">(</span>EventSource source<span class="token punctuation">)</span><span class="token punctuation">{</span>
+        source<span class="token punctuation">.</span><span class="token function">registerListener</span><span class="token punctuation">(</span>
+            <span class="token keyword">new</span> <span class="token class-name">EventListener</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
+                <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">onEvent</span><span class="token punctuation">(</span>Event e<span class="token punctuation">)</span><span class="token punctuation">{</span>
+                    <span class="token function">doSomething</span><span class="token punctuation">(</span>e<span class="token punctuation">)</span><span class="token punctuation">;</span>   <span class="token comment" spellcheck="true">//逸出的原因是source调用了注册方法，这里隐式的调                                        //用了this。doSomething</span>
+                <span class="token punctuation">}</span>
+            <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span>
 
-    public void doSomething(Event e){
-        ....
-    }
-}</code></pre><p>所以，切记 <strong>不要在构造过程中使用this引用逸出</strong>。</p>
+    <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">doSomething</span><span class="token punctuation">(</span>Event e<span class="token punctuation">)</span><span class="token punctuation">{</span>
+        <span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span></code></pre>
+<p>所以，切记 <strong>不要在构造过程中使用this引用逸出</strong>。</p>
 <p>正确的写法：</p>
-<pre><code>public class SafeListener{
-    private final EventListener listener;
+<pre class=" language-java"><code class="language-java"><span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">SafeListener</span><span class="token punctuation">{</span>
+    <span class="token keyword">private</span> <span class="token keyword">final</span> EventListener listener<span class="token punctuation">;</span>
 
-    private SafeListener(){
-        listener = new EventListener(){
-            public void onEvent(Event e){
-                doSomething(e);
-            }
-        }
-    }
+    <span class="token keyword">private</span> <span class="token function">SafeListener</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
+        listener <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">EventListener</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
+            <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">onEvent</span><span class="token punctuation">(</span>Event e<span class="token punctuation">)</span><span class="token punctuation">{</span>
+                <span class="token function">doSomething</span><span class="token punctuation">(</span>e<span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token punctuation">}</span>
+        <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span>
 
-    public static SafeListener newInstance(EventSource source){
-        SafeListener safe = new SafeListener();
-        source.registerListener(safe.listener); //创建好对象之后才进行注册
-        return safe;
-    }
-}</code></pre><h3 id="3-线程封闭"><a href="#3-线程封闭" class="headerlink" title="3.线程封闭"></a>3.线程封闭</h3><h5 id="3-1-Ad-hoc线程封闭"><a href="#3-1-Ad-hoc线程封闭" class="headerlink" title="3.1 Ad-hoc线程封闭"></a>3.1 Ad-hoc线程封闭</h5><p>​        Ad-hoc线程封闭是指，维护线程封闭性的职责完全由程序实现来承担。</p>
+    <span class="token keyword">public</span> <span class="token keyword">static</span> SafeListener <span class="token function">newInstance</span><span class="token punctuation">(</span>EventSource source<span class="token punctuation">)</span><span class="token punctuation">{</span>
+        SafeListener safe <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">SafeListener</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        source<span class="token punctuation">.</span><span class="token function">registerListener</span><span class="token punctuation">(</span>safe<span class="token punctuation">.</span>listener<span class="token punctuation">)</span><span class="token punctuation">;</span> <span class="token comment" spellcheck="true">//创建好对象之后才进行注册</span>
+        <span class="token keyword">return</span> safe<span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span></code></pre>
+<h3 id="3-线程封闭"><a href="#3-线程封闭" class="headerlink" title="3.线程封闭"></a>3.线程封闭</h3><h5 id="3-1-Ad-hoc线程封闭"><a href="#3-1-Ad-hoc线程封闭" class="headerlink" title="3.1 Ad-hoc线程封闭"></a>3.1 Ad-hoc线程封闭</h5><p>​        Ad-hoc线程封闭是指，维护线程封闭性的职责完全由程序实现来承担。</p>
 <p>​        当决定使用线程封闭技术时，通常是因为要将某个特定的子系统实现为一个单线程程子系统。</p>
 <p>​        由于Ad-hoc线程封闭技术的脆弱性，因此程序中尽量少用它。</p>
 <p>​        我承认，确实不理解这是个什么玩意。。。</p>

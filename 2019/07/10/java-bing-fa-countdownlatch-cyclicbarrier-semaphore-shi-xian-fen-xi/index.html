@@ -424,264 +424,273 @@
             <div id="articleContent">
                 <h3 id="1-前言"><a href="#1-前言" class="headerlink" title="1. 前言"></a>1. 前言</h3><p>​        最近在刷LeeCode多线程相关题目时，经常会遇到一些优质的解答使用了J.U.C包中的三个同步工具类配合。所以在此进行整理，方便日后开发中使用。</p>
 <h3 id="2-CountDownLatch"><a href="#2-CountDownLatch" class="headerlink" title="2. CountDownLatch"></a>2. CountDownLatch</h3><p>​        示例代码如下：</p>
-<pre><code>class Foo {
+<pre class=" language-java"><code class="language-java"><span class="token keyword">class</span> <span class="token class-name">Foo</span> <span class="token punctuation">{</span>
 
-    public Foo() {
+    <span class="token keyword">public</span> <span class="token function">Foo</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
 
-    }
+    <span class="token punctuation">}</span>
 
-    public static void main(String[] args) {
-        Foo foo = new Foo();
-        try {
-            foo.execute();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
+    <span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">void</span> <span class="token function">main</span><span class="token punctuation">(</span>String<span class="token punctuation">[</span><span class="token punctuation">]</span> args<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        Foo foo <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Foo</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">try</span> <span class="token punctuation">{</span>
+            foo<span class="token punctuation">.</span><span class="token function">execute</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token punctuation">}</span> <span class="token keyword">catch</span> <span class="token punctuation">(</span><span class="token class-name">Exception</span> e<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+            e<span class="token punctuation">.</span><span class="token function">printStackTrace</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span>
 
-    public void execute() throws Exception{
-        CountDownLatch countDownLatch = new CountDownLatch(3);
+    <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">execute</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token keyword">throws</span> Exception<span class="token punctuation">{</span>
+        CountDownLatch countDownLatch <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">CountDownLatch</span><span class="token punctuation">(</span><span class="token number">3</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 
-        for (int i = 0; i &lt; 10; i++){
-            Thread t = new Thread(new TestRunner(countDownLatch));
-            t.setName(" 我是第 " + i +" 个");
-            t.start();
-        }
-        countDownLatch.await();
-        System.out.println("finished");
-    }
+        <span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token keyword">int</span> i <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span> i <span class="token operator">&lt;</span> <span class="token number">10</span><span class="token punctuation">;</span> i<span class="token operator">++</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
+            Thread t <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Thread</span><span class="token punctuation">(</span><span class="token keyword">new</span> <span class="token class-name">TestRunner</span><span class="token punctuation">(</span>countDownLatch<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+            t<span class="token punctuation">.</span><span class="token function">setName</span><span class="token punctuation">(</span><span class="token string">" 我是第 "</span> <span class="token operator">+</span> i <span class="token operator">+</span><span class="token string">" 个"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+            t<span class="token punctuation">.</span><span class="token function">start</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token punctuation">}</span>
+        countDownLatch<span class="token punctuation">.</span><span class="token function">await</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        System<span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"finished"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
 
 
-    class TestRunner implements Runnable{
+    <span class="token keyword">class</span> <span class="token class-name">TestRunner</span> <span class="token keyword">implements</span> <span class="token class-name">Runnable</span><span class="token punctuation">{</span>
 
-        private CountDownLatch countDownLatch;
+        <span class="token keyword">private</span> CountDownLatch countDownLatch<span class="token punctuation">;</span>
 
-        public TestRunner(CountDownLatch countDownLatch){
-            this.countDownLatch = countDownLatch;
-        }
+        <span class="token keyword">public</span> <span class="token function">TestRunner</span><span class="token punctuation">(</span>CountDownLatch countDownLatch<span class="token punctuation">)</span><span class="token punctuation">{</span>
+            <span class="token keyword">this</span><span class="token punctuation">.</span>countDownLatch <span class="token operator">=</span> countDownLatch<span class="token punctuation">;</span>
+        <span class="token punctuation">}</span>
 
-        @Override
-        public void run() {
-            try {
-                Thread.sleep(1000);
-                System.out.println(Thread.currentThread().getName() + " start execute");
+        <span class="token annotation punctuation">@Override</span>
+        <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">run</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+            <span class="token keyword">try</span> <span class="token punctuation">{</span>
+                Thread<span class="token punctuation">.</span><span class="token function">sleep</span><span class="token punctuation">(</span><span class="token number">1000</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+                System<span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span>Thread<span class="token punctuation">.</span><span class="token function">currentThread</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">getName</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">+</span> <span class="token string">" start execute"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }finally {
-                countDownLatch.countDown();
-            }
+            <span class="token punctuation">}</span> <span class="token keyword">catch</span> <span class="token punctuation">(</span><span class="token class-name">InterruptedException</span> e<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+                e<span class="token punctuation">.</span><span class="token function">printStackTrace</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token punctuation">}</span><span class="token keyword">finally</span> <span class="token punctuation">{</span>
+                countDownLatch<span class="token punctuation">.</span><span class="token function">countDown</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token punctuation">}</span>
 
-        }
-    }
+        <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span>
 
-}</code></pre><p>执行结果如下：</p>
-<pre><code>我是第 0 个 start execute
- 我是第 9 个 start execute
- 我是第 8 个 start execute
+<span class="token punctuation">}</span></code></pre>
+<p>执行结果如下：</p>
+<pre class=" language-java"><code class="language-java">我是第 <span class="token number">0</span> 个 start execute
+ 我是第 <span class="token number">9</span> 个 start execute
+ 我是第 <span class="token number">8</span> 个 start execute
 finished
- 我是第 7 个 start execute
- 我是第 6 个 start execute
- 我是第 4 个 start execute
- 我是第 5 个 start execute
- 我是第 3 个 start execute
- 我是第 2 个 start execute
- 我是第 1 个 start execute</code></pre><p>​        <strong>CountDownLatch</strong>是一个倒计时式的计数器，在初始化的时候可以通过构造参数指定所要统计的线程的数量，每当线程执行一次countDown()方法，计数器减一，当计数器的内部值变为0时，将会开始执行await()方法之后的代码，即允许指定数量的线程执行完毕之后才开始执行。</p>
+ 我是第 <span class="token number">7</span> 个 start execute
+ 我是第 <span class="token number">6</span> 个 start execute
+ 我是第 <span class="token number">4</span> 个 start execute
+ 我是第 <span class="token number">5</span> 个 start execute
+ 我是第 <span class="token number">3</span> 个 start execute
+ 我是第 <span class="token number">2</span> 个 start execute
+ 我是第 <span class="token number">1</span> 个 start execute</code></pre>
+<p>​        <strong>CountDownLatch</strong>是一个倒计时式的计数器，在初始化的时候可以通过构造参数指定所要统计的线程的数量，每当线程执行一次countDown()方法，计数器减一，当计数器的内部值变为0时，将会开始执行await()方法之后的代码，即允许指定数量的线程执行完毕之后才开始执行。</p>
 <p>​        <strong>CountDownLatch</strong>基于AQS，是一个共享锁，await()使当前线程阻塞等待。</p>
-<pre><code>// CountDownLatch aqs源码：
-‘’private static final class Sync 
-                extends AbstractQueuedSynchronizer {
-    Sync(int count) {
-        setState(count);
-    }
-    int getCount() {
-        return getState();
-    }
-    //加锁
-    protected int tryAcquireShared(int acquires) {
-        return (getState() == 0) ? 1 : -1;
-    }
-    //解锁
-    protected boolean tryReleaseShared(int releases) {
-        for (;;) {
-            int c = getState();
-            if (c == 0)
-                return false;
-            int nextc = c-1;
-            if (compareAndSetState(c, nextc))
-                return nextc == 0;
-        }
-    }
-}</code></pre><ul>
+<pre class=" language-java"><code class="language-java"><span class="token comment" spellcheck="true">// CountDownLatch aqs源码：</span>
+‘’<span class="token keyword">private</span> <span class="token keyword">static</span> <span class="token keyword">final</span> <span class="token keyword">class</span> <span class="token class-name">Sync</span> 
+                <span class="token keyword">extends</span> <span class="token class-name">AbstractQueuedSynchronizer</span> <span class="token punctuation">{</span>
+    <span class="token function">Sync</span><span class="token punctuation">(</span><span class="token keyword">int</span> count<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token function">setState</span><span class="token punctuation">(</span>count<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+    <span class="token keyword">int</span> <span class="token function">getCount</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">return</span> <span class="token function">getState</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+    <span class="token comment" spellcheck="true">//加锁</span>
+    <span class="token keyword">protected</span> <span class="token keyword">int</span> <span class="token function">tryAcquireShared</span><span class="token punctuation">(</span><span class="token keyword">int</span> acquires<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">return</span> <span class="token punctuation">(</span><span class="token function">getState</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">==</span> <span class="token number">0</span><span class="token punctuation">)</span> <span class="token operator">?</span> <span class="token number">1</span> <span class="token operator">:</span> <span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+    <span class="token comment" spellcheck="true">//解锁</span>
+    <span class="token keyword">protected</span> <span class="token keyword">boolean</span> <span class="token function">tryReleaseShared</span><span class="token punctuation">(</span><span class="token keyword">int</span> releases<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token punctuation">;</span><span class="token punctuation">;</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+            <span class="token keyword">int</span> c <span class="token operator">=</span> <span class="token function">getState</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token keyword">if</span> <span class="token punctuation">(</span>c <span class="token operator">==</span> <span class="token number">0</span><span class="token punctuation">)</span>
+                <span class="token keyword">return</span> <span class="token boolean">false</span><span class="token punctuation">;</span>
+            <span class="token keyword">int</span> nextc <span class="token operator">=</span> c<span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">;</span>
+            <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token function">compareAndSetState</span><span class="token punctuation">(</span>c<span class="token punctuation">,</span> nextc<span class="token punctuation">)</span><span class="token punctuation">)</span>
+                <span class="token keyword">return</span> nextc <span class="token operator">==</span> <span class="token number">0</span><span class="token punctuation">;</span>
+        <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span></code></pre>
+<ul>
 <li>await()调用tryAcquireShared(1)方法获取锁，根据共享锁的实现返回值小于0时线程会被阻塞等待，也就是只有当state==0,才会成功解锁。</li>
 <li>countDown()调用tryReleaseShared(1)方法进行解锁，当state为0时，共享锁才算完全释放，会唤醒队列等待的线程。</li>
 <li>CountDownLatch没有复位操作，当state的值为0时，再调用await()就不会阻塞线程了，所以CountDownLatch只能使用一次。</li>
 </ul>
 <h3 id="3-CyclicBarrier"><a href="#3-CyclicBarrier" class="headerlink" title="3. CyclicBarrier"></a>3. CyclicBarrier</h3><p>​        示例代码如下：</p>
-<pre><code>class Foo {
+<pre class=" language-java"><code class="language-java"><span class="token keyword">class</span> <span class="token class-name">Foo</span> <span class="token punctuation">{</span>
 
-    public Foo() {
+    <span class="token keyword">public</span> <span class="token function">Foo</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
 
-    }
+    <span class="token punctuation">}</span>
 
-    public static void main(String[] args) {
-        Foo foo = new Foo();
-        try {
-            foo.execute();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
+    <span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">void</span> <span class="token function">main</span><span class="token punctuation">(</span>String<span class="token punctuation">[</span><span class="token punctuation">]</span> args<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        Foo foo <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Foo</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">try</span> <span class="token punctuation">{</span>
+            foo<span class="token punctuation">.</span><span class="token function">execute</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token punctuation">}</span> <span class="token keyword">catch</span> <span class="token punctuation">(</span><span class="token class-name">Exception</span> e<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+            e<span class="token punctuation">.</span><span class="token function">printStackTrace</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span>
 
-    public void execute() throws Exception{
-        CyclicBarrier barrier = new CyclicBarrier(3);
+    <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">execute</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token keyword">throws</span> Exception<span class="token punctuation">{</span>
+        CyclicBarrier barrier <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">CyclicBarrier</span><span class="token punctuation">(</span><span class="token number">3</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 
-        for (int i = 0; i &lt; 10; i++){
-            Thread t = new Thread(new TestRunner(barrier));
-            t.setName(" 我是第 " + i +" 个");
-            t.start();
-        }
-        System.out.println("finished");
-    }
+        <span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token keyword">int</span> i <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span> i <span class="token operator">&lt;</span> <span class="token number">10</span><span class="token punctuation">;</span> i<span class="token operator">++</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
+            Thread t <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Thread</span><span class="token punctuation">(</span><span class="token keyword">new</span> <span class="token class-name">TestRunner</span><span class="token punctuation">(</span>barrier<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+            t<span class="token punctuation">.</span><span class="token function">setName</span><span class="token punctuation">(</span><span class="token string">" 我是第 "</span> <span class="token operator">+</span> i <span class="token operator">+</span><span class="token string">" 个"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+            t<span class="token punctuation">.</span><span class="token function">start</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token punctuation">}</span>
+        System<span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"finished"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
 
 
-    class TestRunner implements Runnable{
+    <span class="token keyword">class</span> <span class="token class-name">TestRunner</span> <span class="token keyword">implements</span> <span class="token class-name">Runnable</span><span class="token punctuation">{</span>
 
-        private CyclicBarrier barrier;
+        <span class="token keyword">private</span> CyclicBarrier barrier<span class="token punctuation">;</span>
 
-        public TestRunner(CyclicBarrier barrier){
-            this.barrier = barrier;
-        }
+        <span class="token keyword">public</span> <span class="token function">TestRunner</span><span class="token punctuation">(</span>CyclicBarrier barrier<span class="token punctuation">)</span><span class="token punctuation">{</span>
+            <span class="token keyword">this</span><span class="token punctuation">.</span>barrier <span class="token operator">=</span> barrier<span class="token punctuation">;</span>
+        <span class="token punctuation">}</span>
 
-        @Override
-        public void run() {
-            try {
-                System.out.println(Thread.currentThread().getName() + " start execute");
-                barrier.await();
-                System.out.println("我朋友他好了");
+        <span class="token annotation punctuation">@Override</span>
+        <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">run</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+            <span class="token keyword">try</span> <span class="token punctuation">{</span>
+                System<span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span>Thread<span class="token punctuation">.</span><span class="token function">currentThread</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">getName</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">+</span> <span class="token string">" start execute"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+                barrier<span class="token punctuation">.</span><span class="token function">await</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+                System<span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"我朋友他好了"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-    }
+            <span class="token punctuation">}</span> <span class="token keyword">catch</span> <span class="token punctuation">(</span><span class="token class-name">Exception</span> e<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+                e<span class="token punctuation">.</span><span class="token function">printStackTrace</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token punctuation">}</span>
+        <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span>
 
-}</code></pre><p>输出结果如下：</p>
-<pre><code>finished
- 我是第 0 个 start execute
- 我是第 1 个 start execute
- 我是第 2 个 start execute
+<span class="token punctuation">}</span></code></pre>
+<p>输出结果如下：</p>
+<pre class=" language-java"><code class="language-java">finished
+ 我是第 <span class="token number">0</span> 个 start execute
+ 我是第 <span class="token number">1</span> 个 start execute
+ 我是第 <span class="token number">2</span> 个 start execute
 我朋友他好了
 我朋友他好了
 我朋友他好了
- 我是第 3 个 start execute
- 我是第 4 个 start execute
- 我是第 5 个 start execute
+ 我是第 <span class="token number">3</span> 个 start execute
+ 我是第 <span class="token number">4</span> 个 start execute
+ 我是第 <span class="token number">5</span> 个 start execute
 我朋友他好了
 我朋友他好了
 我朋友他好了
- 我是第 6 个 start execute
- 我是第 7 个 start execute
- 我是第 8 个 start execute
+ 我是第 <span class="token number">6</span> 个 start execute
+ 我是第 <span class="token number">7</span> 个 start execute
+ 我是第 <span class="token number">8</span> 个 start execute
 我朋友他好了
 我朋友他好了
 我朋友他好了
- 我是第 9 个 start execute</code></pre><p>​        <strong>CyclicBarrier</strong>是可循环的同步屏障，如上示例，构造函数赋值为3，所以每次屏障会拦截三个线程，待三个线程同时抵达屏障时，屏障被打破，线程执行后面逻辑代码。与此同时，循环截取后面的三个线程，依次循环。</p>
+ 我是第 <span class="token number">9</span> 个 start execute</code></pre>
+<p>​        <strong>CyclicBarrier</strong>是可循环的同步屏障，如上示例，构造函数赋值为3，所以每次屏障会拦截三个线程，待三个线程同时抵达屏障时，屏障被打破，线程执行后面逻辑代码。与此同时，循环截取后面的三个线程，依次循环。</p>
 <p>​        <strong>CyclicBarrier</strong>使用一个重入锁实现。</p>
 <h3 id="3-Semaphore"><a href="#3-Semaphore" class="headerlink" title="3. Semaphore"></a>3. Semaphore</h3><p>​        示例代码如下：</p>
-<pre><code>class Foo {
+<pre class=" language-java"><code class="language-java"><span class="token keyword">class</span> <span class="token class-name">Foo</span> <span class="token punctuation">{</span>
 
-    public Foo() {
+    <span class="token keyword">public</span> <span class="token function">Foo</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
 
-    }
+    <span class="token punctuation">}</span>
 
-    public static void main(String[] args) {
-        Foo foo = new Foo();
-        try {
-            foo.execute();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
+    <span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">void</span> <span class="token function">main</span><span class="token punctuation">(</span>String<span class="token punctuation">[</span><span class="token punctuation">]</span> args<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        Foo foo <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Foo</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">try</span> <span class="token punctuation">{</span>
+            foo<span class="token punctuation">.</span><span class="token function">execute</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token punctuation">}</span> <span class="token keyword">catch</span> <span class="token punctuation">(</span><span class="token class-name">Exception</span> e<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+            e<span class="token punctuation">.</span><span class="token function">printStackTrace</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span>
 
-    public void execute() throws Exception{
-        Semaphore semaphore = new Semaphore(3);
+    <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">execute</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token keyword">throws</span> Exception<span class="token punctuation">{</span>
+        Semaphore semaphore <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Semaphore</span><span class="token punctuation">(</span><span class="token number">3</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 
-        for (int i = 0; i &lt; 10; i++){
-            Thread t = new Thread(new TestRunner(semaphore));
-            t.setName(" 我是第 " + i +" 个");
-            t.start();
-        }
-        System.out.println("finished");
-    }
+        <span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token keyword">int</span> i <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span> i <span class="token operator">&lt;</span> <span class="token number">10</span><span class="token punctuation">;</span> i<span class="token operator">++</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
+            Thread t <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Thread</span><span class="token punctuation">(</span><span class="token keyword">new</span> <span class="token class-name">TestRunner</span><span class="token punctuation">(</span>semaphore<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+            t<span class="token punctuation">.</span><span class="token function">setName</span><span class="token punctuation">(</span><span class="token string">" 我是第 "</span> <span class="token operator">+</span> i <span class="token operator">+</span><span class="token string">" 个"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+            t<span class="token punctuation">.</span><span class="token function">start</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token punctuation">}</span>
+        System<span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"finished"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
 
 
-    class TestRunner implements Runnable{
+    <span class="token keyword">class</span> <span class="token class-name">TestRunner</span> <span class="token keyword">implements</span> <span class="token class-name">Runnable</span><span class="token punctuation">{</span>
 
-        private Semaphore semaphore;
+        <span class="token keyword">private</span> Semaphore semaphore<span class="token punctuation">;</span>
 
-        public TestRunner(Semaphore _semaphore){
-            this.semaphore = _semaphore;
-        }
+        <span class="token keyword">public</span> <span class="token function">TestRunner</span><span class="token punctuation">(</span>Semaphore _semaphore<span class="token punctuation">)</span><span class="token punctuation">{</span>
+            <span class="token keyword">this</span><span class="token punctuation">.</span>semaphore <span class="token operator">=</span> _semaphore<span class="token punctuation">;</span>
+        <span class="token punctuation">}</span>
 
-        @Override
-        public void run() {
-            try {
-                semaphore.acquire();
-                System.out.println(Thread.currentThread().getName() + " start execute");
-                Thread.sleep(2000);
-                semaphore.release();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-    }
-}</code></pre><p>执行结果如下：</p>
-<pre><code>finished
- 我是第 0 个 start execute
- 我是第 1 个 start execute
- 我是第 2 个 start execute
- 我是第 3 个 start execute
- 我是第 4 个 start execute
- 我是第 5 个 start execute
- 我是第 7 个 start execute
- 我是第 8 个 start execute
- 我是第 6 个 start execute
- 我是第 9 个 start execute</code></pre><p>​        <strong>Semaphore</strong>是一个计数信号量，常用于限制可以访问某些资源线程数目。</p>
+        <span class="token annotation punctuation">@Override</span>
+        <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">run</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+            <span class="token keyword">try</span> <span class="token punctuation">{</span>
+                semaphore<span class="token punctuation">.</span><span class="token function">acquire</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+                System<span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span>Thread<span class="token punctuation">.</span><span class="token function">currentThread</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">getName</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">+</span> <span class="token string">" start execute"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+                Thread<span class="token punctuation">.</span><span class="token function">sleep</span><span class="token punctuation">(</span><span class="token number">2000</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+                semaphore<span class="token punctuation">.</span><span class="token function">release</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token punctuation">}</span> <span class="token keyword">catch</span> <span class="token punctuation">(</span><span class="token class-name">Exception</span> e<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+                e<span class="token punctuation">.</span><span class="token function">printStackTrace</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token punctuation">}</span>
+        <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span></code></pre>
+<p>执行结果如下：</p>
+<pre class=" language-java"><code class="language-java">finished
+ 我是第 <span class="token number">0</span> 个 start execute
+ 我是第 <span class="token number">1</span> 个 start execute
+ 我是第 <span class="token number">2</span> 个 start execute
+ 我是第 <span class="token number">3</span> 个 start execute
+ 我是第 <span class="token number">4</span> 个 start execute
+ 我是第 <span class="token number">5</span> 个 start execute
+ 我是第 <span class="token number">7</span> 个 start execute
+ 我是第 <span class="token number">8</span> 个 start execute
+ 我是第 <span class="token number">6</span> 个 start execute
+ 我是第 <span class="token number">9</span> 个 start execute</code></pre>
+<p>​        <strong>Semaphore</strong>是一个计数信号量，常用于限制可以访问某些资源线程数目。</p>
 <p>​        以上示例代码，每个2s,打印三行数据，即第1,2,3线程，执行semaphore.acquire()先进来，然后置于睡眠状态，4进来时，semaphore并未执行release（）方法，故而会阻塞，接着1,2,3线程依次执行release(),4,5,6线程进入睡眠状态，依此循环，保证限制线程执行的数目为3条。</p>
 <p>​        <strong>注意：</strong>当semaphore的值为0时，表明当前资源已经耗尽，需要先进行release才能再acquire。故当初始值设为0时，需要先执行release，否则线程将会一直阻塞。经典案例，Leecode的交替打印，代码如下：</p>
-<pre><code>class FooBar {
-    private int n;
-    private Semaphore foo = new Semaphore(1);
-    private Semaphore bar = new Semaphore(0);
+<pre class=" language-java"><code class="language-java"><span class="token keyword">class</span> <span class="token class-name">FooBar</span> <span class="token punctuation">{</span>
+    <span class="token keyword">private</span> <span class="token keyword">int</span> n<span class="token punctuation">;</span>
+    <span class="token keyword">private</span> Semaphore foo <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Semaphore</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">private</span> Semaphore bar <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Semaphore</span><span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 
-    public FooBar(int n) {
-        this.n = n;
-    }
+    <span class="token keyword">public</span> <span class="token function">FooBar</span><span class="token punctuation">(</span><span class="token keyword">int</span> n<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">this</span><span class="token punctuation">.</span>n <span class="token operator">=</span> n<span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
 
-    public void foo(Runnable printFoo) throws InterruptedException {
-        for (int i = 0; i &lt; n; i++) {
-            // printFoo.run() outputs "foo". Do not change or remove this line.
-            //获取后foo变0，所以下次不能重复执行
-            foo.acquire();
-            printFoo.run(); 
-            //执行后，bar变1
-            bar.release();
-        }
-    }
+    <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">foo</span><span class="token punctuation">(</span>Runnable printFoo<span class="token punctuation">)</span> <span class="token keyword">throws</span> InterruptedException <span class="token punctuation">{</span>
+        <span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token keyword">int</span> i <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span> i <span class="token operator">&lt;</span> n<span class="token punctuation">;</span> i<span class="token operator">++</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+            <span class="token comment" spellcheck="true">// printFoo.run() outputs "foo". Do not change or remove this line.</span>
+            <span class="token comment" spellcheck="true">//获取后foo变0，所以下次不能重复执行</span>
+            foo<span class="token punctuation">.</span><span class="token function">acquire</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+            printFoo<span class="token punctuation">.</span><span class="token function">run</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span> 
+            <span class="token comment" spellcheck="true">//执行后，bar变1</span>
+            bar<span class="token punctuation">.</span><span class="token function">release</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span>
 
-    public void bar(Runnable printBar) throws InterruptedException {
-        for (int i = 0; i &lt; n; i++) {
-            // printBar.run() outputs "bar". Do not change or remove this line.
-            //只有当bar变1的时候才能执行，故在首次后执行，执行后变0，所以下次不能重复执行
-            bar.acquire();
-            printBar.run();
-            //执行后，foo变1
-            foo.release();
-        }
-    }
-}</code></pre><p>执行结果如下：</p>
-<pre><code>foobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobar</code></pre><h3 id="4-总结"><a href="#4-总结" class="headerlink" title="4. 总结"></a>4. 总结</h3><ul>
+    <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">bar</span><span class="token punctuation">(</span>Runnable printBar<span class="token punctuation">)</span> <span class="token keyword">throws</span> InterruptedException <span class="token punctuation">{</span>
+        <span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token keyword">int</span> i <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span> i <span class="token operator">&lt;</span> n<span class="token punctuation">;</span> i<span class="token operator">++</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+            <span class="token comment" spellcheck="true">// printBar.run() outputs "bar". Do not change or remove this line.</span>
+            <span class="token comment" spellcheck="true">//只有当bar变1的时候才能执行，故在首次后执行，执行后变0，所以下次不能重复执行</span>
+            bar<span class="token punctuation">.</span><span class="token function">acquire</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+            printBar<span class="token punctuation">.</span><span class="token function">run</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token comment" spellcheck="true">//执行后，foo变1</span>
+            foo<span class="token punctuation">.</span><span class="token function">release</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span></code></pre>
+<p>执行结果如下：</p>
+<pre class=" language-java"><code class="language-java">foobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobarfoobar</code></pre>
+<h3 id="4-总结"><a href="#4-总结" class="headerlink" title="4. 总结"></a>4. 总结</h3><ul>
 <li><strong>CountDownLatch</strong>为计数器，设定初始值，当数值内所有线程执行完毕，才是执行接下来的逻辑。</li>
 <li><strong>CyclicBarrier</strong>为屏障，设定初始值，当数值内所有线程到达指定位置，才进行屏障移除，但可重复。</li>
 <li><strong>Semaphone</strong>为计数信号量，设定初始值，每次线程获取减一，释放加一，其他线程要执行，必须等待令牌释放，即固定了同时只能有指定值个线程在处理资源任务。</li>

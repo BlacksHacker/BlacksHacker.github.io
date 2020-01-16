@@ -464,13 +464,14 @@
 </li>
 <li><p>redo文件：用于系统异常关闭后恢复Btree结构</p>
 <h3 id="3-1-2-配置KahaDB"><a href="#3-1-2-配置KahaDB" class="headerlink" title="3.1.2 配置KahaDB"></a>3.1.2 配置KahaDB</h3><p>  ActiveMQ会默认启动KahaDB。</p>
-<pre><code>&lt;broker xmlns="http://activemq.apache.org/schema/core"  brokerName="localhost" dataDirectory="${activemq.data}"&gt;
+<pre class=" language-xml"><code class="language-xml"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>broker</span> <span class="token attr-name">xmlns</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>http://activemq.apache.org/schema/core<span class="token punctuation">"</span></span>  <span class="token attr-name">brokerName</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>localhost<span class="token punctuation">"</span></span> <span class="token attr-name">dataDirectory</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>${activemq.data}<span class="token punctuation">"</span></span><span class="token punctuation">></span></span>
   ......
-  &lt;persistenceAdapter&gt;
-      &lt;kahaDB directory="${activemq.data}/kahadb" journalMaxFileLength="64mb" indexWriteBatchSize="500"/&gt;
-  &lt;/persistenceAdapter&gt;
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>persistenceAdapter</span><span class="token punctuation">></span></span>
+      <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>kahaDB</span> <span class="token attr-name">directory</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>${activemq.data}/kahadb<span class="token punctuation">"</span></span> <span class="token attr-name">journalMaxFileLength</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>64mb<span class="token punctuation">"</span></span> <span class="token attr-name">indexWriteBatchSize</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>500<span class="token punctuation">"</span></span><span class="token punctuation">/></span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>persistenceAdapter</span><span class="token punctuation">></span></span>
   ......
-&lt;/broker&gt;</code></pre></li>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>broker</span><span class="token punctuation">></span></span></code></pre>
+</li>
 <li><p>journalMaxFileLength：表示设置后的信息文件大小</p>
 </li>
 <li><p>indexWriteBatchSize：表示Metadata Cache 和 Metadata Store进行checkpoint同步的上限</p>
@@ -502,30 +503,32 @@
 <td>该文件记录sst文件的关键信息，包括：某个.sst文件属于哪一个Level，最小key值是多少，最大key值是多少等</td>
 </tr>
 </tbody></table>
-<h3 id="3-2-2-配置LevelDB"><a href="#3-2-2-配置LevelDB" class="headerlink" title="3.2.2 配置LevelDB"></a>3.2.2 配置LevelDB</h3><pre><code>&lt;persistenceAdapter&gt;
-    &lt;levelDB directory="${activemq.data}/levelDB" logSize="52428800" sync="false"/&gt;
-&lt;/persistenceAdapter&gt;</code></pre><ul>
+<h3 id="3-2-2-配置LevelDB"><a href="#3-2-2-配置LevelDB" class="headerlink" title="3.2.2 配置LevelDB"></a>3.2.2 配置LevelDB</h3><pre class=" language-xml"><code class="language-xml"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>persistenceAdapter</span><span class="token punctuation">></span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>levelDB</span> <span class="token attr-name">directory</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>${activemq.data}/levelDB<span class="token punctuation">"</span></span> <span class="token attr-name">logSize</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>52428800<span class="token punctuation">"</span></span> <span class="token attr-name">sync</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>false<span class="token punctuation">"</span></span><span class="token punctuation">/></span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>persistenceAdapter</span><span class="token punctuation">></span></span></code></pre>
+<ul>
 <li>directory：LevelDB的结构文件所放置的目录位置</li>
 <li>logSize：默认大小为100M，采用预占用磁盘，即一旦消息进入，就会有100MB被预先占用。</li>
 <li>sync：异步写log，异步在内存区域向Memtable写入位置索引。<h2 id="3-3-关系型数据库"><a href="#3-3-关系型数据库" class="headerlink" title="3.3 关系型数据库"></a>3.3 关系型数据库</h2>  ActiveMQ支持使用关系型数据库进行持久化存储–通过JDBC实现数据库的连接。<br>mysql数据库配置如下：</li>
 </ul>
-<pre><code>&lt;broker&gt;
-     &lt;persistenceAdapter&gt;
-        &lt;jdbcPersistenceAdapter dataSource="#mysql_datasource" createTablesOnStartup="true"/&gt;
-    &lt;/persistenceAdapter&gt;
-&lt;/broker&gt;
+<pre class=" language-xml"><code class="language-xml"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>broker</span><span class="token punctuation">></span></span>
+     <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>persistenceAdapter</span><span class="token punctuation">></span></span>
+        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>jdbcPersistenceAdapter</span> <span class="token attr-name">dataSource</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>#mysql_datasource<span class="token punctuation">"</span></span> <span class="token attr-name">createTablesOnStartup</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>true<span class="token punctuation">"</span></span><span class="token punctuation">/></span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>persistenceAdapter</span><span class="token punctuation">></span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>broker</span><span class="token punctuation">></span></span>
 
 
 
-&lt;bean id="mysql_datasource" class="com.mchange.v2.c3p0.ComboPooledDataSource"&gt;
-  &lt;property name="driverClass" value="com.mysql.jdbc.Driver"/&gt;
-  &lt;property name="jdbcUrl" value="jdbc:mysql://localhost:3306/activemqdb?relaxAutoCommit=true&amp;amp;useUnicode=true&amp;amp;characterEncoding=utf-8"/&gt;
-  &lt;property name="user" value="root"/&gt;
-  &lt;property name="password" value="123456"/&gt;
-  &lt;property name="minPoolSize" value="10"/&gt;
-  &lt;property name="maxPoolSize" value="30"/&gt;
-  &lt;property name="initialPoolSize" value="10"/&gt;
-&lt;/bean&gt;</code></pre><p><strong>备注：</strong>使用关系型数据库，需要将相关jar包放置到安装路径下的./lib目录下。</p>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>bean</span> <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>mysql_datasource<span class="token punctuation">"</span></span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>com.mchange.v2.c3p0.ComboPooledDataSource<span class="token punctuation">"</span></span><span class="token punctuation">></span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>property</span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>driverClass<span class="token punctuation">"</span></span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>com.mysql.jdbc.Driver<span class="token punctuation">"</span></span><span class="token punctuation">/></span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>property</span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>jdbcUrl<span class="token punctuation">"</span></span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>jdbc:mysql://localhost:3306/activemqdb?relaxAutoCommit<span class="token punctuation">=</span>true&amp;amp;useUnicode<span class="token punctuation">=</span>true&amp;amp;characterEncoding<span class="token punctuation">=</span>utf-8<span class="token punctuation">"</span></span><span class="token punctuation">/></span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>property</span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>user<span class="token punctuation">"</span></span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>root<span class="token punctuation">"</span></span><span class="token punctuation">/></span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>property</span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>password<span class="token punctuation">"</span></span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>123456<span class="token punctuation">"</span></span><span class="token punctuation">/></span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>property</span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>minPoolSize<span class="token punctuation">"</span></span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>10<span class="token punctuation">"</span></span><span class="token punctuation">/></span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>property</span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>maxPoolSize<span class="token punctuation">"</span></span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>30<span class="token punctuation">"</span></span><span class="token punctuation">/></span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>property</span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>initialPoolSize<span class="token punctuation">"</span></span> <span class="token attr-name">value</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>10<span class="token punctuation">"</span></span><span class="token punctuation">/></span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>bean</span><span class="token punctuation">></span></span></code></pre>
+<p><strong>备注：</strong>使用关系型数据库，需要将相关jar包放置到安装路径下的./lib目录下。</p>
 <script>
         document.querySelectorAll('.github-emoji')
           .forEach(el => {
@@ -765,9 +768,10 @@ ActiveMQ的安装
 解压包
 
 tar -zxvf apache-activemq-5.13.2-bin.tar.gz  
+
 配置环境变量
 
-vim /etc/prof
+vim /etc/pro
                         
                     </div>
                     <div class="publish-info">

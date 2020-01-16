@@ -442,44 +442,45 @@
 </li>
 </ul>
 <h4 id="2-2-源码分析"><a href="#2-2-源码分析" class="headerlink" title="2.2 源码分析"></a>2.2 源码分析</h4><p>​        以下是 java.util.concurrent.atomic包下的AtomicInteger的部分源码：</p>
-<pre><code>public class AtomicInteger extends Number implements java.io.Serializable {
-     private static final long serialVersionUID = 6214790243416807050L;
+<pre class=" language-java"><code class="language-java"><span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">AtomicInteger</span> <span class="token keyword">extends</span> <span class="token class-name">Number</span> <span class="token keyword">implements</span> <span class="token class-name">java<span class="token punctuation">.</span>io<span class="token punctuation">.</span>Serializable</span> <span class="token punctuation">{</span>
+     <span class="token keyword">private</span> <span class="token keyword">static</span> <span class="token keyword">final</span> <span class="token keyword">long</span> serialVersionUID <span class="token operator">=</span> 6214790243416807050L<span class="token punctuation">;</span>
 
-     //在没有锁的机制下，字段value要使用volatile，来保证数据在线程间是可见的。
-     private volatile int value;
+     <span class="token comment" spellcheck="true">//在没有锁的机制下，字段value要使用volatile，来保证数据在线程间是可见的。</span>
+     <span class="token keyword">private</span> <span class="token keyword">volatile</span> <span class="token keyword">int</span> value<span class="token punctuation">;</span>
 
-     public AtomicInteger(int initialValue) {
-        value = initialValue;
-    }
+     <span class="token keyword">public</span> <span class="token function">AtomicInteger</span><span class="token punctuation">(</span><span class="token keyword">int</span> initialValue<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        value <span class="token operator">=</span> initialValue<span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
 
-     public final int get() {
-        return value;
-    }
+     <span class="token keyword">public</span> <span class="token keyword">final</span> <span class="token keyword">int</span> <span class="token function">get</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">return</span> value<span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
 
-    public final void set(int newValue) {
-        value = newValue;
-    }
+    <span class="token keyword">public</span> <span class="token keyword">final</span> <span class="token keyword">void</span> <span class="token function">set</span><span class="token punctuation">(</span><span class="token keyword">int</span> newValue<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        value <span class="token operator">=</span> newValue<span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
 
-     public final int getAndSet(int newValue) {
-        return unsafe.getAndSetInt(this, valueOffset, newValue);
-    }
+     <span class="token keyword">public</span> <span class="token keyword">final</span> <span class="token keyword">int</span> <span class="token function">getAndSet</span><span class="token punctuation">(</span><span class="token keyword">int</span> newValue<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">return</span> unsafe<span class="token punctuation">.</span><span class="token function">getAndSetInt</span><span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">,</span> valueOffset<span class="token punctuation">,</span> newValue<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
 
-    //prev拿到原始值，next拿到新值，采用compareAndSet方法进行CAS操作，其返回的是boolean值，即在自旋过程中，如果修改失败，则继续自旋重试，直到数据修改成功。
-      public final int updateAndGet(IntUnaryOperator updateFunction) {
-        int prev, next;
-        do {
-            prev = get();
-            next = updateFunction.applyAsInt(prev);
-        } while (!compareAndSet(prev, next));
-        return next;
-    }
+    <span class="token comment" spellcheck="true">//prev拿到原始值，next拿到新值，采用compareAndSet方法进行CAS操作，其返回的是boolean值，即在自旋过程中，如果修改失败，则继续自旋重试，直到数据修改成功。</span>
+      <span class="token keyword">public</span> <span class="token keyword">final</span> <span class="token keyword">int</span> <span class="token function">updateAndGet</span><span class="token punctuation">(</span>IntUnaryOperator updateFunction<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">int</span> prev<span class="token punctuation">,</span> next<span class="token punctuation">;</span>
+        <span class="token keyword">do</span> <span class="token punctuation">{</span>
+            prev <span class="token operator">=</span> <span class="token function">get</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+            next <span class="token operator">=</span> updateFunction<span class="token punctuation">.</span><span class="token function">applyAsInt</span><span class="token punctuation">(</span>prev<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token punctuation">}</span> <span class="token keyword">while</span> <span class="token punctuation">(</span><span class="token operator">!</span><span class="token function">compareAndSet</span><span class="token punctuation">(</span>prev<span class="token punctuation">,</span> next<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">return</span> next<span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
 
-    //利用JNI（Java Native Interface）来完成CPU指令的操作
-     public final boolean compareAndSet(int expect, int update) {
-        return unsafe.compareAndSwapInt(this, valueOffset, expect, update);
-    }
+    <span class="token comment" spellcheck="true">//利用JNI（Java Native Interface）来完成CPU指令的操作</span>
+     <span class="token keyword">public</span> <span class="token keyword">final</span> <span class="token keyword">boolean</span> <span class="token function">compareAndSet</span><span class="token punctuation">(</span><span class="token keyword">int</span> expect<span class="token punctuation">,</span> <span class="token keyword">int</span> update<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">return</span> unsafe<span class="token punctuation">.</span><span class="token function">compareAndSwapInt</span><span class="token punctuation">(</span><span class="token keyword">this</span><span class="token punctuation">,</span> valueOffset<span class="token punctuation">,</span> expect<span class="token punctuation">,</span> update<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
 
-}</code></pre><h4 id="2-3-CAS的缺点："><a href="#2-3-CAS的缺点：" class="headerlink" title="2.3 CAS的缺点："></a>2.3 CAS的缺点：</h4><ul>
+<span class="token punctuation">}</span></code></pre>
+<h4 id="2-3-CAS的缺点："><a href="#2-3-CAS的缺点：" class="headerlink" title="2.3 CAS的缺点："></a>2.3 CAS的缺点：</h4><ul>
 <li><p>ABA问题</p>
 <p>​    如果内存地址V初次读取的值是A，期间被改成B，之后又被改回A，那么CAS操作就会认为它从来没有变过，这个漏洞称为CAS的“ABA”问题。java的atomic包提供了AtomicStampedReference类来解决ABA问题，其作用是首先检查当前引用是否等于预期引用，并且当前标志是否等于预期标志，如果全部相等，则以原子方式将该引用和该标志的值设置为给定的更新值。</p>
 </li>

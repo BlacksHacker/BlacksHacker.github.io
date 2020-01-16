@@ -418,40 +418,41 @@
         <div class="card-content article-card-content">
             <div id="articleContent">
                 <h1 id="CGLIB动态代理"><a href="#CGLIB动态代理" class="headerlink" title="CGLIB动态代理"></a>CGLIB动态代理</h1><h1 id="1-前言"><a href="#1-前言" class="headerlink" title="1.前言"></a>1.前言</h1><p>  CGLIB（Code Generator Library）是一个强大的、高性能的代码生成库。其被广泛应用于AOP框架（Spring、dynaop）中，用以提供方法拦截操作。<br>  CGLIB的底层是通过使用一个小而快的字节码处理框架ASM，来转换字节码并生成新的类。</p>
-<h2 id="2-CGLIB-实例代码："><a href="#2-CGLIB-实例代码：" class="headerlink" title="2.CGLIB 实例代码："></a>2.CGLIB 实例代码：</h2><pre><code>//被代理类
-public class User {
-    public String getUserName(){
-        System.out.println("this is Tom");
-        return "Tom";
-    }
-}
+<h2 id="2-CGLIB-实例代码："><a href="#2-CGLIB-实例代码：" class="headerlink" title="2.CGLIB 实例代码："></a>2.CGLIB 实例代码：</h2><pre class=" language-java"><code class="language-java"><span class="token comment" spellcheck="true">//被代理类</span>
+<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">User</span> <span class="token punctuation">{</span>
+    <span class="token keyword">public</span> String <span class="token function">getUserName</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
+        System<span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"this is Tom"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">return</span> <span class="token string">"Tom"</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
 
-//实现接口
-public class MyMethodInterceptor implements MethodInterceptor {
-    @Override
-    public Object intercept(Object o, Method method, Object[] objects, MethodProxy methodProxy) throws Throwable {
-        System.out.println("------beforeExecute");
-        Object object = methodProxy.invokeSuper(o, objects);
-        System.out.println("------afterExecute");
-        return object;
-    }
-}
+<span class="token comment" spellcheck="true">//实现接口</span>
+<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">MyMethodInterceptor</span> <span class="token keyword">implements</span> <span class="token class-name">MethodInterceptor</span> <span class="token punctuation">{</span>
+    <span class="token annotation punctuation">@Override</span>
+    <span class="token keyword">public</span> Object <span class="token function">intercept</span><span class="token punctuation">(</span>Object o<span class="token punctuation">,</span> Method method<span class="token punctuation">,</span> Object<span class="token punctuation">[</span><span class="token punctuation">]</span> objects<span class="token punctuation">,</span> MethodProxy methodProxy<span class="token punctuation">)</span> <span class="token keyword">throws</span> Throwable <span class="token punctuation">{</span>
+        System<span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"------beforeExecute"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        Object object <span class="token operator">=</span> methodProxy<span class="token punctuation">.</span><span class="token function">invokeSuper</span><span class="token punctuation">(</span>o<span class="token punctuation">,</span> objects<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        System<span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"------afterExecute"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">return</span> object<span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
 
-//测试类
-public class CglibTest {
-    public static void main(String[] args) {
-        Enhancer enhancer = new Enhancer();
-        enhancer.setSuperclass(User.class);
-        enhancer.setCallback(new MyMethodInterceptor());
-        User userProxy = (User)enhancer.create();
-        userProxy.getUserName();
-    }
-}
+<span class="token comment" spellcheck="true">//测试类</span>
+<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">CglibTest</span> <span class="token punctuation">{</span>
+    <span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">void</span> <span class="token function">main</span><span class="token punctuation">(</span>String<span class="token punctuation">[</span><span class="token punctuation">]</span> args<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        Enhancer enhancer <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Enhancer</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        enhancer<span class="token punctuation">.</span><span class="token function">setSuperclass</span><span class="token punctuation">(</span>User<span class="token punctuation">.</span><span class="token keyword">class</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        enhancer<span class="token punctuation">.</span><span class="token function">setCallback</span><span class="token punctuation">(</span><span class="token keyword">new</span> <span class="token class-name">MyMethodInterceptor</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        User userProxy <span class="token operator">=</span> <span class="token punctuation">(</span>User<span class="token punctuation">)</span>enhancer<span class="token punctuation">.</span><span class="token function">create</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        userProxy<span class="token punctuation">.</span><span class="token function">getUserName</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
 
-//结果
-------beforeExecute
-this is Tom
-------afterExecute</code></pre><script>
+<span class="token comment" spellcheck="true">//结果</span>
+<span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span>beforeExecute
+<span class="token keyword">this</span> is Tom
+<span class="token operator">--</span><span class="token operator">--</span><span class="token operator">--</span>afterExecute</code></pre>
+<script>
         document.querySelectorAll('.github-emoji')
           .forEach(el => {
             if (!el.dataset.src) { return; }

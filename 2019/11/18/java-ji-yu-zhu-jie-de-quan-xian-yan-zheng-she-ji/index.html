@@ -420,155 +420,160 @@
             <div id="articleContent">
                 <h3 id="1-前言"><a href="#1-前言" class="headerlink" title="1.前言"></a>1.前言</h3><p>​        前一段时间负责了一个项目的权限验证方面的设计，主要用于限制不同的角色的不同操作权限，仅限后端控制，前端控制的目的在于隐藏不必要的操作，以达到良好的用户体验，此处暂不涉及前端，进行整理，方便日后回顾。</p>
 <h3 id="2-基于注解的权限设计"><a href="#2-基于注解的权限设计" class="headerlink" title="2. 基于注解的权限设计"></a>2. 基于注解的权限设计</h3><p>​        后端的权限功能代代码采用了<strong>注解</strong>的形式，目的便于理解和解耦，为日后权限功能的扩展留下良好的设计思路。</p>
-<h5 id="2-1-注解"><a href="#2-1-注解" class="headerlink" title="2.1 注解"></a>2.1 注解</h5><pre><code>//该注解用于标记方法，标记所要进行权限控制的位置
+<h5 id="2-1-注解"><a href="#2-1-注解" class="headerlink" title="2.1 注解"></a>2.1 注解</h5><pre class=" language-java"><code class="language-java"><span class="token comment" spellcheck="true">//该注解用于标记方法，标记所要进行权限控制的位置</span>
 
-@Target(ElementType.METHOD)
-@Retention(RetentionPolicy.RUNTIME)
-@Documented
-@Component
-public @interface ActionCheck {
-    String name();
-    String value();
-}
+<span class="token annotation punctuation">@Target</span><span class="token punctuation">(</span>ElementType<span class="token punctuation">.</span>METHOD<span class="token punctuation">)</span>
+<span class="token annotation punctuation">@Retention</span><span class="token punctuation">(</span>RetentionPolicy<span class="token punctuation">.</span>RUNTIME<span class="token punctuation">)</span>
+<span class="token annotation punctuation">@Documented</span>
+<span class="token annotation punctuation">@Component</span>
+<span class="token keyword">public</span> @<span class="token keyword">interface</span> <span class="token class-name">ActionCheck</span> <span class="token punctuation">{</span>
+    String <span class="token function">name</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    String <span class="token function">value</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
 
-//该注解用于标记权限控制时，必须传入的入参，后面会对所标记的参数进行校验
-@Target(ElementType.PARAMETER)
-@Retention(RetentionPolicy.RUNTIME)
-@Documented
-@Component
-public @interface InputParam {
-}
+<span class="token comment" spellcheck="true">//该注解用于标记权限控制时，必须传入的入参，后面会对所标记的参数进行校验</span>
+<span class="token annotation punctuation">@Target</span><span class="token punctuation">(</span>ElementType<span class="token punctuation">.</span>PARAMETER<span class="token punctuation">)</span>
+<span class="token annotation punctuation">@Retention</span><span class="token punctuation">(</span>RetentionPolicy<span class="token punctuation">.</span>RUNTIME<span class="token punctuation">)</span>
+<span class="token annotation punctuation">@Documented</span>
+<span class="token annotation punctuation">@Component</span>
+<span class="token keyword">public</span> @<span class="token keyword">interface</span> <span class="token class-name">InputParam</span> <span class="token punctuation">{</span>
+<span class="token punctuation">}</span>
 
 
-</code></pre><h5 id="2-2-参数类"><a href="#2-2-参数类" class="headerlink" title="2.2 参数类"></a>2.2 参数类</h5><pre><code>该参数类中参数，是用于封装权限查询时的参数，不同业务参数不同。
+</code></pre>
+<h5 id="2-2-参数类"><a href="#2-2-参数类" class="headerlink" title="2.2 参数类"></a>2.2 参数类</h5><pre class=" language-java"><code class="language-java">该参数类中参数，是用于封装权限查询时的参数，不同业务参数不同。
 
-public class ActionCheckVo {
-    //项目UUID
-    private String projectUuid;
-    //模块
-    private String module;
-    //当前用于id
-    private String userId;
+<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">ActionCheckVo</span> <span class="token punctuation">{</span>
+    <span class="token comment" spellcheck="true">//项目UUID</span>
+    <span class="token keyword">private</span> String projectUuid<span class="token punctuation">;</span>
+    <span class="token comment" spellcheck="true">//模块</span>
+    <span class="token keyword">private</span> String module<span class="token punctuation">;</span>
+    <span class="token comment" spellcheck="true">//当前用于id</span>
+    <span class="token keyword">private</span> String userId<span class="token punctuation">;</span>
 
-    public String getProjectUuid() {
-        return projectUuid;
-    }
+    <span class="token keyword">public</span> String <span class="token function">getProjectUuid</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">return</span> projectUuid<span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
 
-    public void setProjectUuid(String projectUuid) {
-        this.projectUuid = projectUuid;
-    }
+    <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">setProjectUuid</span><span class="token punctuation">(</span>String projectUuid<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">this</span><span class="token punctuation">.</span>projectUuid <span class="token operator">=</span> projectUuid<span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
 
-    public String getModule() {
-        return module;
-    }
+    <span class="token keyword">public</span> String <span class="token function">getModule</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">return</span> module<span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
 
-    public void setModule(String module) {
-        this.module = module;
-    }
+    <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">setModule</span><span class="token punctuation">(</span>String module<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">this</span><span class="token punctuation">.</span>module <span class="token operator">=</span> module<span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
 
-    public String getUserId() {
-        return userId;
-    }
+    <span class="token keyword">public</span> String <span class="token function">getUserId</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">return</span> userId<span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
 
-    public void setUserId(String userId) {
-        this.userId = userId;
-    }
-}</code></pre><h4 id="2-3-AOP权限验证"><a href="#2-3-AOP权限验证" class="headerlink" title="2.3 AOP权限验证"></a>2.3 AOP权限验证</h4><p>​        权限验证是通过AOP的前置通知注解@Before，业务逻辑在执行@actionCheck所标记的方法时，会先执行AOP前置通知的权限验证，确保此次操作执行有权限进行。</p>
-<pre><code>@Aspect
-@Service
-public class RoleActionHandler {
+    <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">setUserId</span><span class="token punctuation">(</span>String userId<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">this</span><span class="token punctuation">.</span>userId <span class="token operator">=</span> userId<span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span></code></pre>
+<h4 id="2-3-AOP权限验证"><a href="#2-3-AOP权限验证" class="headerlink" title="2.3 AOP权限验证"></a>2.3 AOP权限验证</h4><p>​        权限验证是通过AOP的前置通知注解@Before，业务逻辑在执行@actionCheck所标记的方法时，会先执行AOP前置通知的权限验证，确保此次操作执行有权限进行。</p>
+<pre class=" language-java"><code class="language-java"><span class="token annotation punctuation">@Aspect</span>
+<span class="token annotation punctuation">@Service</span>
+<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">RoleActionHandler</span> <span class="token punctuation">{</span>
 
-    @Autowired
-    private ProjectGroupMemberMapper memberMapper;
+    <span class="token annotation punctuation">@Autowired</span>
+    <span class="token keyword">private</span> ProjectGroupMemberMapper memberMapper<span class="token punctuation">;</span>
 
-    @Autowired
-    private ProjectGroupActionMapper roleMapper;
+    <span class="token annotation punctuation">@Autowired</span>
+    <span class="token keyword">private</span> ProjectGroupActionMapper roleMapper<span class="token punctuation">;</span>
 
-    @Before("@annotation(actionCheck)")
-    public void ActionCheck(JoinPoint point, ActionCheck actionCheck){
-        ActionCheckVo checkVo = new ActionCheckVo();
-        Object[] params = point.getArgs();
-        for (Object param : params){
-            if (param instanceof ActionCheckVo){
-                checkVo = (ActionCheckVo) param;
-            }
-        }
+    <span class="token annotation punctuation">@Before</span><span class="token punctuation">(</span><span class="token string">"@annotation(actionCheck)"</span><span class="token punctuation">)</span>
+    <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">ActionCheck</span><span class="token punctuation">(</span>JoinPoint point<span class="token punctuation">,</span> ActionCheck actionCheck<span class="token punctuation">)</span><span class="token punctuation">{</span>
+        ActionCheckVo checkVo <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">ActionCheckVo</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        Object<span class="token punctuation">[</span><span class="token punctuation">]</span> params <span class="token operator">=</span> point<span class="token punctuation">.</span><span class="token function">getArgs</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">for</span> <span class="token punctuation">(</span>Object param <span class="token operator">:</span> params<span class="token punctuation">)</span><span class="token punctuation">{</span>
+            <span class="token keyword">if</span> <span class="token punctuation">(</span>param <span class="token keyword">instanceof</span> <span class="token class-name">ActionCheckVo</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
+                checkVo <span class="token operator">=</span> <span class="token punctuation">(</span>ActionCheckVo<span class="token punctuation">)</span> param<span class="token punctuation">;</span>
+            <span class="token punctuation">}</span>
+        <span class="token punctuation">}</span>
 
-        boolean auth = false;
-        List&lt;ProjectGroupMemberVo&gt; memberVoList = memberMapper.getProjectGroupMember(checkVo.getProjectUuid(), checkVo.getUserId());
-        if (memberVoList != null &amp;&amp; memberVoList.size() &gt; 0){
-            for (ProjectGroupMemberVo member : memberVoList){
-                ProjectGroupActionVo actionParam = new ProjectGroupActionVo();
-                actionParam.setGroupUuid(member.getGroupUuid());
-                actionParam.setModule(checkVo.getModule());
-                actionParam.setProcessAreaUuid(checkVo.getProcessAreaUuid());
-                List&lt;ProjectGroupActionVo&gt; actionVoList = roleMapper.searchGroupActionByParams(actionParam);
-                for (ProjectGroupActionVo actionVo : actionVoList){
-                    if (actionCheck.value().equals(actionVo.getAction())){
-                        auth = true;
-                        break;
-                    }
-                }
-            }
+        <span class="token keyword">boolean</span> auth <span class="token operator">=</span> <span class="token boolean">false</span><span class="token punctuation">;</span>
+        List<span class="token operator">&lt;</span>ProjectGroupMemberVo<span class="token operator">></span> memberVoList <span class="token operator">=</span> memberMapper<span class="token punctuation">.</span><span class="token function">getProjectGroupMember</span><span class="token punctuation">(</span>checkVo<span class="token punctuation">.</span><span class="token function">getProjectUuid</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span> checkVo<span class="token punctuation">.</span><span class="token function">getUserId</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">if</span> <span class="token punctuation">(</span>memberVoList <span class="token operator">!=</span> null <span class="token operator">&amp;&amp;</span> memberVoList<span class="token punctuation">.</span><span class="token function">size</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">></span> <span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
+            <span class="token keyword">for</span> <span class="token punctuation">(</span>ProjectGroupMemberVo member <span class="token operator">:</span> memberVoList<span class="token punctuation">)</span><span class="token punctuation">{</span>
+                ProjectGroupActionVo actionParam <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">ProjectGroupActionVo</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+                actionParam<span class="token punctuation">.</span><span class="token function">setGroupUuid</span><span class="token punctuation">(</span>member<span class="token punctuation">.</span><span class="token function">getGroupUuid</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+                actionParam<span class="token punctuation">.</span><span class="token function">setModule</span><span class="token punctuation">(</span>checkVo<span class="token punctuation">.</span><span class="token function">getModule</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+                actionParam<span class="token punctuation">.</span><span class="token function">setProcessAreaUuid</span><span class="token punctuation">(</span>checkVo<span class="token punctuation">.</span><span class="token function">getProcessAreaUuid</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+                List<span class="token operator">&lt;</span>ProjectGroupActionVo<span class="token operator">></span> actionVoList <span class="token operator">=</span> roleMapper<span class="token punctuation">.</span><span class="token function">searchGroupActionByParams</span><span class="token punctuation">(</span>actionParam<span class="token punctuation">)</span><span class="token punctuation">;</span>
+                <span class="token keyword">for</span> <span class="token punctuation">(</span>ProjectGroupActionVo actionVo <span class="token operator">:</span> actionVoList<span class="token punctuation">)</span><span class="token punctuation">{</span>
+                    <span class="token keyword">if</span> <span class="token punctuation">(</span>actionCheck<span class="token punctuation">.</span><span class="token function">value</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">equals</span><span class="token punctuation">(</span>actionVo<span class="token punctuation">.</span><span class="token function">getAction</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
+                        auth <span class="token operator">=</span> <span class="token boolean">true</span><span class="token punctuation">;</span>
+                        <span class="token keyword">break</span><span class="token punctuation">;</span>
+                    <span class="token punctuation">}</span>
+                <span class="token punctuation">}</span>
+            <span class="token punctuation">}</span>
 
-        }
-        if (!auth){
-            throw new ActionCheckFailedException();
-        }
-    }
+        <span class="token punctuation">}</span>
+        <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span>auth<span class="token punctuation">)</span><span class="token punctuation">{</span>
+            <span class="token keyword">throw</span> <span class="token keyword">new</span> <span class="token class-name">ActionCheckFailedException</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span>
 
-}</code></pre><h4 id="2-4-启动校验"><a href="#2-4-启动校验" class="headerlink" title="2.4 启动校验"></a>2.4 启动校验</h4><p>​        启动校验的目的是保证权限验证的注解被正确使用。</p>
+<span class="token punctuation">}</span></code></pre>
+<h4 id="2-4-启动校验"><a href="#2-4-启动校验" class="headerlink" title="2.4 启动校验"></a>2.4 启动校验</h4><p>​        启动校验的目的是保证权限验证的注解被正确使用。</p>
 <p> 启动校验有三种方式：</p>
 <ul>
 <li>实现<strong>WebApplicationInitializer</strong>接口，重写<strong>onStartup()</strong>方法。</li>
 <li>实现<strong>ApplicationListener</strong>接口，重写<strong>onApplicationEvent()</strong>方法。</li>
 <li>编写启动类，代码置于静态块中，使用注解类标记，并进行Spring注入。</li>
 </ul>
-<pre><code>public class ActionCheckInitializer implements WebApplicationInitializer {
+<pre class=" language-java"><code class="language-java"><span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">ActionCheckInitializer</span> <span class="token keyword">implements</span> <span class="token class-name">WebApplicationInitializer</span> <span class="token punctuation">{</span>
 
-    private static Map&lt;String, String&gt; roleActionMap = new HashMap&lt;&gt;();
+    <span class="token keyword">private</span> <span class="token keyword">static</span> Map<span class="token operator">&lt;</span>String<span class="token punctuation">,</span> String<span class="token operator">></span> roleActionMap <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">HashMap</span><span class="token operator">&lt;</span><span class="token operator">></span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 
-    @Override
-    public void onStartup(ServletContext servletContext) throws ServletException {
-        Reflections reflections = new Reflections("codedriver", new MethodAnnotationsScanner());
-        Set&lt;Method&gt; methods =  reflections.getMethodsAnnotatedWith(ActionCheck.class);
-        for (Method method : methods){
-            ActionCheck check = AnnotationUtils.findAnnotation(method, ActionCheck.class);
-            if (check != null){
-                boolean valid = false;
-                Annotation[][] parameterAnnotations = method.getParameterAnnotations();
-                if (parameterAnnotations.length == 1 &amp;&amp; parameterAnnotations[0].length == 1){
-                    if (parameterAnnotations[0][0] instanceof InputParam){
-                        AnnotatedType[] annotatedTypes =  method.getAnnotatedParameterTypes();
-                        AnnotatedType annotatedType = annotatedTypes[0];
-                        if(annotatedType.getType().getTypeName().equals(ActionCheckVo.class.getName())){
-                            valid = true;
-                        }
-                    }
-                }
-                if (valid){
-                    String key = check.value();
-                    String value = check.name();
-                    if (roleActionMap.containsKey(key) &amp;&amp; !roleActionMap.get(key).equals(value)){
-                        throw new ActionCheckValueConflictException();
-                    }else {
-                        roleActionMap.put(key, value);
-                    }
-                }else {
-                    throw new ActionCheckParamErrorException();
-                }
-            }
-        }
-    }
-}</code></pre><h4 id="2-5-测试类"><a href="#2-5-测试类" class="headerlink" title="2.5 测试类"></a>2.5 测试类</h4><p>​    test方法就是业务方法，通过@ActionCheck可以知道此处进行的是check操作，并且进行了权限判断。</p>
-<pre><code>@Service
-public class Test{
-    @ActionCheck(name = "检查", value = "check")
-    @Override
-    public void test(@InputParam ActionCheckVo actionCheckVo) {
-        System.out.println("aa");
-    }
-}</code></pre><script>
+    <span class="token annotation punctuation">@Override</span>
+    <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">onStartup</span><span class="token punctuation">(</span>ServletContext servletContext<span class="token punctuation">)</span> <span class="token keyword">throws</span> ServletException <span class="token punctuation">{</span>
+        Reflections reflections <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Reflections</span><span class="token punctuation">(</span><span class="token string">"codedriver"</span><span class="token punctuation">,</span> <span class="token keyword">new</span> <span class="token class-name">MethodAnnotationsScanner</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        Set<span class="token operator">&lt;</span>Method<span class="token operator">></span> methods <span class="token operator">=</span>  reflections<span class="token punctuation">.</span><span class="token function">getMethodsAnnotatedWith</span><span class="token punctuation">(</span>ActionCheck<span class="token punctuation">.</span><span class="token keyword">class</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">for</span> <span class="token punctuation">(</span>Method method <span class="token operator">:</span> methods<span class="token punctuation">)</span><span class="token punctuation">{</span>
+            ActionCheck check <span class="token operator">=</span> AnnotationUtils<span class="token punctuation">.</span><span class="token function">findAnnotation</span><span class="token punctuation">(</span>method<span class="token punctuation">,</span> ActionCheck<span class="token punctuation">.</span><span class="token keyword">class</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token keyword">if</span> <span class="token punctuation">(</span>check <span class="token operator">!=</span> null<span class="token punctuation">)</span><span class="token punctuation">{</span>
+                <span class="token keyword">boolean</span> valid <span class="token operator">=</span> <span class="token boolean">false</span><span class="token punctuation">;</span>
+                Annotation<span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token punctuation">[</span><span class="token punctuation">]</span> parameterAnnotations <span class="token operator">=</span> method<span class="token punctuation">.</span><span class="token function">getParameterAnnotations</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+                <span class="token keyword">if</span> <span class="token punctuation">(</span>parameterAnnotations<span class="token punctuation">.</span>length <span class="token operator">==</span> <span class="token number">1</span> <span class="token operator">&amp;&amp;</span> parameterAnnotations<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">.</span>length <span class="token operator">==</span> <span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
+                    <span class="token keyword">if</span> <span class="token punctuation">(</span>parameterAnnotations<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span> <span class="token keyword">instanceof</span> <span class="token class-name">InputParam</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
+                        AnnotatedType<span class="token punctuation">[</span><span class="token punctuation">]</span> annotatedTypes <span class="token operator">=</span>  method<span class="token punctuation">.</span><span class="token function">getAnnotatedParameterTypes</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+                        AnnotatedType annotatedType <span class="token operator">=</span> annotatedTypes<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
+                        <span class="token keyword">if</span><span class="token punctuation">(</span>annotatedType<span class="token punctuation">.</span><span class="token function">getType</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">getTypeName</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">equals</span><span class="token punctuation">(</span>ActionCheckVo<span class="token punctuation">.</span><span class="token keyword">class</span><span class="token punctuation">.</span><span class="token function">getName</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
+                            valid <span class="token operator">=</span> <span class="token boolean">true</span><span class="token punctuation">;</span>
+                        <span class="token punctuation">}</span>
+                    <span class="token punctuation">}</span>
+                <span class="token punctuation">}</span>
+                <span class="token keyword">if</span> <span class="token punctuation">(</span>valid<span class="token punctuation">)</span><span class="token punctuation">{</span>
+                    String key <span class="token operator">=</span> check<span class="token punctuation">.</span><span class="token function">value</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+                    String value <span class="token operator">=</span> check<span class="token punctuation">.</span><span class="token function">name</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+                    <span class="token keyword">if</span> <span class="token punctuation">(</span>roleActionMap<span class="token punctuation">.</span><span class="token function">containsKey</span><span class="token punctuation">(</span>key<span class="token punctuation">)</span> <span class="token operator">&amp;&amp;</span> <span class="token operator">!</span>roleActionMap<span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span>key<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">equals</span><span class="token punctuation">(</span>value<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
+                        <span class="token keyword">throw</span> <span class="token keyword">new</span> <span class="token class-name">ActionCheckValueConflictException</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+                    <span class="token punctuation">}</span><span class="token keyword">else</span> <span class="token punctuation">{</span>
+                        roleActionMap<span class="token punctuation">.</span><span class="token function">put</span><span class="token punctuation">(</span>key<span class="token punctuation">,</span> value<span class="token punctuation">)</span><span class="token punctuation">;</span>
+                    <span class="token punctuation">}</span>
+                <span class="token punctuation">}</span><span class="token keyword">else</span> <span class="token punctuation">{</span>
+                    <span class="token keyword">throw</span> <span class="token keyword">new</span> <span class="token class-name">ActionCheckParamErrorException</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+                <span class="token punctuation">}</span>
+            <span class="token punctuation">}</span>
+        <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span></code></pre>
+<h4 id="2-5-测试类"><a href="#2-5-测试类" class="headerlink" title="2.5 测试类"></a>2.5 测试类</h4><p>​    test方法就是业务方法，通过@ActionCheck可以知道此处进行的是check操作，并且进行了权限判断。</p>
+<pre class=" language-java"><code class="language-java"><span class="token annotation punctuation">@Service</span>
+<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">Test</span><span class="token punctuation">{</span>
+    <span class="token annotation punctuation">@ActionCheck</span><span class="token punctuation">(</span>name <span class="token operator">=</span> <span class="token string">"检查"</span><span class="token punctuation">,</span> value <span class="token operator">=</span> <span class="token string">"check"</span><span class="token punctuation">)</span>
+    <span class="token annotation punctuation">@Override</span>
+    <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">test</span><span class="token punctuation">(</span><span class="token annotation punctuation">@InputParam</span> ActionCheckVo actionCheckVo<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        System<span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"aa"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span></code></pre>
+<script>
         document.querySelectorAll('.github-emoji')
           .forEach(el => {
             if (!el.dataset.src) { return; }
@@ -786,31 +791,31 @@ public class Test{
 <article id="prenext-posts" class="prev-next articles">
     <div class="row article-row">
         
-        <div class="article col s12 m6" data-aos="fade-up" data-aos="fade-up">
+        <div class="article col s12 m6" data-aos="fade-up">
             <div class="article-badge left-badge text-color">
-                <i class="fa fa-dot-circle-o"></i>&nbsp;本篇
-            </div>
+                <i class="fa fa-chevron-left"></i>&nbsp;上一篇</div>
             <div class="card">
-                <a href="/2019/11/18/java-ji-yu-zhu-jie-de-quan-xian-yan-zheng-she-ji/">
+                <a href="/2019/11/24/java-fan-she-kuang-jia-reflections/">
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/5.jpg" class="responsive-img" alt="Java：基于AOP配合注解的权限验证设计">
+                        <img src="/medias/featureimages/1.jpg" class="responsive-img" alt="Java：反射框架 Reflections">
                         
-                        <span class="card-title">Java：基于AOP配合注解的权限验证设计</span>
+                        <span class="card-title">Java：反射框架 Reflections</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
                     <div class="summary block-with-text">
                         
-                            1.前言​        前一段时间负责了一个项目的权限验证方面的设计，主要用于限制不同的角色的不同操作权限，仅限后端控制，前端控制的目的在于隐藏不必要的操作，以达到良好的用户体验，此处暂不涉及前端，进行整理，方便日后回顾。
-2. 基于注解
+                            1. 类介绍​        Reflections通过classpath，索引元数据，并且允许在运行时查询这些元数据。
+1.1 maven坐标&lt;dependency>
+  &lt;groupId>org.reflections&lt
                         
                     </div>
                     <div class="publish-info">
-                            <span class="publish-date">
-                                <i class="fa fa-clock-o fa-fw icon-date"></i>2019-11-18
-                            </span>
+                        <span class="publish-date">
+                            <i class="fa fa-clock-o fa-fw icon-date"></i>2019-11-24
+                        </span>
                         <span class="publish-author">
                             
                             <i class="fa fa-bookmark fa-fw icon-category"></i>
@@ -823,12 +828,11 @@ public class Test{
                         </span>
                     </div>
                 </div>
-
                 
                 <div class="card-action article-tags">
                     
-                    <a href="/tags/权限设计/" target="_blank">
-                        <span class="chip bg-color">权限设计</span>
+                    <a href="/tags/java工具类/" target="_blank">
+                        <span class="chip bg-color">java工具类</span>
                     </a>
                     
                 </div>

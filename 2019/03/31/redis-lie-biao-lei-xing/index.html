@@ -461,40 +461,52 @@
 <li><p>添加操作</p>
 <ul>
 <li><p>从右边插入</p>
-<pre><code>  rpush key value[value ...]</code></pre></li>
+<pre class=" language-shell"><code class="language-shell">  rpush key value[value ...]</code></pre>
+</li>
 <li><p>从左边插入</p>
-<pre><code>lpush key value[value ...]</code></pre></li>
+<pre class=" language-shell"><code class="language-shell">lpush key value[value ...]</code></pre>
+</li>
 <li><p>向某个元素前或后插入元素</p>
-<pre><code>linsert key before|after pivot value</code></pre></li>
+<pre class=" language-shell"><code class="language-shell">linsert key before|after pivot value</code></pre>
+</li>
 </ul>
 </li>
 <li><p>查找</p>
 <ul>
 <li><p>获取指定范围的元素列表</p>
-<pre><code>lrange key start end</code></pre></li>
+<pre class=" language-shell"><code class="language-shell">lrange key start end</code></pre>
+</li>
 <li><p>获取指定索引下标的元素</p>
-<pre><code>lindex key index</code></pre></li>
+<pre class=" language-shell"><code class="language-shell">lindex key index</code></pre>
+</li>
 <li><p>获取列表长度</p>
-<pre><code>llen key</code></pre></li>
+<pre class=" language-shell"><code class="language-shell">llen key</code></pre>
+</li>
 </ul>
 </li>
 <li><p>删除</p>
 <ul>
 <li><p>从列表左侧弹出元素</p>
-<pre><code>lpop key</code></pre></li>
+<pre class=" language-shell"><code class="language-shell">lpop key</code></pre>
+</li>
 <li><p>右侧弹出元素</p>
-<pre><code>rpop key</code></pre></li>
+<pre class=" language-shell"><code class="language-shell">rpop key</code></pre>
+</li>
 <li><p>删除指定元素(count &gt;0 ,从左到右，count&lt;0 从右到左，count = 0, 删除所有)</p>
-<pre><code>lrem key count value</code></pre></li>
+<pre class=" language-shell"><code class="language-shell">lrem key count value</code></pre>
+</li>
 <li><p>按照索引范围修剪列表</p>
-<pre><code>ltrim key start end</code></pre></li>
+<pre class=" language-shell"><code class="language-shell">ltrim key start end</code></pre>
+</li>
 </ul>
 </li>
 <li><p>修改</p>
-<pre><code>lset key index newValue</code></pre></li>
+<pre class=" language-shell"><code class="language-shell">lset key index newValue</code></pre>
+</li>
 <li><p>阻塞操作(列表为空时，timeout=3，3秒后返回，timeout=0，客户端一直阻塞，直到新数据插入，列表不为空时，立即返回，多个客户端执行，遵循先到先得原则)</p>
-<pre><code>blpop key [key ...] timeout
-brpop key [key ...] timeout</code></pre></li>
+<pre class=" language-shell"><code class="language-shell">blpop key [key ...] timeout
+brpop key [key ...] timeout</code></pre>
+</li>
 </ul>
 <h3 id="3-内部编码"><a href="#3-内部编码" class="headerlink" title="3. 内部编码"></a>3. 内部编码</h3><p>，        列表的内部编码有两种：</p>
 <ul>
@@ -756,7 +768,8 @@ brpop key [key ...] timeout</code></pre></li>
 
 添加成员
 zadd key score member [score member ...]
-计算成员个
+
+计算成员
                         
                     </div>
                     <div class="publish-info">

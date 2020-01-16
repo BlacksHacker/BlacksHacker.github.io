@@ -421,136 +421,146 @@
             <div id="articleContent">
                 <h3 id="1-前言"><a href="#1-前言" class="headerlink" title="1. 前言"></a>1. 前言</h3><p>​        泛型的主要目的之一就是来指定容器要持有什么类型的对象，而且由编译器来保证类型的正确性，基本类型无法作为类型参数。</p>
 <h3 id="2-泛型"><a href="#2-泛型" class="headerlink" title="2. 泛型"></a>2. 泛型</h3><h5 id="2-1-元组概念"><a href="#2-1-元组概念" class="headerlink" title="2.1 元组概念"></a>2.1 元组概念</h5><p>​        将一组对象打包直接存储在其中一个单一对象中。</p>
-<pre><code>//可被继承 进行扩展
-public class TwoTuple&lt;A, B&gt;{
-    public final A first;
-    public final B second;
-    public TwoTuple(A a, B b){
-       first = a;
-       second = b;
-   }
-}
+<pre class=" language-java"><code class="language-java"><span class="token comment" spellcheck="true">//可被继承 进行扩展</span>
+<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">TwoTuple</span><span class="token operator">&lt;</span>A<span class="token punctuation">,</span> B<span class="token operator">></span><span class="token punctuation">{</span>
+    <span class="token keyword">public</span> <span class="token keyword">final</span> A first<span class="token punctuation">;</span>
+    <span class="token keyword">public</span> <span class="token keyword">final</span> B second<span class="token punctuation">;</span>
+    <span class="token keyword">public</span> <span class="token function">TwoTuple</span><span class="token punctuation">(</span>A a<span class="token punctuation">,</span> B b<span class="token punctuation">)</span><span class="token punctuation">{</span>
+       first <span class="token operator">=</span> a<span class="token punctuation">;</span>
+       second <span class="token operator">=</span> b<span class="token punctuation">;</span>
+   <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
 
-public class ThreeTuple&lt;A, B, C&gt; extends TwoTuple&lt;A, B&gt;{
-    public final C three;
-    public ThreeTuple(A a, B b, C c){
-       super(a, b)
-       three = c;
-   }    
-}
+<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">ThreeTuple</span><span class="token operator">&lt;</span>A<span class="token punctuation">,</span> B<span class="token punctuation">,</span> C<span class="token operator">></span> <span class="token keyword">extends</span> <span class="token class-name">TwoTuple</span><span class="token operator">&lt;</span>A<span class="token punctuation">,</span> B<span class="token operator">></span><span class="token punctuation">{</span>
+    <span class="token keyword">public</span> <span class="token keyword">final</span> C three<span class="token punctuation">;</span>
+    <span class="token keyword">public</span> <span class="token function">ThreeTuple</span><span class="token punctuation">(</span>A a<span class="token punctuation">,</span> B b<span class="token punctuation">,</span> C c<span class="token punctuation">)</span><span class="token punctuation">{</span>
+       <span class="token keyword">super</span><span class="token punctuation">(</span>a<span class="token punctuation">,</span> b<span class="token punctuation">)</span>
+       three <span class="token operator">=</span> c<span class="token punctuation">;</span>
+   <span class="token punctuation">}</span>    
+<span class="token punctuation">}</span>
 
-//元组测试  存放多个返回对象
-public class Tupletest{
-    public static TwoTuple&lt;String, Integer&gt; f(){
-       return new TwoTuple&lt;String, Integer&gt;("hello", 1024);    
-   }
-}</code></pre><h5 id="2-2-泛型接口"><a href="#2-2-泛型接口" class="headerlink" title="2.2 泛型接口"></a>2.2 泛型接口</h5><pre><code>pulic interface Gernerator&lt;T&gt;{
-    T next();
-}
+<span class="token comment" spellcheck="true">//元组测试  存放多个返回对象</span>
+<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">Tupletest</span><span class="token punctuation">{</span>
+    <span class="token keyword">public</span> <span class="token keyword">static</span> TwoTuple<span class="token operator">&lt;</span>String<span class="token punctuation">,</span> Integer<span class="token operator">></span> <span class="token function">f</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
+       <span class="token keyword">return</span> <span class="token keyword">new</span> <span class="token class-name">TwoTuple</span><span class="token operator">&lt;</span>String<span class="token punctuation">,</span> Integer<span class="token operator">></span><span class="token punctuation">(</span><span class="token string">"hello"</span><span class="token punctuation">,</span> <span class="token number">1024</span><span class="token punctuation">)</span><span class="token punctuation">;</span>    
+   <span class="token punctuation">}</span>
+<span class="token punctuation">}</span></code></pre>
+<h5 id="2-2-泛型接口"><a href="#2-2-泛型接口" class="headerlink" title="2.2 泛型接口"></a>2.2 泛型接口</h5><pre class=" language-java"><code class="language-java">pulic <span class="token keyword">interface</span> <span class="token class-name">Gernerator</span><span class="token operator">&lt;</span>T<span class="token operator">></span><span class="token punctuation">{</span>
+    T <span class="token function">next</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
 
-public class Coffee implements Generator&lt;String&gt;{
-    @Override
-    public String next(){
+<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">Coffee</span> <span class="token keyword">implements</span> <span class="token class-name">Generator</span><span class="token operator">&lt;</span>String<span class="token operator">></span><span class="token punctuation">{</span>
+    <span class="token annotation punctuation">@Override</span>
+    <span class="token keyword">public</span> String <span class="token function">next</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
 
-   }
-}
+   <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
 
-参数化的接口确保next（）的返回值是参数的类型。</code></pre><h5 id="2-3-泛型方法"><a href="#2-3-泛型方法" class="headerlink" title="2.3 泛型方法"></a>2.3 泛型方法</h5><p>​        泛型方法使得方法独立于类而产生变化。</p>
-<pre><code>public class GeneratorMethods{
-    public &lt;T&gt; void f(T x){
-       sout(x.getClass().getName());
-   }
-}</code></pre><p>​        使用泛型类时必须指明参数类型，而泛型方法不必指出， 编译器会进行类型参数推断。 类型参数判断若传入是基本类型，系统会自行进行打包处理。</p>
+参数化的接口确保next（）的返回值是参数的类型。</code></pre>
+<h5 id="2-3-泛型方法"><a href="#2-3-泛型方法" class="headerlink" title="2.3 泛型方法"></a>2.3 泛型方法</h5><p>​        泛型方法使得方法独立于类而产生变化。</p>
+<pre class=" language-java"><code class="language-java"><span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">GeneratorMethods</span><span class="token punctuation">{</span>
+    <span class="token keyword">public</span> <span class="token operator">&lt;</span>T<span class="token operator">></span> <span class="token keyword">void</span> <span class="token function">f</span><span class="token punctuation">(</span>T x<span class="token punctuation">)</span><span class="token punctuation">{</span>
+       <span class="token function">sout</span><span class="token punctuation">(</span>x<span class="token punctuation">.</span><span class="token function">getClass</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">getName</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+   <span class="token punctuation">}</span>
+<span class="token punctuation">}</span></code></pre>
+<p>​        使用泛型类时必须指明参数类型，而泛型方法不必指出， 编译器会进行类型参数推断。 类型参数判断若传入是基本类型，系统会自行进行打包处理。</p>
 <p>​        类型判断只对赋值操作有效，若将泛型方法调用的结果作为参数进行传递，编译器不会类型推断。因为编译器认为：泛型方法调用后，其返回值被赋给了Object类型的变量。</p>
-<pre><code>static void f(Map&lt;People, List&lt;? extends Pet&gt;&gt; petPeople){
+<pre class=" language-java"><code class="language-java"><span class="token keyword">static</span> <span class="token keyword">void</span> <span class="token function">f</span><span class="token punctuation">(</span>Map<span class="token operator">&lt;</span>People<span class="token punctuation">,</span> List<span class="token operator">&lt;</span><span class="token operator">?</span> <span class="token keyword">extends</span> <span class="token class-name">Pet</span><span class="token operator">>></span> petPeople<span class="token punctuation">)</span><span class="token punctuation">{</span>
 
-}
-f(New.map());</code></pre><p>​        显示进行说明 可以解决上述问题，即泛型显示说明</p>
-<pre><code>f(Map&lt;People, List&lt;Pet&gt; petPeople&gt;){
+<span class="token punctuation">}</span>
+<span class="token function">f</span><span class="token punctuation">(</span>New<span class="token punctuation">.</span><span class="token function">map</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
+<p>​        显示进行说明 可以解决上述问题，即泛型显示说明</p>
+<pre class=" language-java"><code class="language-java"><span class="token function">f</span><span class="token punctuation">(</span>Map<span class="token operator">&lt;</span>People<span class="token punctuation">,</span> List<span class="token operator">&lt;</span>Pet<span class="token operator">></span> petPeople<span class="token operator">></span><span class="token punctuation">)</span><span class="token punctuation">{</span>
 
-}
-f(New.&lt;Person.List&lt;Pet&gt;&gt;map());</code></pre><p>​        静态方法</p>
-<pre><code>public static &lt;T&gt; T getSelf(T a){
-   return a;
-}</code></pre><h5 id="2-4-泛型的限制"><a href="#2-4-泛型的限制" class="headerlink" title="2.4 泛型的限制"></a>2.4 泛型的限制</h5><ul>
+<span class="token punctuation">}</span>
+<span class="token function">f</span><span class="token punctuation">(</span>New<span class="token punctuation">.</span>&lt;Person<span class="token punctuation">.</span>List<span class="token operator">&lt;</span>Pet<span class="token operator">>></span><span class="token function">map</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
+<p>​        静态方法</p>
+<pre class=" language-java"><code class="language-java"><span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token operator">&lt;</span>T<span class="token operator">></span> T <span class="token function">getSelf</span><span class="token punctuation">(</span>T a<span class="token punctuation">)</span><span class="token punctuation">{</span>
+   <span class="token keyword">return</span> a<span class="token punctuation">;</span>
+<span class="token punctuation">}</span></code></pre>
+<h5 id="2-4-泛型的限制"><a href="#2-4-泛型的限制" class="headerlink" title="2.4 泛型的限制"></a>2.4 泛型的限制</h5><ul>
 <li>不能实例化类型变量</li>
 </ul>
-<pre><code>T objg = new T(); ERROR
+<pre class=" language-java"><code class="language-java">T objg <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">T</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span> ERROR
 
-//可以利用反射进行
+<span class="token comment" spellcheck="true">//可以利用反射进行</span>
 
-public class GenerateObj&lt;T&gt;(){
-    private T obj;
-    public GenerateObj(Class&lt;T&gt; c){
-       try{
-       obj = c.newInstance();
-       }catch(Exception e){
-           e.printStackTrance();
-       }
-   }
-}
+<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">GenerateObj</span><span class="token operator">&lt;</span>T<span class="token operator">></span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
+    <span class="token keyword">private</span> T obj<span class="token punctuation">;</span>
+    <span class="token keyword">public</span> <span class="token function">GenerateObj</span><span class="token punctuation">(</span>Class<span class="token operator">&lt;</span>T<span class="token operator">></span> c<span class="token punctuation">)</span><span class="token punctuation">{</span>
+       <span class="token keyword">try</span><span class="token punctuation">{</span>
+       obj <span class="token operator">=</span> c<span class="token punctuation">.</span><span class="token function">newInstance</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+       <span class="token punctuation">}</span><span class="token keyword">catch</span><span class="token punctuation">(</span>Exception e<span class="token punctuation">)</span><span class="token punctuation">{</span>
+           e<span class="token punctuation">.</span><span class="token function">printStackTrance</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+       <span class="token punctuation">}</span>
+   <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
 
-test:
-GenerateObj&lt;String&gt; obj = new GenerateObj&lt;&gt;(String.class);</code></pre><ul>
+test<span class="token operator">:</span>
+GenerateObj<span class="token operator">&lt;</span>String<span class="token operator">></span> obj <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">GenerateObj</span><span class="token operator">&lt;</span><span class="token operator">></span><span class="token punctuation">(</span>String<span class="token punctuation">.</span><span class="token keyword">class</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
+<ul>
 <li>不能实例化泛型数据</li>
 </ul>
-<pre><code>T[] arr = new T[3]; ERROR
+<pre class=" language-java"><code class="language-java">T<span class="token punctuation">[</span><span class="token punctuation">]</span> arr <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">T</span><span class="token punctuation">[</span><span class="token number">3</span><span class="token punctuation">]</span><span class="token punctuation">;</span> ERROR
 
-//A.可以先创建Object类型的数组，然后获取时转换为T类型的数组。
+<span class="token comment" spellcheck="true">//A.可以先创建Object类型的数组，然后获取时转换为T类型的数组。</span>
 
-public class GenerateArray{
-    private Object[] arr;
-    public GenerateArray(int n){
-       this.arr = new object[n];
-   }
-    public void set(int i, T o){
-       arr[i] = o;
-   }
-    public T get(int i){
-       return (T)this,arr[i];
-   }
-}
+<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">GenerateArray</span><span class="token punctuation">{</span>
+    <span class="token keyword">private</span> Object<span class="token punctuation">[</span><span class="token punctuation">]</span> arr<span class="token punctuation">;</span>
+    <span class="token keyword">public</span> <span class="token function">GenerateArray</span><span class="token punctuation">(</span><span class="token keyword">int</span> n<span class="token punctuation">)</span><span class="token punctuation">{</span>
+       <span class="token keyword">this</span><span class="token punctuation">.</span>arr <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">object</span><span class="token punctuation">[</span>n<span class="token punctuation">]</span><span class="token punctuation">;</span>
+   <span class="token punctuation">}</span>
+    <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">set</span><span class="token punctuation">(</span><span class="token keyword">int</span> i<span class="token punctuation">,</span> T o<span class="token punctuation">)</span><span class="token punctuation">{</span>
+       arr<span class="token punctuation">[</span>i<span class="token punctuation">]</span> <span class="token operator">=</span> o<span class="token punctuation">;</span>
+   <span class="token punctuation">}</span>
+    <span class="token keyword">public</span> T <span class="token function">get</span><span class="token punctuation">(</span><span class="token keyword">int</span> i<span class="token punctuation">)</span><span class="token punctuation">{</span>
+       <span class="token keyword">return</span> <span class="token punctuation">(</span>T<span class="token punctuation">)</span><span class="token keyword">this</span><span class="token punctuation">,</span>arr<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">;</span>
+   <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
 
-//B.利用反射机制
+<span class="token comment" spellcheck="true">//B.利用反射机制</span>
 
-public generateArray(Class&lt;T&gt; type, int n){
-    arr = (T[])Array.newInstance(type, n);
-}</code></pre><ul>
+<span class="token keyword">public</span> <span class="token function">generateArray</span><span class="token punctuation">(</span>Class<span class="token operator">&lt;</span>T<span class="token operator">></span> type<span class="token punctuation">,</span> <span class="token keyword">int</span> n<span class="token punctuation">)</span><span class="token punctuation">{</span>
+    arr <span class="token operator">=</span> <span class="token punctuation">(</span>T<span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token punctuation">)</span>Array<span class="token punctuation">.</span><span class="token function">newInstance</span><span class="token punctuation">(</span>type<span class="token punctuation">,</span> n<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span></code></pre>
+<ul>
 <li>不能在<strong>泛型类</strong>的静态上下文使用类型变量</li>
 </ul>
-<pre><code>public class Foo&lt;T&gt;{
-    private static T t;
-   public static T get(){     //error
-       return T;
-   }
-}</code></pre><ul>
+<pre class=" language-java"><code class="language-java"><span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">Foo</span><span class="token operator">&lt;</span>T<span class="token operator">></span><span class="token punctuation">{</span>
+    <span class="token keyword">private</span> <span class="token keyword">static</span> T t<span class="token punctuation">;</span>
+   <span class="token keyword">public</span> <span class="token keyword">static</span> T <span class="token function">get</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">{</span>     <span class="token comment" spellcheck="true">//error</span>
+       <span class="token keyword">return</span> T<span class="token punctuation">;</span>
+   <span class="token punctuation">}</span>
+<span class="token punctuation">}</span></code></pre>
+<ul>
 <li>不能抛出或者捕获泛型类的实例</li>
 </ul>
-<pre><code>public class Problem&lt;T&gt; extends Exception{  //error
-}
+<pre class=" language-java"><code class="language-java"><span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">Problem</span><span class="token operator">&lt;</span>T<span class="token operator">></span> <span class="token keyword">extends</span> <span class="token class-name">Exception</span><span class="token punctuation">{</span>  <span class="token comment" spellcheck="true">//error</span>
+<span class="token punctuation">}</span>
 
-//扩展Throwable也是不合法的
+<span class="token comment" spellcheck="true">//扩展Throwable也是不合法的</span>
 
-public class Foo {
-    public static &lt;T extends Throwable&gt; void doWork(){
-       try{
+<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">Foo</span> <span class="token punctuation">{</span>
+    <span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token operator">&lt;</span>T <span class="token keyword">extends</span> <span class="token class-name">Throwable</span><span class="token operator">></span> <span class="token keyword">void</span> <span class="token function">doWork</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
+       <span class="token keyword">try</span><span class="token punctuation">{</span>
 
-       }catch(T t){   //error
+       <span class="token punctuation">}</span><span class="token keyword">catch</span><span class="token punctuation">(</span>T t<span class="token punctuation">)</span><span class="token punctuation">{</span>   <span class="token comment" spellcheck="true">//error</span>
 
-       }
-   }
-}
+       <span class="token punctuation">}</span>
+   <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
 
-//但在异常规范中使用泛型变量是允许的
+<span class="token comment" spellcheck="true">//但在异常规范中使用泛型变量是允许的</span>
 
-public class Foo{
-    public static &lt;T extends Throwable&gt; void doWork(T t) throws T{
-       try{
-       }catch(Throwable realCause){
-           throw t;
-       }
-   }
-}</code></pre><h5 id="2-5-类型变量的规定"><a href="#2-5-类型变量的规定" class="headerlink" title="2.5 类型变量的规定"></a>2.5 类型变量的规定</h5><p>​        <strong>java类库中，常用E表示集合的元素类型，K和V分别表示关键字和值的类型，T（U, S）表示任意类型。</strong></p>
+<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">Foo</span><span class="token punctuation">{</span>
+    <span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token operator">&lt;</span>T <span class="token keyword">extends</span> <span class="token class-name">Throwable</span><span class="token operator">></span> <span class="token keyword">void</span> <span class="token function">doWork</span><span class="token punctuation">(</span>T t<span class="token punctuation">)</span> <span class="token keyword">throws</span> T<span class="token punctuation">{</span>
+       <span class="token keyword">try</span><span class="token punctuation">{</span>
+       <span class="token punctuation">}</span><span class="token keyword">catch</span><span class="token punctuation">(</span>Throwable realCause<span class="token punctuation">)</span><span class="token punctuation">{</span>
+           <span class="token keyword">throw</span> t<span class="token punctuation">;</span>
+       <span class="token punctuation">}</span>
+   <span class="token punctuation">}</span>
+<span class="token punctuation">}</span></code></pre>
+<h5 id="2-5-类型变量的规定"><a href="#2-5-类型变量的规定" class="headerlink" title="2.5 类型变量的规定"></a>2.5 类型变量的规定</h5><p>​        <strong>java类库中，常用E表示集合的元素类型，K和V分别表示关键字和值的类型，T（U, S）表示任意类型。</strong></p>
 <ul>
 <li><p>被定义的泛型类作为接收方，也需要对传入的类型变量T的值做一定的限制和约束，如必须是某个超类的子类，或实现某个接口</p>
 </li>
@@ -559,9 +569,10 @@ public class Foo{
 <li><p>限定类型之间使用“&amp;”进行分割。</p>
 </li>
 <li><p>如果有类有接口，类名放于前，且至多有一个，接口不限</p>
-<pre><code>public class Foo&lt;T extends SuperClass&amp;Comparable&gt;{
+<pre class=" language-java"><code class="language-java"><span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">Foo</span><span class="token operator">&lt;</span>T <span class="token keyword">extends</span> <span class="token class-name">SuperClass</span><span class="token operator">&amp;</span>Comparable<span class="token operator">></span><span class="token punctuation">{</span>
 
-}</code></pre></li>
+<span class="token punctuation">}</span></code></pre>
+</li>
 </ul>
 <h5 id="2-6-泛型的继承关系"><a href="#2-6-泛型的继承关系" class="headerlink" title="2.6 泛型的继承关系"></a>2.6 泛型的继承关系</h5><ul>
 <li>类名相同，但类型变量T不同的两个泛型类没有什么联系（即使Employee 是Manager的父类）。（ArrayList<manager> 和 ArrayList<employee>）</employee></manager></li>
@@ -570,11 +581,13 @@ public class Foo{
 </ul>
 <h5 id="2-7-统配符的使用"><a href="#2-7-统配符的使用" class="headerlink" title="2.7 统配符的使用"></a>2.7 统配符的使用</h5><ul>
 <li><p>向上造型一个泛型对象的引用（上界通配符）</p>
-<pre><code>List&lt;Apple&gt; apples = new ArrayList&lt;Apple&gt;();
-List&lt;? extends Fruits&gt; fruits = apples;</code></pre><p>​        <strong>上界通配符，List&lt;? extends Fruits&gt; 是 List<fruits>和List<apple>的基类,一个能放水果以及一切都是水果派生类的盘子。</apple></fruits></strong></p>
+<pre class=" language-java"><code class="language-java">List<span class="token operator">&lt;</span>Apple<span class="token operator">></span> apples <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">ArrayList</span><span class="token operator">&lt;</span>Apple<span class="token operator">></span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+List<span class="token operator">&lt;</span><span class="token operator">?</span> <span class="token keyword">extends</span> <span class="token class-name">Fruits</span><span class="token operator">></span> fruits <span class="token operator">=</span> apples<span class="token punctuation">;</span></code></pre>
+<p>​        <strong>上界通配符，List&lt;? extends Fruits&gt; 是 List<fruits>和List<apple>的基类,一个能放水果以及一切都是水果派生类的盘子。</apple></fruits></strong></p>
 </li>
 <li><p><strong>下界通配符，Plate&lt;? super Fruit&gt; 是 Plate<fruit>的基类，但不是Plate<apple>的基类。一个能放水果以及一切是水果基类的盘子。Food 是 Fruits的基类。</apple></fruit></strong></p>
-<pre><code>List&lt;? super Fruits&gt; list = new List&lt;Fruit&gt;(new Fruit());</code></pre><p><strong><em>副作用：</em></strong></p>
+<pre class=" language-java"><code class="language-java">List<span class="token operator">&lt;</span><span class="token operator">?</span> <span class="token keyword">super</span> Fruits<span class="token operator">></span> list <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">List</span><span class="token operator">&lt;</span>Fruit<span class="token operator">></span><span class="token punctuation">(</span><span class="token keyword">new</span> <span class="token class-name">Fruit</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
+<p><strong><em>副作用：</em></strong></p>
 <ul>
 <li>上界不能存，只能外取。即&lt;? extends Fruits&gt; 会让set方法失效，但get方法还是有效的。</li>
 <li>原因：编译器只知道容器内是Frutis或者它的子类，但不知道具体的类型，所以标上一个占位符，具体类不清楚，插入时，容器类不清楚是否与之匹配，所以就不允许。  并且读出来的东西，只能以父类进行接收。</li>
@@ -620,9 +633,10 @@ List&lt;? extends Fruits&gt; fruits = apples;</code></pre><p>​        <strong>
 <li>在类文字中必须使用原生态类型，规范不允许使用参数，List.class, String[].class  都是合法的，List&lt;String.class&gt;和 List&lt;?&gt;.class则不合法。</li>
 <li>泛型信息在运行时被擦除，因此在参数化类型而非无限制通配符类型上使用instance操作符是非法的。用无限制通配符类型替换原生类型，对instanceof操作符的行为不会产生任何影响</li>
 </ul>
-<pre><code>if&lt;o instanceof Set&gt;{
-    Set&lt;?&gt; m = (Set&lt;?&gt;) o;
-}</code></pre></li>
+<pre class=" language-java"><code class="language-java"><span class="token keyword">if</span><span class="token operator">&lt;</span>o <span class="token keyword">instanceof</span> <span class="token class-name">Set</span><span class="token operator">></span><span class="token punctuation">{</span>
+    Set<span class="token operator">&lt;</span><span class="token operator">?</span><span class="token operator">></span> m <span class="token operator">=</span> <span class="token punctuation">(</span>Set<span class="token operator">&lt;</span><span class="token operator">?</span><span class="token operator">></span><span class="token punctuation">)</span> o<span class="token punctuation">;</span>
+<span class="token punctuation">}</span></code></pre>
+</li>
 </ul>
 </li>
 <li><p>第 24 条：消除非受检警告</p>
@@ -630,42 +644,45 @@ List&lt;? extends Fruits&gt; fruits = apples;</code></pre><p>​        <strong>
 <li>消除非受检警告，要尽可能的消除每一个非受检警告,每一个警告都有可能抛出ClassCastException异常，使用该注解，最好写上原因。</li>
 <li>SuppressWarnings注解放在return语句是非法的，应该新建一个局部变量进行保存返回值</li>
 </ul>
-<pre><code>@SuppressWarnings("uncheck")
-T[] result = (T[])Arrays.copeOf(elements, size, a.getClass());</code></pre></li>
+<pre class=" language-java"><code class="language-java"><span class="token annotation punctuation">@SuppressWarnings</span><span class="token punctuation">(</span><span class="token string">"uncheck"</span><span class="token punctuation">)</span>
+T<span class="token punctuation">[</span><span class="token punctuation">]</span> result <span class="token operator">=</span> <span class="token punctuation">(</span>T<span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token punctuation">)</span>Arrays<span class="token punctuation">.</span><span class="token function">copeOf</span><span class="token punctuation">(</span>elements<span class="token punctuation">,</span> size<span class="token punctuation">,</span> a<span class="token punctuation">.</span><span class="token function">getClass</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
+</li>
 <li><p>第 25 条：列表优先于数组</p>
 <ul>
 <li>数组与泛型相比，是协变的，具体化的。 sub是super的子类型，则sub[] 就是super[]的子类型，但是泛型却是不行的。数组的错误会在运行时才抛出异常，而列表则会进行编译检查。</li>
 <li>泛型在编译时强化它们的类型信息，在运行时丢弃或擦出元素类型信息。擦除就是使用泛型可以与没有使用泛型的代码随意互用</li>
 <li>创建泛型、参数化类型或者类型参数的数组都是非法的。 非法的原因在于它不是类型安全的。</li>
 </ul>
-<pre><code>new List&lt;E&gt;[]  new List&lt;String&gt;[] 和 new E[]
+<pre class=" language-java"><code class="language-java"><span class="token keyword">new</span> <span class="token class-name">List</span><span class="token operator">&lt;</span>E<span class="token operator">></span><span class="token punctuation">[</span><span class="token punctuation">]</span>  <span class="token keyword">new</span> <span class="token class-name">List</span><span class="token operator">&lt;</span>String<span class="token operator">></span><span class="token punctuation">[</span><span class="token punctuation">]</span> 和 <span class="token keyword">new</span> <span class="token class-name">E</span><span class="token punctuation">[</span><span class="token punctuation">]</span>
 
 举例说明非法的原因：
 创建一个使用参数化类型List的数组
-List&lt;String&gt;[] stringlist = new List&lt;String&gt;[1];
+List<span class="token operator">&lt;</span>String<span class="token operator">></span><span class="token punctuation">[</span><span class="token punctuation">]</span> stringlist <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">List</span><span class="token operator">&lt;</span>String<span class="token operator">></span><span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
 创建一个使用参数化类型的列表
-List&lt;Integer&gt; intList = new ArrayList[];
+List<span class="token operator">&lt;</span>Integer<span class="token operator">></span> intList <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">ArrayList</span><span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
 由于数组是协变的，所以下面的是成立的。
-Object[] objects = stringList
+Object<span class="token punctuation">[</span><span class="token punctuation">]</span> objects <span class="token operator">=</span> stringList
 因而，就可以
-objects[0] = stringList;
+objects<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span> <span class="token operator">=</span> stringList<span class="token punctuation">;</span>
 但是下面的取值方式，看似是合理的，但是由于存入的是一个Integer参数画的List，所以会将Integer转换成String，这时就会抛出异常
-String s = stringList[0].get(0);</code></pre></li>
+String s <span class="token operator">=</span> stringList<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
+</li>
 <li><p>第26条：优先考虑使用泛型</p>
 </li>
 </ul>
-<pre><code>当在使用泛型类型时，进行转换的时候，
+<pre class=" language-java"><code class="language-java">当在使用泛型类型时，进行转换的时候，
 
-//标量类型
-private Object[] elements;
-E result = (E)elements[size];
+<span class="token comment" spellcheck="true">//标量类型</span>
+<span class="token keyword">private</span> Object<span class="token punctuation">[</span><span class="token punctuation">]</span> elements<span class="token punctuation">;</span>
+E result <span class="token operator">=</span> <span class="token punctuation">(</span>E<span class="token punctuation">)</span>elements<span class="token punctuation">[</span>size<span class="token punctuation">]</span><span class="token punctuation">;</span>
 
-//数组类型
-private E[] elements;
-elements = (E[]) new Object[12];
+<span class="token comment" spellcheck="true">//数组类型</span>
+<span class="token keyword">private</span> E<span class="token punctuation">[</span><span class="token punctuation">]</span> elements<span class="token punctuation">;</span>
+elements <span class="token operator">=</span> <span class="token punctuation">(</span>E<span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token punctuation">)</span> <span class="token keyword">new</span> <span class="token class-name">Object</span><span class="token punctuation">[</span><span class="token number">12</span><span class="token punctuation">]</span><span class="token punctuation">;</span>
 
-两种方式都可以，但当使用SuppressWarnings注解时
-禁止数组类型的未受检转换比禁止标量类型的更加危险(2比1更加危险)。</code></pre><script>
+<span class="token comment" spellcheck="true">//两种方式都可以，但当使用SuppressWarnings注解时</span>
+<span class="token comment" spellcheck="true">//禁止数组类型的未受检转换比禁止标量类型的更加危险(2比1更加危险)。</span></code></pre>
+<script>
         document.querySelectorAll('.github-emoji')
           .forEach(el => {
             if (!el.dataset.src) { return; }

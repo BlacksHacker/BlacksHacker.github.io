@@ -431,108 +431,109 @@
             <div id="articleContent">
                 <h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><p>​        公司最近给主模块搞一个系统通知的功能，要求设计并对接各大分模块的消息通知，要求是分模块业务执行过程中会触发消息插件，将消息推送到系统通知的消息存储区域，但是一旦业务执行失败，业务会进行回滚，但是消息已经发出去了，显然不合理。因此配合事务，最后采用Spring事务异步进行发送的方式搞定，即业务执行完毕之后事务提交，则进行消息的异步推送。</p>
 <h3 id="异步发送"><a href="#异步发送" class="headerlink" title="异步发送"></a>异步发送</h3><p>​            直接上代码：</p>
-<pre><code>@Service
-public class SystemRemindMessageHandler {
+<pre class=" language-java"><code class="language-java"><span class="token annotation punctuation">@Service</span>
+<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">SystemRemindMessageHandler</span> <span class="token punctuation">{</span>
 
-    //采用log4j进行日志保存
-    static Logger logger = LoggerFactory.getLogger(SystemRemindMessageHandler.class);
+    <span class="token comment" spellcheck="true">//采用log4j进行日志保存</span>
+    <span class="token keyword">static</span> Logger logger <span class="token operator">=</span> LoggerFactory<span class="token punctuation">.</span><span class="token function">getLogger</span><span class="token punctuation">(</span>SystemRemindMessageHandler<span class="token punctuation">.</span><span class="token keyword">class</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 
-    //采用ThreadLocal为每个线程保存相关的 异步线程集合
-    private static final ThreadLocal&lt;List&lt;Runnable&gt;&gt; RUNNABLES = new ThreadLocal&lt;&gt;();
+    <span class="token comment" spellcheck="true">//采用ThreadLocal为每个线程保存相关的 异步线程集合</span>
+    <span class="token keyword">private</span> <span class="token keyword">static</span> <span class="token keyword">final</span> ThreadLocal<span class="token operator">&lt;</span>List<span class="token operator">&lt;</span>Runnable<span class="token operator">>></span> RUNNABLES <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">ThreadLocal</span><span class="token operator">&lt;</span><span class="token operator">></span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 
-    private static RealTimeRemindMapper realTimeRemindMapper;
+    <span class="token keyword">private</span> <span class="token keyword">static</span> RealTimeRemindMapper realTimeRemindMapper<span class="token punctuation">;</span>
 
-    private static RemindMapper remindMapper;
+    <span class="token keyword">private</span> <span class="token keyword">static</span> RemindMapper remindMapper<span class="token punctuation">;</span>
 
-    //Spring注入
-    @Autowired
-    public  void setRealTimeRemindMapper(RealTimeRemindMapper realTimeRemindMapper) {
-        SystemRemindMessageHandler.realTimeRemindMapper = realTimeRemindMapper;
-    }
+    <span class="token comment" spellcheck="true">//Spring注入</span>
+    <span class="token annotation punctuation">@Autowired</span>
+    <span class="token keyword">public</span>  <span class="token keyword">void</span> <span class="token function">setRealTimeRemindMapper</span><span class="token punctuation">(</span>RealTimeRemindMapper realTimeRemindMapper<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        SystemRemindMessageHandler<span class="token punctuation">.</span>realTimeRemindMapper <span class="token operator">=</span> realTimeRemindMapper<span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
 
-    //Spring注入
-    @Autowired
-    public  void setRemindMapper(RemindMapper remindMapper) {
-        SystemRemindMessageHandler.remindMapper = remindMapper;
-    }
+    <span class="token comment" spellcheck="true">//Spring注入</span>
+    <span class="token annotation punctuation">@Autowired</span>
+    <span class="token keyword">public</span>  <span class="token keyword">void</span> <span class="token function">setRemindMapper</span><span class="token punctuation">(</span>RemindMapper remindMapper<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        SystemRemindMessageHandler<span class="token punctuation">.</span>remindMapper <span class="token operator">=</span> remindMapper<span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
 
-    //使用锁保证并行消息发送的安全性
-    public synchronized static void sendMessage(RemindMessageVo messageVo, String className){
-        //创建线程
-        SystemRemindMessageHandler.MessageRunner runner = new SystemRemindMessageHandler.MessageRunner(messageVo, className);
-        //如果当前不存在事务，则直接进行消息的保存
-        if (!TransactionSynchronizationManager.isSynchronizationActive()){
-            CommonThreadPool.execute(runner);
-            return;
-        }
-        //获取当前线程的异步线程集合
-        List&lt;Runnable&gt; runnables = RUNNABLES.get();
-        //如果没有当前线程的异步线程集合，则创建
-        if (runnables == null){
-            runnables = new ArrayList&lt;Runnable&gt;();
-            //创建好的集合加入ThreadLocal
-            RUNNABLES.set(runnables);
-            //设置事务触发的动作
-            TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronizationAdapter() {
+    <span class="token comment" spellcheck="true">//使用锁保证并行消息发送的安全性</span>
+    <span class="token keyword">public</span> <span class="token keyword">synchronized</span> <span class="token keyword">static</span> <span class="token keyword">void</span> <span class="token function">sendMessage</span><span class="token punctuation">(</span>RemindMessageVo messageVo<span class="token punctuation">,</span> String className<span class="token punctuation">)</span><span class="token punctuation">{</span>
+        <span class="token comment" spellcheck="true">//创建线程</span>
+        SystemRemindMessageHandler<span class="token punctuation">.</span>MessageRunner runner <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">SystemRemindMessageHandler<span class="token punctuation">.</span>MessageRunner</span><span class="token punctuation">(</span>messageVo<span class="token punctuation">,</span> className<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token comment" spellcheck="true">//如果当前不存在事务，则直接进行消息的保存</span>
+        <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span>TransactionSynchronizationManager<span class="token punctuation">.</span><span class="token function">isSynchronizationActive</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
+            CommonThreadPool<span class="token punctuation">.</span><span class="token function">execute</span><span class="token punctuation">(</span>runner<span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token keyword">return</span><span class="token punctuation">;</span>
+        <span class="token punctuation">}</span>
+        <span class="token comment" spellcheck="true">//获取当前线程的异步线程集合</span>
+        List<span class="token operator">&lt;</span>Runnable<span class="token operator">></span> runnables <span class="token operator">=</span> RUNNABLES<span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token comment" spellcheck="true">//如果没有当前线程的异步线程集合，则创建</span>
+        <span class="token keyword">if</span> <span class="token punctuation">(</span>runnables <span class="token operator">==</span> null<span class="token punctuation">)</span><span class="token punctuation">{</span>
+            runnables <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">ArrayList</span><span class="token operator">&lt;</span>Runnable<span class="token operator">></span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token comment" spellcheck="true">//创建好的集合加入ThreadLocal</span>
+            RUNNABLES<span class="token punctuation">.</span><span class="token function">set</span><span class="token punctuation">(</span>runnables<span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token comment" spellcheck="true">//设置事务触发的动作</span>
+            TransactionSynchronizationManager<span class="token punctuation">.</span><span class="token function">registerSynchronization</span><span class="token punctuation">(</span><span class="token keyword">new</span> <span class="token class-name">TransactionSynchronizationAdapter</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
 
-                //重写事务提交后的动作
-                @Override
-                public void afterCommit() {
+                <span class="token comment" spellcheck="true">//重写事务提交后的动作</span>
+                <span class="token annotation punctuation">@Override</span>
+                <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">afterCommit</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
 
-                    //拿到当前线程的异步线程集合，遍历全部执行，消息推送
-                    List&lt;Runnable&gt; runnables = RUNNABLES.get();
-                    for (int i = 0; i &lt; runnables.size(); i++){
-                        Runnable runnable = runnables.get(i);
-                        CommonThreadPool.execute(runnable);
-                    }
-                }
+                    <span class="token comment" spellcheck="true">//拿到当前线程的异步线程集合，遍历全部执行，消息推送</span>
+                    List<span class="token operator">&lt;</span>Runnable<span class="token operator">></span> runnables <span class="token operator">=</span> RUNNABLES<span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+                    <span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token keyword">int</span> i <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span> i <span class="token operator">&lt;</span> runnables<span class="token punctuation">.</span><span class="token function">size</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span> i<span class="token operator">++</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
+                        Runnable runnable <span class="token operator">=</span> runnables<span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span>i<span class="token punctuation">)</span><span class="token punctuation">;</span>
+                        CommonThreadPool<span class="token punctuation">.</span><span class="token function">execute</span><span class="token punctuation">(</span>runnable<span class="token punctuation">)</span><span class="token punctuation">;</span>
+                    <span class="token punctuation">}</span>
+                <span class="token punctuation">}</span>
 
-                //重写完成方法，移除当前线程的异步线程集合
-                @Override
-                public void afterCompletion(int status){
-                    RUNNABLES.remove();
-                }
-            });
-        }
-        //如果当前线程存在异步线程集合，则加入
-        runnables.add(runner);
-    }
+                <span class="token comment" spellcheck="true">//重写完成方法，移除当前线程的异步线程集合</span>
+                <span class="token annotation punctuation">@Override</span>
+                <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">afterCompletion</span><span class="token punctuation">(</span><span class="token keyword">int</span> status<span class="token punctuation">)</span><span class="token punctuation">{</span>
+                    RUNNABLES<span class="token punctuation">.</span><span class="token function">remove</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+                <span class="token punctuation">}</span>
+            <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token punctuation">}</span>
+        <span class="token comment" spellcheck="true">//如果当前线程存在异步线程集合，则加入</span>
+        runnables<span class="token punctuation">.</span><span class="token function">add</span><span class="token punctuation">(</span>runner<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
 
-    //静态内部类
-    static class MessageRunner implements Runnable{
+    <span class="token comment" spellcheck="true">//静态内部类</span>
+    <span class="token keyword">static</span> <span class="token keyword">class</span> <span class="token class-name">MessageRunner</span> <span class="token keyword">implements</span> <span class="token class-name">Runnable</span><span class="token punctuation">{</span>
 
-        private RemindMessageVo mess;
+        <span class="token keyword">private</span> RemindMessageVo mess<span class="token punctuation">;</span>
 
-        private String className;
+        <span class="token keyword">private</span> String className<span class="token punctuation">;</span>
 
-        public MessageRunner(RemindMessageVo _mess, String _className){
-            mess = _mess;
-            className = _className;
-        }
+        <span class="token keyword">public</span> <span class="token function">MessageRunner</span><span class="token punctuation">(</span>RemindMessageVo _mess<span class="token punctuation">,</span> String _className<span class="token punctuation">)</span><span class="token punctuation">{</span>
+            mess <span class="token operator">=</span> _mess<span class="token punctuation">;</span>
+            className <span class="token operator">=</span> _className<span class="token punctuation">;</span>
+        <span class="token punctuation">}</span>
 
-        @Override
-        public void run() {
-            String oldName = Thread.currentThread().getName();
-            //修改线程名，以便于日志打印问题
-            Thread.currentThread().setName("SYSTEMREMIND-MESSAGEHANDLER-" + mess.getTitle());
-            try{
-                Long systemRemindId = remindMapper.getRemindIdByClassName(className);
-                if (systemRemindId != null &amp;&amp; systemRemindId !=0L){
-                    //此处进行省略，为消息发送业务代码
-                }else {
-                    throw new RuntimeException("找不到动态消息组件：" + className);
-                }
-            }catch (Exception ex){
-                logger.error(ex.getMessage(), ex);
-            }
-            finally {
-                //恢复线程名称
-                Thread.currentThread().setName(oldName);
-            }
-        }
-    }
-}
-</code></pre><p>参考博客：<a href="https://segmentfault.com/a/1190000004235193" target="_blank" rel="noopener">如何在数据库事务提交成功后进行异步操作</a></p>
+        <span class="token annotation punctuation">@Override</span>
+        <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">run</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+            String oldName <span class="token operator">=</span> Thread<span class="token punctuation">.</span><span class="token function">currentThread</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">getName</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token comment" spellcheck="true">//修改线程名，以便于日志打印问题</span>
+            Thread<span class="token punctuation">.</span><span class="token function">currentThread</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">setName</span><span class="token punctuation">(</span><span class="token string">"SYSTEMREMIND-MESSAGEHANDLER-"</span> <span class="token operator">+</span> mess<span class="token punctuation">.</span><span class="token function">getTitle</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token keyword">try</span><span class="token punctuation">{</span>
+                Long systemRemindId <span class="token operator">=</span> remindMapper<span class="token punctuation">.</span><span class="token function">getRemindIdByClassName</span><span class="token punctuation">(</span>className<span class="token punctuation">)</span><span class="token punctuation">;</span>
+                <span class="token keyword">if</span> <span class="token punctuation">(</span>systemRemindId <span class="token operator">!=</span> null <span class="token operator">&amp;&amp;</span> systemRemindId <span class="token operator">!=</span>0L<span class="token punctuation">)</span><span class="token punctuation">{</span>
+                    <span class="token comment" spellcheck="true">//此处进行省略，为消息发送业务代码</span>
+                <span class="token punctuation">}</span><span class="token keyword">else</span> <span class="token punctuation">{</span>
+                    <span class="token keyword">throw</span> <span class="token keyword">new</span> <span class="token class-name">RuntimeException</span><span class="token punctuation">(</span><span class="token string">"找不到动态消息组件："</span> <span class="token operator">+</span> className<span class="token punctuation">)</span><span class="token punctuation">;</span>
+                <span class="token punctuation">}</span>
+            <span class="token punctuation">}</span><span class="token keyword">catch</span> <span class="token punctuation">(</span><span class="token class-name">Exception</span> ex<span class="token punctuation">)</span><span class="token punctuation">{</span>
+                logger<span class="token punctuation">.</span><span class="token function">error</span><span class="token punctuation">(</span>ex<span class="token punctuation">.</span><span class="token function">getMessage</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span> ex<span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token punctuation">}</span>
+            <span class="token keyword">finally</span> <span class="token punctuation">{</span>
+                <span class="token comment" spellcheck="true">//恢复线程名称</span>
+                Thread<span class="token punctuation">.</span><span class="token function">currentThread</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">setName</span><span class="token punctuation">(</span>oldName<span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token punctuation">}</span>
+        <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<p>参考博客：<a href="https://segmentfault.com/a/1190000004235193" target="_blank" rel="noopener">如何在数据库事务提交成功后进行异步操作</a></p>
 <script>
         document.querySelectorAll('.github-emoji')
           .forEach(el => {

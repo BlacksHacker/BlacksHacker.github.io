@@ -8,15 +8,20 @@
     <meta name="description" content="1. 全局命令
 查看所有键
 keys *    
+
 键总数
 dbsize
+
 检查键是否存在
 exists key 
+
 删除键(支持删除多个)
 del key
+
 键过期
 expire key seconds
-键过期剩余时间(-1 : 没有过期时间， ">
+
+键过期剩余时间(-1 : 没有过">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <meta name="renderer" content="webkit|ie-stand|ie-comp">
@@ -438,21 +443,29 @@ expire key seconds
             <div id="articleContent">
                 <h3 id="1-全局命令"><a href="#1-全局命令" class="headerlink" title="1. 全局命令"></a>1. 全局命令</h3><ul>
 <li><p>查看所有键</p>
-<pre><code>keys *    </code></pre></li>
+<pre class=" language-shell"><code class="language-shell">keys *    </code></pre>
+</li>
 <li><p>键总数</p>
-<pre><code>dbsize</code></pre></li>
+<pre class=" language-shell"><code class="language-shell">dbsize</code></pre>
+</li>
 <li><p>检查键是否存在</p>
-<pre><code>exists key </code></pre></li>
+<pre class=" language-shell"><code class="language-shell">exists key </code></pre>
+</li>
 <li><p>删除键(支持删除多个)</p>
-<pre><code>del key</code></pre></li>
+<pre class=" language-shell"><code class="language-shell">del key</code></pre>
+</li>
 <li><p>键过期</p>
-<pre><code>expire key seconds</code></pre></li>
+<pre class=" language-shell"><code class="language-shell">expire key seconds</code></pre>
+</li>
 <li><p>键过期剩余时间(-1 : 没有过期时间， -2 ： 键不存在)</p>
-<pre><code>ttl key</code></pre></li>
+<pre class=" language-shell"><code class="language-shell">ttl key</code></pre>
+</li>
 <li><p>键的数据结构类型(不存在返回none)</p>
-<pre><code>type key</code></pre></li>
+<pre class=" language-shell"><code class="language-shell">type key</code></pre>
+</li>
 <li><p>查看内部编码</p>
-<pre><code>objecy encoding key </code></pre></li>
+<pre class=" language-shell"><code class="language-shell">objecy encoding key </code></pre>
+</li>
 </ul>
 <h3 id="2-数据结构和内部编码"><a href="#2-数据结构和内部编码" class="headerlink" title="2. 数据结构和内部编码"></a>2. 数据结构和内部编码</h3><h5 id="2-1-五种数据结构"><a href="#2-1-五种数据结构" class="headerlink" title="2.1 五种数据结构"></a>2.1 五种数据结构</h5><p><img src="/2019/03/16/redis-ji-chu-jie-shao/1571973182171.png" alt="1571973182171"></p>
 <h5 id="2-2-数据结构和内部编码"><a href="#2-2-数据结构和内部编码" class="headerlink" title="2.2 数据结构和内部编码"></a>2.2 数据结构和内部编码</h5><p><img src="/2019/03/16/redis-ji-chu-jie-shao/1571973218076.png" alt="1571973218076"></p>
@@ -761,10 +774,11 @@ expire key seconds
 2. 常用命令
 设置值(可以给一个键设置多次，即设置多个值)
 hest key field value
+
 获取值
 hget key field
-删除值
 
+删除
                         
                     </div>
                     <div class="publish-info">

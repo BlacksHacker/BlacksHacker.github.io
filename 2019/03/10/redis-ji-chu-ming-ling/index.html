@@ -467,19 +467,24 @@
 <pre class=" language-shell"><code class="language-shell">redis-server</code></pre>
 </li>
 <li><p>运行启动(redis-server –configKey1 configValue1 –configKey2 configValue2)</p>
-<pre><code>redis-server --port 6380 </code></pre></li>
+<pre class=" language-shell"><code class="language-shell">redis-server --port 6380 </code></pre>
+</li>
 <li><p>配置文件启动</p>
-<pre><code>redis-server /opt/redis/redis.conf</code></pre></li>
+<pre class=" language-shell"><code class="language-shell">redis-server /opt/redis/redis.conf</code></pre>
+</li>
 </ul>
 <h3 id="3-Redis命令客户端"><a href="#3-Redis命令客户端" class="headerlink" title="3. Redis命令客户端"></a>3. Redis命令客户端</h3><ul>
 <li><p>交互式，一经连接，之后只输入命令返回结果</p>
-<pre><code>redis-cli -h 127.0.0.1 -p 6379</code></pre></li>
+<pre class=" language-shell"><code class="language-shell">redis-cli -h 127.0.0.1 -p 6379</code></pre>
+</li>
 <li><p>命令式</p>
-<pre><code>redis-cli -h 127.0.0.1 -p 6379 get hello</code></pre></li>
+<pre class=" language-shell"><code class="language-shell">redis-cli -h 127.0.0.1 -p 6379 get hello</code></pre>
+</li>
 </ul>
 <h3 id="4-停止服务"><a href="#4-停止服务" class="headerlink" title="4. 停止服务"></a>4. 停止服务</h3><ul>
 <li><p>停止服务(断开客户端的连接，生成持久化文件)</p>
-<pre><code>redis-cli shutdown</code></pre></li>
+<pre class=" language-shell"><code class="language-shell">redis-cli shutdown</code></pre>
+</li>
 </ul>
 <script>
         document.querySelectorAll('.github-emoji')
@@ -720,10 +725,11 @@
 2. 常用命令
 设置值(可以给一个键设置多次，即设置多个值)
 hest key field value
+
 获取值
 hget key field
-删除值
 
+删除
                         
                     </div>
                     <div class="publish-info">
@@ -785,12 +791,14 @@ hget key field
 解压安装包
 
 tar -zxvf  redis-5.0.4.tar.gz
+
 进入解压后的安装包进行编译(时间较长)
 
 make
+
 出现以上结果，表明编译成功。
 
-运行mak
+运行m
                         
                     </div>
                     <div class="publish-info">

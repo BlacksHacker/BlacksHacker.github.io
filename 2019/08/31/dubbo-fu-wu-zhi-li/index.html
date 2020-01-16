@@ -509,70 +509,74 @@
 </ul>
 <h5 id="3-2-dubbo的简单使用（整合Spring）"><a href="#3-2-dubbo的简单使用（整合Spring）" class="headerlink" title="3.2 dubbo的简单使用（整合Spring）"></a>3.2 dubbo的简单使用（整合Spring）</h5><ol>
 <li><p>导入POM文件</p>
-<pre><code>&lt;properties&gt;
-    &lt;dubbo.version&gt;2.7.4.1&lt;/dubbo.version&gt;
-&lt;/properties&gt;
+<pre class=" language-xml"><code class="language-xml"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>properties</span><span class="token punctuation">></span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>dubbo.version</span><span class="token punctuation">></span></span>2.7.4.1<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>dubbo.version</span><span class="token punctuation">></span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>properties</span><span class="token punctuation">></span></span>
 
-&lt;dependencies&gt;
-    &lt;dependency&gt;
-        &lt;groupId&gt;org.apache.dubbo&lt;/groupId&gt;
-        &lt;artifactId&gt;dubbo&lt;/artifactId&gt;
-        &lt;version&gt;${dubbo.version}&lt;/version&gt;
-    &lt;/dependency&gt;
-    &lt;dependency&gt;
-        &lt;groupId&gt;org.apache.dubbo&lt;/groupId&gt;
-        &lt;artifactId&gt;dubbo-dependencies-zookeeper&lt;/artifactId&gt;
-        &lt;version&gt;${dubbo.version}&lt;/version&gt;
-        &lt;type&gt;pom&lt;/type&gt;
-    &lt;/dependency&gt;
-&lt;/dependencies&gt;</code></pre><p>这里使用了zookeeper注册中心。</p>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>dependencies</span><span class="token punctuation">></span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>dependency</span><span class="token punctuation">></span></span>
+        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>groupId</span><span class="token punctuation">></span></span>org.apache.dubbo<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>groupId</span><span class="token punctuation">></span></span>
+        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>artifactId</span><span class="token punctuation">></span></span>dubbo<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>artifactId</span><span class="token punctuation">></span></span>
+        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>version</span><span class="token punctuation">></span></span>${dubbo.version}<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>version</span><span class="token punctuation">></span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>dependency</span><span class="token punctuation">></span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>dependency</span><span class="token punctuation">></span></span>
+        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>groupId</span><span class="token punctuation">></span></span>org.apache.dubbo<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>groupId</span><span class="token punctuation">></span></span>
+        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>artifactId</span><span class="token punctuation">></span></span>dubbo-dependencies-zookeeper<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>artifactId</span><span class="token punctuation">></span></span>
+        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>version</span><span class="token punctuation">></span></span>${dubbo.version}<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>version</span><span class="token punctuation">></span></span>
+        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>type</span><span class="token punctuation">></span></span>pom<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>type</span><span class="token punctuation">></span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>dependency</span><span class="token punctuation">></span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>dependencies</span><span class="token punctuation">></span></span></code></pre>
+<p>这里使用了zookeeper注册中心。</p>
 </li>
 <li><p>定义服务层接口</p>
-<pre><code>//service接口
-public interface GreetingService {
-    String sayHi(String name);
-}
+<pre class=" language-java"><code class="language-java"><span class="token comment" spellcheck="true">//service接口</span>
+<span class="token keyword">public</span> <span class="token keyword">interface</span> <span class="token class-name">GreetingService</span> <span class="token punctuation">{</span>
+    String <span class="token function">sayHi</span><span class="token punctuation">(</span>String name<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
 
-//对应实现类
-public class GreetingsServiceImpl implements GreetingsService {
-    @Override
-    public String sayHi(String name) {
-        return "hi, " + name;
-    }
-}
-</code></pre></li>
+<span class="token comment" spellcheck="true">//对应实现类</span>
+<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">GreetingsServiceImpl</span> <span class="token keyword">implements</span> <span class="token class-name">GreetingsService</span> <span class="token punctuation">{</span>
+    <span class="token annotation punctuation">@Override</span>
+    <span class="token keyword">public</span> String <span class="token function">sayHi</span><span class="token punctuation">(</span>String name<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">return</span> <span class="token string">"hi, "</span> <span class="token operator">+</span> name<span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre>
+</li>
 <li><p>服务容器加载服务提供者</p>
-<pre><code>public class Application {
-    private static String zookeeperHost = System.getProperty("zookeeper.address", "127.0.0.1");
+<pre class=" language-java"><code class="language-java"><span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">Application</span> <span class="token punctuation">{</span>
+    <span class="token keyword">private</span> <span class="token keyword">static</span> String zookeeperHost <span class="token operator">=</span> System<span class="token punctuation">.</span><span class="token function">getProperty</span><span class="token punctuation">(</span><span class="token string">"zookeeper.address"</span><span class="token punctuation">,</span> <span class="token string">"127.0.0.1"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 
-    public static void main(String[] args) throws Exception {
-        ServiceConfig&lt;GreetingsService&gt; service = new ServiceConfig&lt;&gt;();
-        service.setApplication(new ApplicationConfig("first-dubbo-provider"));
-        service.setRegistry(new RegistryConfig("zookeeper://" + zookeeperHost + ":2181"));
-        service.setInterface(GreetingsService.class);
-        service.setRef(new GreetingsServiceImpl());
-        service.export();
+    <span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">void</span> <span class="token function">main</span><span class="token punctuation">(</span>String<span class="token punctuation">[</span><span class="token punctuation">]</span> args<span class="token punctuation">)</span> <span class="token keyword">throws</span> Exception <span class="token punctuation">{</span>
+        ServiceConfig<span class="token operator">&lt;</span>GreetingsService<span class="token operator">></span> service <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">ServiceConfig</span><span class="token operator">&lt;</span><span class="token operator">></span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        service<span class="token punctuation">.</span><span class="token function">setApplication</span><span class="token punctuation">(</span><span class="token keyword">new</span> <span class="token class-name">ApplicationConfig</span><span class="token punctuation">(</span><span class="token string">"first-dubbo-provider"</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        service<span class="token punctuation">.</span><span class="token function">setRegistry</span><span class="token punctuation">(</span><span class="token keyword">new</span> <span class="token class-name">RegistryConfig</span><span class="token punctuation">(</span><span class="token string">"zookeeper://"</span> <span class="token operator">+</span> zookeeperHost <span class="token operator">+</span> <span class="token string">":2181"</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        service<span class="token punctuation">.</span><span class="token function">setInterface</span><span class="token punctuation">(</span>GreetingsService<span class="token punctuation">.</span><span class="token keyword">class</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        service<span class="token punctuation">.</span><span class="token function">setRef</span><span class="token punctuation">(</span><span class="token keyword">new</span> <span class="token class-name">GreetingsServiceImpl</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        service<span class="token punctuation">.</span><span class="token function">export</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 
-        System.out.println("dubbo service started");
-        new CountDownLatch(1).await();
-    }
-}</code></pre></li>
+        System<span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"dubbo service started"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">new</span> <span class="token class-name">CountDownLatch</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">await</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span></code></pre>
+</li>
 <li><p>从服务容器中获取服务</p>
 </li>
 </ol>
-<pre><code>    public class Application {
-    private static String zookeeperHost = System.getProperty("zookeeper.address", "127.0.0.1");
+<pre class=" language-java"><code class="language-java">    <span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">Application</span> <span class="token punctuation">{</span>
+    <span class="token keyword">private</span> <span class="token keyword">static</span> String zookeeperHost <span class="token operator">=</span> System<span class="token punctuation">.</span><span class="token function">getProperty</span><span class="token punctuation">(</span><span class="token string">"zookeeper.address"</span><span class="token punctuation">,</span> <span class="token string">"127.0.0.1"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 
-    public static void main(String[] args) {
-        ReferenceConfig&lt;GreetingsService&gt; reference = new ReferenceConfig&lt;&gt;();
-        reference.setApplication(new ApplicationConfig("first-dubbo-consumer"));
-        reference.setRegistry(new RegistryConfig("zookeeper://" + zookeeperHost + ":2181"));
-        reference.setInterface(GreetingsService.class);
-        GreetingsService service = reference.get();
-        String message = service.sayHi("dubbo");
-        System.out.println(message);
-    }
-}</code></pre><script>
+    <span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">void</span> <span class="token function">main</span><span class="token punctuation">(</span>String<span class="token punctuation">[</span><span class="token punctuation">]</span> args<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        ReferenceConfig<span class="token operator">&lt;</span>GreetingsService<span class="token operator">></span> reference <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">ReferenceConfig</span><span class="token operator">&lt;</span><span class="token operator">></span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        reference<span class="token punctuation">.</span><span class="token function">setApplication</span><span class="token punctuation">(</span><span class="token keyword">new</span> <span class="token class-name">ApplicationConfig</span><span class="token punctuation">(</span><span class="token string">"first-dubbo-consumer"</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        reference<span class="token punctuation">.</span><span class="token function">setRegistry</span><span class="token punctuation">(</span><span class="token keyword">new</span> <span class="token class-name">RegistryConfig</span><span class="token punctuation">(</span><span class="token string">"zookeeper://"</span> <span class="token operator">+</span> zookeeperHost <span class="token operator">+</span> <span class="token string">":2181"</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        reference<span class="token punctuation">.</span><span class="token function">setInterface</span><span class="token punctuation">(</span>GreetingsService<span class="token punctuation">.</span><span class="token keyword">class</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        GreetingsService service <span class="token operator">=</span> reference<span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        String message <span class="token operator">=</span> service<span class="token punctuation">.</span><span class="token function">sayHi</span><span class="token punctuation">(</span><span class="token string">"dubbo"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        System<span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span>message<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span></code></pre>
+<script>
         document.querySelectorAll('.github-emoji')
           .forEach(el => {
             if (!el.dataset.src) { return; }

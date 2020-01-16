@@ -420,10 +420,11 @@
         <hr class="clearfix">
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <h1 id="1-Nginx–Liunx安装"><a href="#1-Nginx–Liunx安装" class="headerlink" title="1.Nginx–Liunx安装"></a>1.Nginx–Liunx安装</h1><h3 id="1-安装nginx环境"><a href="#1-安装nginx环境" class="headerlink" title="1. 安装nginx环境"></a>1. 安装nginx环境</h3><pre><code>1 yum install gcc-c++
+                <h1 id="1-Nginx–Liunx安装"><a href="#1-Nginx–Liunx安装" class="headerlink" title="1.Nginx–Liunx安装"></a>1.Nginx–Liunx安装</h1><h3 id="1-安装nginx环境"><a href="#1-安装nginx环境" class="headerlink" title="1. 安装nginx环境"></a>1. 安装nginx环境</h3><pre class=" language-shell"><code class="language-shell">1 yum install gcc-c++
 2 yum install -y pcre pcre-devel
 3 yum install -y zlib zlib-devel
-4 yum install -y openssl openssl-devel</code></pre><ul>
+4 yum install -y openssl openssl-devel</code></pre>
+<ul>
 <li>gcc，因为安装nginx需要先将官网下载的源码进行编译，编译依赖gcc环境，如果没有gcc环境的话，需要安装gcc。</li>
 <li>pcre，prce(Perl Compatible Regular Expressions)是一个Perl库，包括 perl 兼容的正则表达式库。nginx的http模块使用pcre来解析正则表达式，所以需要在linux上安装pcre库。</li>
 <li>zlib，zlib库提供了很多种压缩和解压缩的方式，nginx使用zlib对http包的内容进行gzip，所以需要在linux上安装zlib库。</li>
@@ -432,37 +433,47 @@
 <h3 id="2-正式安装"><a href="#2-正式安装" class="headerlink" title="2. 正式安装"></a>2. 正式安装</h3><ul>
 <li>下载nginx1.8.0版本</li>
 </ul>
-<pre><code>wget http://nginx.org/download/nginx-1.8.0.tar.gz</code></pre><ul>
+<pre class=" language-shell"><code class="language-shell">wget http://nginx.org/download/nginx-1.8.0.tar.gz</code></pre>
+<ul>
 <li>解压文件</li>
 </ul>
-<pre><code>tar -zxvf nginx-1.8.0.tar.gz</code></pre><ul>
+<pre class=" language-shell"><code class="language-shell">tar -zxvf nginx-1.8.0.tar.gz</code></pre>
+<ul>
 <li>进入解压目录进行编译（nginx的全路径）</li>
 </ul>
-<pre><code>./configure --prefix=/usr/lixs/nginx/nginx-1.8.0</code></pre><pre><code>make</code></pre><pre><code>make install</code></pre><ul>
+<pre class=" language-shell"><code class="language-shell">./configure --prefix=/usr/lixs/nginx/nginx-1.8.0</code></pre>
+<pre class=" language-shell"><code class="language-shell">make</code></pre>
+<pre class=" language-shell"><code class="language-shell">make install</code></pre>
+<ul>
 <li>上述操作完毕之后，会在nginx-1.8.0的目录下出现<strong>sbin</strong>和<strong>logs</strong>文件夹（如果没有logs文件夹，则需要手动创建，并创建<strong>error.log</strong>和<strong>access.log</strong>文件）。</li>
 </ul>
 <p><img src="/2019/02/08/nginx-an-zhuang-yu-pei-zhi-wen-jian-xiang-jie/1567570387898.png" alt="1567570387898"></p>
 <ul>
-<li>启动nginx，进入sbin目录，内部有一个<strong>nginx</strong>文件，执行命令<pre><code>./nginx</code></pre></li>
+<li>启动nginx，进入sbin目录，内部有一个<strong>nginx</strong>文件，执行命令<pre class=" language-shell"><code class="language-shell">./nginx</code></pre>
+</li>
 </ul>
 <p><img src="/2019/02/08/nginx-an-zhuang-yu-pei-zhi-wen-jian-xiang-jie/1567570525335.png" alt="1567570525335"></p>
 <ul>
 <li>查看nginx进程，是否已经成功启动</li>
 </ul>
-<pre><code>ps aux|grep nginx</code></pre><p><img src="/2019/02/08/nginx-an-zhuang-yu-pei-zhi-wen-jian-xiang-jie/1567570599157.png" alt="1567570599157"></p>
+<pre class=" language-shell"><code class="language-shell">ps aux|grep nginx</code></pre>
+<p><img src="/2019/02/08/nginx-an-zhuang-yu-pei-zhi-wen-jian-xiang-jie/1567570599157.png" alt="1567570599157"></p>
 <h3 id="2-1-查看结果"><a href="#2-1-查看结果" class="headerlink" title="2.1 查看结果"></a>2.1 查看结果</h3><ul>
 <li>浏览器输入ip地址便可以直接访问nginx页面。<br><img src="/2019/02/08/nginx-an-zhuang-yu-pei-zhi-wen-jian-xiang-jie/1567570840754.png" alt="1567570840754"><h3 id="2-2-安装验证"><a href="#2-2-安装验证" class="headerlink" title="2.2 安装验证"></a>2.2 安装验证</h3></li>
 <li>验证配置文件，可以检查nginx.conf配置文件其格式、语法是否正确，如果存在配置文件错误，则会出现相应提示，成功也会提示</li>
 </ul>
-<pre><code>./nginx -t</code></pre><p><img src="/2019/02/08/nginx-an-zhuang-yu-pei-zhi-wen-jian-xiang-jie/1567578852819.png" alt="1567578852819"></p>
+<pre class=" language-shell"><code class="language-shell">./nginx -t</code></pre>
+<p><img src="/2019/02/08/nginx-an-zhuang-yu-pei-zhi-wen-jian-xiang-jie/1567578852819.png" alt="1567578852819"></p>
 <ul>
 <li>重加载/重启nginx，以新的nginx.conf配置文件启动</li>
 </ul>
-<pre><code>./nginx -s reload</code></pre><ul>
+<pre class=" language-shell"><code class="language-shell">./nginx -s reload</code></pre>
+<ul>
 <li>停止nginx</li>
 </ul>
-<pre><code>./nginx -s stop</code></pre><h3 id="2-3-重要配置项"><a href="#2-3-重要配置项" class="headerlink" title="2.3 重要配置项"></a>2.3 重要配置项</h3><p>  以下是针对于Nginx安装目录下的conf文件夹下的<strong>nginx.conf</strong>配置文件的解析。</p>
-<pre><code>#================================以下是全局配置项
+<pre class=" language-shell"><code class="language-shell">./nginx -s stop</code></pre>
+<h3 id="2-3-重要配置项"><a href="#2-3-重要配置项" class="headerlink" title="2.3 重要配置项"></a>2.3 重要配置项</h3><p>  以下是针对于Nginx安装目录下的conf文件夹下的<strong>nginx.conf</strong>配置文件的解析。</p>
+<pre class=" language-shell"><code class="language-shell">#================================以下是全局配置项
 #指定运行nginx的用户和用户组，默认情况下该选项关闭（关闭的情况就是nobody）
 #user  nobody nobody;     
 #运行nginx的进程数量，最优值取决于多种因素，CPU核数，硬盘驱动，一般设置为CPU的核数
@@ -599,7 +610,8 @@ http {
         }
     }
 }
-</code></pre><p><strong>扩展信息：</strong></p>
+</code></pre>
+<p><strong>扩展信息：</strong></p>
 <ul>
 <li><p><strong>upstream块</strong></p>
 <p>​    在Http Upstream模块中，可以设置后端服务器的socket信息，同时还可以设定每个后端服务器在负载均衡调度中的状态。常用状态如下：</p>
@@ -612,31 +624,35 @@ http {
 <p>​     <strong>Nginx支持四种负载均衡的方法</strong>：</p>
 <ul>
 <li><p>Round-robin 根据权重的轮询方式，默认使用该方法</p>
-<pre><code>upstream backend{
+<pre class=" language-shell"><code class="language-shell">upstream backend{
     server backend1.example.com weight=3;
     server backend2.example.com;
-}</code></pre></li>
+}</code></pre>
+</li>
 <li><p>least_conn 具有最少活跃连接数的服务器将会被发送请求</p>
-<pre><code>upsream backend{
+<pre class=" language-shell"><code class="language-shell">upsream backend{
     least_conn;
 
     server backend1.example.com;
     server backend2.example.com;
-}</code></pre></li>
+}</code></pre>
+</li>
 <li><p>ip_hash 根据客户端的ip地址来决定请求发送给哪个服务器（hash算法）</p>
-<pre><code>upstream backend{
+<pre class=" language-shell"><code class="language-shell">upstream backend{
     ip_hash;
 
     server backend1.example,com;
     server backend2.example.com;
-}</code></pre></li>
+}</code></pre>
+</li>
 <li><p>hash 根据用户自定义的hash值来决定请求发送到哪个服务器</p>
-<pre><code>upstream backend{
+<pre class=" language-shell"><code class="language-shell">upstream backend{
     hash $request_uri consistent
 
     server backend1.example.com;
     server backend2.example.com;
-}</code></pre></li>
+}</code></pre>
+</li>
 </ul>
 </li>
 <li><p><strong>location块</strong> </p>
@@ -685,7 +701,7 @@ http {
 <li><p><strong>文件路径</strong></p>
 <ul>
 <li><p>以root 设置资源路径 root path</p>
-<pre><code># 如果请求是 /abc/index/test.html 则web服务器将会返回 /data/html/abc/index/test.html
+<pre class=" language-shell"><code class="language-shell"># 如果请求是 /abc/index/test.html 则web服务器将会返回 /data/html/abc/index/test.html
 location /abc {
     root /data/html
 }
@@ -693,9 +709,10 @@ location /abc {
 # 请求 .js文件都会返回 /data/js 下的文件
 location \/js$ {
     root /data/js
-}</code></pre></li>
+}</code></pre>
+</li>
 <li><p>以 alias 设置资源路径：alias path</p>
-<pre><code># 访问 /abc 会映射到 /data/abc 文件夹
+<pre class=" language-shell"><code class="language-shell"># 访问 /abc 会映射到 /data/abc 文件夹
 location /abc {
     alias /data/abc
 }
@@ -703,38 +720,44 @@ location /abc {
 # 等同于
 location /abc {
     root /data
-}</code></pre></li>
+}</code></pre>
+</li>
 <li><p>首页 index file</p>
-<pre><code># 收到请求后，先尝试访问path/index.html 文件，如果可以访问，直接返回文件内容结束请求，否则，再尝试返回 path/index.php
+<pre class=" language-shell"><code class="language-shell"># 收到请求后，先尝试访问path/index.html 文件，如果可以访问，直接返回文件内容结束请求，否则，再尝试返回 path/index.php
 location / {
     root path;
     index /index.html /index.php
-}</code></pre></li>
+}</code></pre>
+</li>
 <li><p>根据HTTP返回码重定向</p>
-<pre><code>error_page 404 /404.html
+<pre class=" language-shell"><code class="language-shell">error_page 404 /404.html
 error_page 502 503 504 /50x.html
-error_page 403 http://example.com/forbidden.html</code></pre><p>通过 = 更改返回的错误码：</p>
-<pre><code>error_page 404=200 /empty.gif</code></pre></li>
+error_page 403 http://example.com/forbidden.html</code></pre>
+<p>通过 = 更改返回的错误码：</p>
+<pre class=" language-shell"><code class="language-shell">error_page 404=200 /empty.gif</code></pre>
+</li>
 </ul>
 </li>
 <li><p><strong>反向代理服务器</strong></p>
 <ul>
 <li><p><strong>proxy_pass</strong></p>
 <p>该配置将当前请求反向代理到URL参数指定的服务器上，URL可以是主机名或IP地址。</p>
-<pre><code># 访问 /abc 会转发到 http://127.0.0.1:8080/index.html
+<pre class=" language-shell"><code class="language-shell"># 访问 /abc 会转发到 http://127.0.0.1:8080/index.html
 location /abc {
     proxy_pass http://127.0.0.1:8080/index.html
-}</code></pre></li>
-</ul>
+}</code></pre>
 </li>
 </ul>
 </li>
 </ul>
-<h3 id="2-4-常用命令"><a href="#2-4-常用命令" class="headerlink" title="2.4 常用命令"></a>2.4 常用命令</h3><pre><code>nginx -s reload #使运行中的Nginx重加载配置并生效
+</li>
+</ul>
+<h3 id="2-4-常用命令"><a href="#2-4-常用命令" class="headerlink" title="2.4 常用命令"></a>2.4 常用命令</h3><pre class=" language-shell"><code class="language-shell">nginx -s reload #使运行中的Nginx重加载配置并生效
 nginx -s stop #停止服务
 nginx -s quit #处理完当前所有请求再停止服务
 nginx -t # 检查配置信息是否有错误
-nginx -c new_nginx.conf #使用自定义配置文件</code></pre><script>
+nginx -c new_nginx.conf #使用自定义配置文件</code></pre>
+<script>
         document.querySelectorAll('.github-emoji')
           .forEach(el => {
             if (!el.dataset.src) { return; }

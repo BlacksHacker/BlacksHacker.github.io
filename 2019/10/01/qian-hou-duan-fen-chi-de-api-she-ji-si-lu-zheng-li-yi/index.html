@@ -436,150 +436,153 @@
 <ul>
 <li>以最常用的<strong>Post</strong>类型为例，该方法用于接收post类型的普通接口请求，解析请求中的接口token和参数，以便分配给具体的接口处理类：</li>
 </ul>
-<pre><code>@RequestMapping(value = "/rest/**",
-            method = RequestMethod.POST)
-            //接口传递的参数是以JSONObject
-    public void dispatcherForPost(@RequestBody
-    String jsonStr, HttpServletRequest request, HttpServletResponse response) throws Exception {
-    //获取接口前缀的定义规则，即 api/rest/**（依赖于spring-webmvc）
-        String pattern = (String) request.getAttribute(HandlerMapping.BEST_MATCHING_PATTERN_ATTRIBUTE);
-        //根据接口请求规则获取接口的token值，即pattern之后的接口请求路径
-        String token = new AntPathMatcher().extractPathWithinPattern(pattern, request.getServletPath());
+<pre class=" language-java"><code class="language-java"><span class="token annotation punctuation">@RequestMapping</span><span class="token punctuation">(</span>value <span class="token operator">=</span> <span class="token string">"/rest/**"</span><span class="token punctuation">,</span>
+            method <span class="token operator">=</span> RequestMethod<span class="token punctuation">.</span>POST<span class="token punctuation">)</span>
+            <span class="token comment" spellcheck="true">//接口传递的参数是以JSONObject</span>
+    <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">dispatcherForPost</span><span class="token punctuation">(</span><span class="token annotation punctuation">@RequestBody</span>
+    String jsonStr<span class="token punctuation">,</span> HttpServletRequest request<span class="token punctuation">,</span> HttpServletResponse response<span class="token punctuation">)</span> <span class="token keyword">throws</span> Exception <span class="token punctuation">{</span>
+    <span class="token comment" spellcheck="true">//获取接口前缀的定义规则，即 api/rest/**（依赖于spring-webmvc）</span>
+        String pattern <span class="token operator">=</span> <span class="token punctuation">(</span>String<span class="token punctuation">)</span> request<span class="token punctuation">.</span><span class="token function">getAttribute</span><span class="token punctuation">(</span>HandlerMapping<span class="token punctuation">.</span>BEST_MATCHING_PATTERN_ATTRIBUTE<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token comment" spellcheck="true">//根据接口请求规则获取接口的token值，即pattern之后的接口请求路径</span>
+        String token <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">AntPathMatcher</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">extractPathWithinPattern</span><span class="token punctuation">(</span>pattern<span class="token punctuation">,</span> request<span class="token punctuation">.</span><span class="token function">getServletPath</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 
-        //获取参数值
-        JSONObject paramObj = null;
-        if (StringUtils.isNotBlank(jsonStr)) {
-            try {
-                paramObj = JSONObject.parseObject(jsonStr);
-            } catch (Exception e) {
-                throw new Exception("参数不是json格式,错误信息为：" + e.getMessage());
-            }
-        } else {
-            paramObj = new JSONObject();
-        }
+        <span class="token comment" spellcheck="true">//获取参数值</span>
+        JSONObject paramObj <span class="token operator">=</span> null<span class="token punctuation">;</span>
+        <span class="token keyword">if</span> <span class="token punctuation">(</span>StringUtils<span class="token punctuation">.</span><span class="token function">isNotBlank</span><span class="token punctuation">(</span>jsonStr<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+            <span class="token keyword">try</span> <span class="token punctuation">{</span>
+                paramObj <span class="token operator">=</span> JSONObject<span class="token punctuation">.</span><span class="token function">parseObject</span><span class="token punctuation">(</span>jsonStr<span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token punctuation">}</span> <span class="token keyword">catch</span> <span class="token punctuation">(</span><span class="token class-name">Exception</span> e<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+                <span class="token keyword">throw</span> <span class="token keyword">new</span> <span class="token class-name">Exception</span><span class="token punctuation">(</span><span class="token string">"参数不是json格式,错误信息为："</span> <span class="token operator">+</span> e<span class="token punctuation">.</span><span class="token function">getMessage</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token punctuation">}</span>
+        <span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token punctuation">{</span>
+            paramObj <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">JSONObject</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token punctuation">}</span>
 
 
-        Enumeration&lt;String&gt; paraNames = request.getParameterNames();
-        while (paraNames.hasMoreElements()) {
-            String p = paraNames.nextElement();
-            String[] vs = request.getParameterValues(p);
-            if (vs.length &gt; 1) {
-                paramObj.put(p, vs);
-            } else {
-                paramObj.put(p, request.getParameter(p));
-            }
-        }
-        JSONObject returnObj = new JSONObject();
-        try {
-            //调用转发方法，上层的代码目的是提取参数，以及token
-            doIt(request, response, token, ApiVo.Type.OBJECT, paramObj, returnObj, "doservice");
-        } catch (ApiRuntimeException ex) {
-            response.setStatus(500);
-            returnObj.put("Error", ex.getErrorCode());
-            returnObj.put("Status", "ERROR");
-            returnObj.put("Message", ex.getMessage());
-        } catch (Exception ex) {
-            response.setStatus(500);
-            returnObj.put("Error", 500);
-            returnObj.put("Status", "ERROR");
-            returnObj.put("Message", ExceptionUtils.getStackTrace(ex));
-            logger.error(ex.getMessage(), ex);
-        }
-        if (!response.isCommitted()) {
-            response.setContentType(Config.RESPONSE_TYPE_JSON);
-            response.getWriter().print(returnObj);
-        }
-    }</code></pre><ul>
+        Enumeration<span class="token operator">&lt;</span>String<span class="token operator">></span> paraNames <span class="token operator">=</span> request<span class="token punctuation">.</span><span class="token function">getParameterNames</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">while</span> <span class="token punctuation">(</span>paraNames<span class="token punctuation">.</span><span class="token function">hasMoreElements</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+            String p <span class="token operator">=</span> paraNames<span class="token punctuation">.</span><span class="token function">nextElement</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+            String<span class="token punctuation">[</span><span class="token punctuation">]</span> vs <span class="token operator">=</span> request<span class="token punctuation">.</span><span class="token function">getParameterValues</span><span class="token punctuation">(</span>p<span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token keyword">if</span> <span class="token punctuation">(</span>vs<span class="token punctuation">.</span>length <span class="token operator">></span> <span class="token number">1</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+                paramObj<span class="token punctuation">.</span><span class="token function">put</span><span class="token punctuation">(</span>p<span class="token punctuation">,</span> vs<span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token punctuation">{</span>
+                paramObj<span class="token punctuation">.</span><span class="token function">put</span><span class="token punctuation">(</span>p<span class="token punctuation">,</span> request<span class="token punctuation">.</span><span class="token function">getParameter</span><span class="token punctuation">(</span>p<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token punctuation">}</span>
+        <span class="token punctuation">}</span>
+        JSONObject returnObj <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">JSONObject</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">try</span> <span class="token punctuation">{</span>
+            <span class="token comment" spellcheck="true">//调用转发方法，上层的代码目的是提取参数，以及token</span>
+            <span class="token function">doIt</span><span class="token punctuation">(</span>request<span class="token punctuation">,</span> response<span class="token punctuation">,</span> token<span class="token punctuation">,</span> ApiVo<span class="token punctuation">.</span>Type<span class="token punctuation">.</span>OBJECT<span class="token punctuation">,</span> paramObj<span class="token punctuation">,</span> returnObj<span class="token punctuation">,</span> <span class="token string">"doservice"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token punctuation">}</span> <span class="token keyword">catch</span> <span class="token punctuation">(</span><span class="token class-name">ApiRuntimeException</span> ex<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+            response<span class="token punctuation">.</span><span class="token function">setStatus</span><span class="token punctuation">(</span><span class="token number">500</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+            returnObj<span class="token punctuation">.</span><span class="token function">put</span><span class="token punctuation">(</span><span class="token string">"Error"</span><span class="token punctuation">,</span> ex<span class="token punctuation">.</span><span class="token function">getErrorCode</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+            returnObj<span class="token punctuation">.</span><span class="token function">put</span><span class="token punctuation">(</span><span class="token string">"Status"</span><span class="token punctuation">,</span> <span class="token string">"ERROR"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+            returnObj<span class="token punctuation">.</span><span class="token function">put</span><span class="token punctuation">(</span><span class="token string">"Message"</span><span class="token punctuation">,</span> ex<span class="token punctuation">.</span><span class="token function">getMessage</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token punctuation">}</span> <span class="token keyword">catch</span> <span class="token punctuation">(</span><span class="token class-name">Exception</span> ex<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+            response<span class="token punctuation">.</span><span class="token function">setStatus</span><span class="token punctuation">(</span><span class="token number">500</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+            returnObj<span class="token punctuation">.</span><span class="token function">put</span><span class="token punctuation">(</span><span class="token string">"Error"</span><span class="token punctuation">,</span> <span class="token number">500</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+            returnObj<span class="token punctuation">.</span><span class="token function">put</span><span class="token punctuation">(</span><span class="token string">"Status"</span><span class="token punctuation">,</span> <span class="token string">"ERROR"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+            returnObj<span class="token punctuation">.</span><span class="token function">put</span><span class="token punctuation">(</span><span class="token string">"Message"</span><span class="token punctuation">,</span> ExceptionUtils<span class="token punctuation">.</span><span class="token function">getStackTrace</span><span class="token punctuation">(</span>ex<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+            logger<span class="token punctuation">.</span><span class="token function">error</span><span class="token punctuation">(</span>ex<span class="token punctuation">.</span><span class="token function">getMessage</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span> ex<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token punctuation">}</span>
+        <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span>response<span class="token punctuation">.</span><span class="token function">isCommitted</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+            response<span class="token punctuation">.</span><span class="token function">setContentType</span><span class="token punctuation">(</span>Config<span class="token punctuation">.</span>RESPONSE_TYPE_JSON<span class="token punctuation">)</span><span class="token punctuation">;</span>
+            response<span class="token punctuation">.</span><span class="token function">getWriter</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">print</span><span class="token punctuation">(</span>returnObj<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span></code></pre>
+<ul>
 <li>doIt方法的目的在于根据接口token调用对应的接口处理类，并将处理结果进行统一封装，接口对象实体以及对应Vo对象，会在项目启动时扫描进Map中进行存储，三种不同的接口类型对应三种不同的基类。</li>
 </ul>
-<pre><code>private void doIt(HttpServletRequest request, HttpServletResponse response, String token, ApiVo.Type apiType, JSONObject paramObj, JSONObject returnObj, String action) throws Exception {
-        //项目启动时，会预先将所有接口类实体和其信息Vo扫描进Map中，再通过token在工厂中进行获取
-        ApiVo interfaceVo = ApiComponentFactory.getApiByToken(token);
+<pre class=" language-java"><code class="language-java"><span class="token keyword">private</span> <span class="token keyword">void</span> <span class="token function">doIt</span><span class="token punctuation">(</span>HttpServletRequest request<span class="token punctuation">,</span> HttpServletResponse response<span class="token punctuation">,</span> String token<span class="token punctuation">,</span> ApiVo<span class="token punctuation">.</span>Type apiType<span class="token punctuation">,</span> JSONObject paramObj<span class="token punctuation">,</span> JSONObject returnObj<span class="token punctuation">,</span> String action<span class="token punctuation">)</span> <span class="token keyword">throws</span> Exception <span class="token punctuation">{</span>
+        <span class="token comment" spellcheck="true">//项目启动时，会预先将所有接口类实体和其信息Vo扫描进Map中，再通过token在工厂中进行获取</span>
+        ApiVo interfaceVo <span class="token operator">=</span> ApiComponentFactory<span class="token punctuation">.</span><span class="token function">getApiByToken</span><span class="token punctuation">(</span>token<span class="token punctuation">)</span><span class="token punctuation">;</span>
 
-        if (interfaceVo == null) {
-            //从表中获取接口类对应Vo
-            interfaceVo = apiService.getApiByToken(token);
-            if (interfaceVo == null || !interfaceVo.getIsActive().equals(1)) {
-                throw new ApiNotFoundException("token为“" + token + "”的接口不存在或已被禁用");
-            }
-        }
+        <span class="token keyword">if</span> <span class="token punctuation">(</span>interfaceVo <span class="token operator">==</span> null<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+            <span class="token comment" spellcheck="true">//从表中获取接口类对应Vo</span>
+            interfaceVo <span class="token operator">=</span> apiService<span class="token punctuation">.</span><span class="token function">getApiByToken</span><span class="token punctuation">(</span>token<span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token keyword">if</span> <span class="token punctuation">(</span>interfaceVo <span class="token operator">==</span> null <span class="token operator">||</span> <span class="token operator">!</span>interfaceVo<span class="token punctuation">.</span><span class="token function">getIsActive</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">equals</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+                <span class="token keyword">throw</span> <span class="token keyword">new</span> <span class="token class-name">ApiNotFoundException</span><span class="token punctuation">(</span><span class="token string">"token为“"</span> <span class="token operator">+</span> token <span class="token operator">+</span> <span class="token string">"”的接口不存在或已被禁用"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token punctuation">}</span>
+        <span class="token punctuation">}</span>
 
-        if (apiType.equals(ApiVo.Type.OBJECT)) {
-            //获取接口类实体对象
-            ApiComponent restComponent = ApiComponentFactory.getInstance(interfaceVo.getComponentId());
-            if (restComponent != null) {
-                if (action.equals("doservice")) {
-                    Long starttime = System.currentTimeMillis();
-                    //调用实体类的doService方法进行参数的处理
-                    Object returnV = restComponent.doService(interfaceVo, paramObj);
-                    //封装最终返回值
-                    Long endtime = System.currentTimeMillis();
-                    returnObj.put("TimeCost", endtime - starttime);
-                    returnObj.put("Return", returnV);
-                    returnObj.put("Status", "OK");
-                } else {
-                    //返回接口的帮助文档
-                    returnObj.putAll(restComponent.help());
-                }
-            } else {
-                throw new ComponentNotFoundException("接口组件:" + restComponent.getId() + "不存在");
-            }
-            //采用流类型的处理方式
-        } else if (apiType.equals(ApiVo.Type.STREAM)) {
-            JsonStreamApiComponent restComponent = ApiComponentFactory.getStreamInstance(interfaceVo.getComponentId());
-            if (restComponent != null) {
-                if (action.equals("doservice")) {
-                    Object returnV = restComponent.doService(interfaceVo, paramObj, new JSONReader(new InputStreamReader(request.getInputStream(), "utf-8")));
-                    returnObj.put("Return", returnV);
-                    returnObj.put("Status", "OK");
-                } else {
-                    returnObj.putAll(restComponent.help());
-                }
-            } else {
-                throw new ComponentNotFoundException("接口组件:" + restComponent.getId() + "不存在");
-            }
-            //采用二进制类型的处理方式
-        } else if (apiType.equals(ApiVo.Type.BINARY)) {
-            BinaryStreamApiComponent restComponent = ApiComponentFactory.getBinaryInstance(interfaceVo.getComponentId());
-            if (restComponent != null) {
-                if (action.equals("doservice")) {
-                    Object returnV = restComponent.doService(interfaceVo, paramObj, request, response);
-                    returnObj.put("Return", returnV);
-                    returnObj.put("Status", "OK");
-                } else {
-                    returnObj.putAll(restComponent.help());
-                }
-            } else {
-                throw new ComponentNotFoundException("接口组件:" + restComponent.getId() + "不存在");
-            }
-        }
-    }</code></pre><ul>
+        <span class="token keyword">if</span> <span class="token punctuation">(</span>apiType<span class="token punctuation">.</span><span class="token function">equals</span><span class="token punctuation">(</span>ApiVo<span class="token punctuation">.</span>Type<span class="token punctuation">.</span>OBJECT<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+            <span class="token comment" spellcheck="true">//获取接口类实体对象</span>
+            ApiComponent restComponent <span class="token operator">=</span> ApiComponentFactory<span class="token punctuation">.</span><span class="token function">getInstance</span><span class="token punctuation">(</span>interfaceVo<span class="token punctuation">.</span><span class="token function">getComponentId</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token keyword">if</span> <span class="token punctuation">(</span>restComponent <span class="token operator">!=</span> null<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+                <span class="token keyword">if</span> <span class="token punctuation">(</span>action<span class="token punctuation">.</span><span class="token function">equals</span><span class="token punctuation">(</span><span class="token string">"doservice"</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+                    Long starttime <span class="token operator">=</span> System<span class="token punctuation">.</span><span class="token function">currentTimeMillis</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+                    <span class="token comment" spellcheck="true">//调用实体类的doService方法进行参数的处理</span>
+                    Object returnV <span class="token operator">=</span> restComponent<span class="token punctuation">.</span><span class="token function">doService</span><span class="token punctuation">(</span>interfaceVo<span class="token punctuation">,</span> paramObj<span class="token punctuation">)</span><span class="token punctuation">;</span>
+                    <span class="token comment" spellcheck="true">//封装最终返回值</span>
+                    Long endtime <span class="token operator">=</span> System<span class="token punctuation">.</span><span class="token function">currentTimeMillis</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+                    returnObj<span class="token punctuation">.</span><span class="token function">put</span><span class="token punctuation">(</span><span class="token string">"TimeCost"</span><span class="token punctuation">,</span> endtime <span class="token operator">-</span> starttime<span class="token punctuation">)</span><span class="token punctuation">;</span>
+                    returnObj<span class="token punctuation">.</span><span class="token function">put</span><span class="token punctuation">(</span><span class="token string">"Return"</span><span class="token punctuation">,</span> returnV<span class="token punctuation">)</span><span class="token punctuation">;</span>
+                    returnObj<span class="token punctuation">.</span><span class="token function">put</span><span class="token punctuation">(</span><span class="token string">"Status"</span><span class="token punctuation">,</span> <span class="token string">"OK"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+                <span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token punctuation">{</span>
+                    <span class="token comment" spellcheck="true">//返回接口的帮助文档</span>
+                    returnObj<span class="token punctuation">.</span><span class="token function">putAll</span><span class="token punctuation">(</span>restComponent<span class="token punctuation">.</span><span class="token function">help</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+                <span class="token punctuation">}</span>
+            <span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token punctuation">{</span>
+                <span class="token keyword">throw</span> <span class="token keyword">new</span> <span class="token class-name">ComponentNotFoundException</span><span class="token punctuation">(</span><span class="token string">"接口组件:"</span> <span class="token operator">+</span> restComponent<span class="token punctuation">.</span><span class="token function">getId</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">+</span> <span class="token string">"不存在"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token punctuation">}</span>
+            <span class="token comment" spellcheck="true">//采用流类型的处理方式</span>
+        <span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token keyword">if</span> <span class="token punctuation">(</span>apiType<span class="token punctuation">.</span><span class="token function">equals</span><span class="token punctuation">(</span>ApiVo<span class="token punctuation">.</span>Type<span class="token punctuation">.</span>STREAM<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+            JsonStreamApiComponent restComponent <span class="token operator">=</span> ApiComponentFactory<span class="token punctuation">.</span><span class="token function">getStreamInstance</span><span class="token punctuation">(</span>interfaceVo<span class="token punctuation">.</span><span class="token function">getComponentId</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token keyword">if</span> <span class="token punctuation">(</span>restComponent <span class="token operator">!=</span> null<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+                <span class="token keyword">if</span> <span class="token punctuation">(</span>action<span class="token punctuation">.</span><span class="token function">equals</span><span class="token punctuation">(</span><span class="token string">"doservice"</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+                    Object returnV <span class="token operator">=</span> restComponent<span class="token punctuation">.</span><span class="token function">doService</span><span class="token punctuation">(</span>interfaceVo<span class="token punctuation">,</span> paramObj<span class="token punctuation">,</span> <span class="token keyword">new</span> <span class="token class-name">JSONReader</span><span class="token punctuation">(</span><span class="token keyword">new</span> <span class="token class-name">InputStreamReader</span><span class="token punctuation">(</span>request<span class="token punctuation">.</span><span class="token function">getInputStream</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token string">"utf-8"</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+                    returnObj<span class="token punctuation">.</span><span class="token function">put</span><span class="token punctuation">(</span><span class="token string">"Return"</span><span class="token punctuation">,</span> returnV<span class="token punctuation">)</span><span class="token punctuation">;</span>
+                    returnObj<span class="token punctuation">.</span><span class="token function">put</span><span class="token punctuation">(</span><span class="token string">"Status"</span><span class="token punctuation">,</span> <span class="token string">"OK"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+                <span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token punctuation">{</span>
+                    returnObj<span class="token punctuation">.</span><span class="token function">putAll</span><span class="token punctuation">(</span>restComponent<span class="token punctuation">.</span><span class="token function">help</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+                <span class="token punctuation">}</span>
+            <span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token punctuation">{</span>
+                <span class="token keyword">throw</span> <span class="token keyword">new</span> <span class="token class-name">ComponentNotFoundException</span><span class="token punctuation">(</span><span class="token string">"接口组件:"</span> <span class="token operator">+</span> restComponent<span class="token punctuation">.</span><span class="token function">getId</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">+</span> <span class="token string">"不存在"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token punctuation">}</span>
+            <span class="token comment" spellcheck="true">//采用二进制类型的处理方式</span>
+        <span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token keyword">if</span> <span class="token punctuation">(</span>apiType<span class="token punctuation">.</span><span class="token function">equals</span><span class="token punctuation">(</span>ApiVo<span class="token punctuation">.</span>Type<span class="token punctuation">.</span>BINARY<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+            BinaryStreamApiComponent restComponent <span class="token operator">=</span> ApiComponentFactory<span class="token punctuation">.</span><span class="token function">getBinaryInstance</span><span class="token punctuation">(</span>interfaceVo<span class="token punctuation">.</span><span class="token function">getComponentId</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token keyword">if</span> <span class="token punctuation">(</span>restComponent <span class="token operator">!=</span> null<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+                <span class="token keyword">if</span> <span class="token punctuation">(</span>action<span class="token punctuation">.</span><span class="token function">equals</span><span class="token punctuation">(</span><span class="token string">"doservice"</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+                    Object returnV <span class="token operator">=</span> restComponent<span class="token punctuation">.</span><span class="token function">doService</span><span class="token punctuation">(</span>interfaceVo<span class="token punctuation">,</span> paramObj<span class="token punctuation">,</span> request<span class="token punctuation">,</span> response<span class="token punctuation">)</span><span class="token punctuation">;</span>
+                    returnObj<span class="token punctuation">.</span><span class="token function">put</span><span class="token punctuation">(</span><span class="token string">"Return"</span><span class="token punctuation">,</span> returnV<span class="token punctuation">)</span><span class="token punctuation">;</span>
+                    returnObj<span class="token punctuation">.</span><span class="token function">put</span><span class="token punctuation">(</span><span class="token string">"Status"</span><span class="token punctuation">,</span> <span class="token string">"OK"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+                <span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token punctuation">{</span>
+                    returnObj<span class="token punctuation">.</span><span class="token function">putAll</span><span class="token punctuation">(</span>restComponent<span class="token punctuation">.</span><span class="token function">help</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+                <span class="token punctuation">}</span>
+            <span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token punctuation">{</span>
+                <span class="token keyword">throw</span> <span class="token keyword">new</span> <span class="token class-name">ComponentNotFoundException</span><span class="token punctuation">(</span><span class="token string">"接口组件:"</span> <span class="token operator">+</span> restComponent<span class="token punctuation">.</span><span class="token function">getId</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">+</span> <span class="token string">"不存在"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token punctuation">}</span>
+        <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span></code></pre>
+<ul>
 <li><p>restHelp方法的目的在于返回接口类的接口帮助说明</p>
-<pre><code>@RequestMapping(value = "/help/rest/**",
-            method = RequestMethod.GET)
-    public void resthelp(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        String pattern = (String) request.getAttribute(HandlerMapping.BEST_MATCHING_PATTERN_ATTRIBUTE);
-        String token = new AntPathMatcher().extractPathWithinPattern(pattern, request.getServletPath());
+<pre class=" language-java"><code class="language-java"><span class="token annotation punctuation">@RequestMapping</span><span class="token punctuation">(</span>value <span class="token operator">=</span> <span class="token string">"/help/rest/**"</span><span class="token punctuation">,</span>
+            method <span class="token operator">=</span> RequestMethod<span class="token punctuation">.</span>GET<span class="token punctuation">)</span>
+    <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">resthelp</span><span class="token punctuation">(</span>HttpServletRequest request<span class="token punctuation">,</span> HttpServletResponse response<span class="token punctuation">)</span> <span class="token keyword">throws</span> IOException <span class="token punctuation">{</span>
+        String pattern <span class="token operator">=</span> <span class="token punctuation">(</span>String<span class="token punctuation">)</span> request<span class="token punctuation">.</span><span class="token function">getAttribute</span><span class="token punctuation">(</span>HandlerMapping<span class="token punctuation">.</span>BEST_MATCHING_PATTERN_ATTRIBUTE<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        String token <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">AntPathMatcher</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">extractPathWithinPattern</span><span class="token punctuation">(</span>pattern<span class="token punctuation">,</span> request<span class="token punctuation">.</span><span class="token function">getServletPath</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 
-        JSONObject returnObj = new JSONObject();
-        try {
-        //标明是“help”类型请求
-            doIt(request, response, token, ApiVo.Type.OBJECT, null, returnObj, "help");
-        } catch (ApiRuntimeException ex) {
-            response.setStatus(500);
-            returnObj.put("ErrorCode", ex.getErrorCode());
-            returnObj.put("Status", "ERROR");
-            returnObj.put("Message", ex.getMessage());
-        } catch (Exception ex) {
-            logger.error(ex.getMessage(), ex);
-            response.setStatus(500);
-            returnObj.put("ErrorCode", 500);
-            returnObj.put("Status", "ERROR");
-            returnObj.put("Message", ExceptionUtils.getStackFrames(ex));
-        }
-        response.setContentType(Config.RESPONSE_TYPE_JSON);
-        response.getWriter().print(returnObj.toJSONString());
-    }</code></pre></li>
+        JSONObject returnObj <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">JSONObject</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">try</span> <span class="token punctuation">{</span>
+        <span class="token comment" spellcheck="true">//标明是“help”类型请求</span>
+            <span class="token function">doIt</span><span class="token punctuation">(</span>request<span class="token punctuation">,</span> response<span class="token punctuation">,</span> token<span class="token punctuation">,</span> ApiVo<span class="token punctuation">.</span>Type<span class="token punctuation">.</span>OBJECT<span class="token punctuation">,</span> null<span class="token punctuation">,</span> returnObj<span class="token punctuation">,</span> <span class="token string">"help"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token punctuation">}</span> <span class="token keyword">catch</span> <span class="token punctuation">(</span><span class="token class-name">ApiRuntimeException</span> ex<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+            response<span class="token punctuation">.</span><span class="token function">setStatus</span><span class="token punctuation">(</span><span class="token number">500</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+            returnObj<span class="token punctuation">.</span><span class="token function">put</span><span class="token punctuation">(</span><span class="token string">"ErrorCode"</span><span class="token punctuation">,</span> ex<span class="token punctuation">.</span><span class="token function">getErrorCode</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+            returnObj<span class="token punctuation">.</span><span class="token function">put</span><span class="token punctuation">(</span><span class="token string">"Status"</span><span class="token punctuation">,</span> <span class="token string">"ERROR"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+            returnObj<span class="token punctuation">.</span><span class="token function">put</span><span class="token punctuation">(</span><span class="token string">"Message"</span><span class="token punctuation">,</span> ex<span class="token punctuation">.</span><span class="token function">getMessage</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token punctuation">}</span> <span class="token keyword">catch</span> <span class="token punctuation">(</span><span class="token class-name">Exception</span> ex<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+            logger<span class="token punctuation">.</span><span class="token function">error</span><span class="token punctuation">(</span>ex<span class="token punctuation">.</span><span class="token function">getMessage</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span> ex<span class="token punctuation">)</span><span class="token punctuation">;</span>
+            response<span class="token punctuation">.</span><span class="token function">setStatus</span><span class="token punctuation">(</span><span class="token number">500</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+            returnObj<span class="token punctuation">.</span><span class="token function">put</span><span class="token punctuation">(</span><span class="token string">"ErrorCode"</span><span class="token punctuation">,</span> <span class="token number">500</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+            returnObj<span class="token punctuation">.</span><span class="token function">put</span><span class="token punctuation">(</span><span class="token string">"Status"</span><span class="token punctuation">,</span> <span class="token string">"ERROR"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+            returnObj<span class="token punctuation">.</span><span class="token function">put</span><span class="token punctuation">(</span><span class="token string">"Message"</span><span class="token punctuation">,</span> ExceptionUtils<span class="token punctuation">.</span><span class="token function">getStackFrames</span><span class="token punctuation">(</span>ex<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token punctuation">}</span>
+        response<span class="token punctuation">.</span><span class="token function">setContentType</span><span class="token punctuation">(</span>Config<span class="token punctuation">.</span>RESPONSE_TYPE_JSON<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        response<span class="token punctuation">.</span><span class="token function">getWriter</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">print</span><span class="token punctuation">(</span>returnObj<span class="token punctuation">.</span><span class="token function">toJSONString</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span></code></pre>
+</li>
 </ul>
 <ul>
 <li><p>总结整理：</p>

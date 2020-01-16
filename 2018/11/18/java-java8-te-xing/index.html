@@ -420,166 +420,183 @@
         <hr class="clearfix">
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <h4 id="1-Default-Method-for-Interfaces（接口的default方法）"><a href="#1-Default-Method-for-Interfaces（接口的default方法）" class="headerlink" title="1. Default Method for Interfaces（接口的default方法）"></a>1. Default Method for Interfaces（接口的default方法）</h4><pre><code>public interface Formula {
-    double calcute(int a);
+                <h4 id="1-Default-Method-for-Interfaces（接口的default方法）"><a href="#1-Default-Method-for-Interfaces（接口的default方法）" class="headerlink" title="1. Default Method for Interfaces（接口的default方法）"></a>1. Default Method for Interfaces（接口的default方法）</h4><pre class=" language-java"><code class="language-java"><span class="token keyword">public</span> <span class="token keyword">interface</span> <span class="token class-name">Formula</span> <span class="token punctuation">{</span>
+    <span class="token keyword">double</span> <span class="token function">calcute</span><span class="token punctuation">(</span><span class="token keyword">int</span> a<span class="token punctuation">)</span><span class="token punctuation">;</span>
 
-    default double sqrt(int a){
-        return Math.sqrt(a);
-    }
+    <span class="token keyword">default</span> <span class="token keyword">double</span> <span class="token function">sqrt</span><span class="token punctuation">(</span><span class="token keyword">int</span> a<span class="token punctuation">)</span><span class="token punctuation">{</span>
+        <span class="token keyword">return</span> Math<span class="token punctuation">.</span><span class="token function">sqrt</span><span class="token punctuation">(</span>a<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
 
-    public static void main(String[] args) {
-        Formula formula = new Formula() {
-            @Override
-            public double calcute(int a) {
-                return sqrt(a * 100);
-            }
-        };
+    <span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">void</span> <span class="token function">main</span><span class="token punctuation">(</span>String<span class="token punctuation">[</span><span class="token punctuation">]</span> args<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        Formula formula <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Formula</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+            <span class="token annotation punctuation">@Override</span>
+            <span class="token keyword">public</span> <span class="token keyword">double</span> <span class="token function">calcute</span><span class="token punctuation">(</span><span class="token keyword">int</span> a<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+                <span class="token keyword">return</span> <span class="token function">sqrt</span><span class="token punctuation">(</span>a <span class="token operator">*</span> <span class="token number">100</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token punctuation">}</span>
+        <span class="token punctuation">}</span><span class="token punctuation">;</span>
 
-        System.out.println(formula.calcute(100));
-        System.out.println(formula.sqrt(16));
-    }
-}</code></pre><h4 id="2-Lambda-expression-集合排序"><a href="#2-Lambda-expression-集合排序" class="headerlink" title="2.Lambda expression(集合排序)"></a>2.Lambda expression(集合排序)</h4><pre><code>public static void main(String[] args) {
-        List&lt;Integer&gt; numList = new ArrayList&lt;&gt;();
-        numList.add(1);
-        numList.add(3);
-        numList.add(2);
-        // #1
-        Collections.sort(numList, (Integer a, Integer b) -&gt;{
-            return b.compareTo(a);
-        });
-        // #2
-        Collections.sort(numList, (Integer a, Integer b) -&gt; b.compareTo(a));
-        // #3
-        numList.sort((a,  b) -&gt; b.compareTo(a));
+        System<span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span>formula<span class="token punctuation">.</span><span class="token function">calcute</span><span class="token punctuation">(</span><span class="token number">100</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        System<span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span>formula<span class="token punctuation">.</span><span class="token function">sqrt</span><span class="token punctuation">(</span><span class="token number">16</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span></code></pre>
+<h4 id="2-Lambda-expression-集合排序"><a href="#2-Lambda-expression-集合排序" class="headerlink" title="2.Lambda expression(集合排序)"></a>2.Lambda expression(集合排序)</h4><pre class=" language-java"><code class="language-java"><span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">void</span> <span class="token function">main</span><span class="token punctuation">(</span>String<span class="token punctuation">[</span><span class="token punctuation">]</span> args<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        List<span class="token operator">&lt;</span>Integer<span class="token operator">></span> numList <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">ArrayList</span><span class="token operator">&lt;</span><span class="token operator">></span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        numList<span class="token punctuation">.</span><span class="token function">add</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        numList<span class="token punctuation">.</span><span class="token function">add</span><span class="token punctuation">(</span><span class="token number">3</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        numList<span class="token punctuation">.</span><span class="token function">add</span><span class="token punctuation">(</span><span class="token number">2</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token comment" spellcheck="true">// #1</span>
+        Collections<span class="token punctuation">.</span><span class="token function">sort</span><span class="token punctuation">(</span>numList<span class="token punctuation">,</span> <span class="token punctuation">(</span>Integer a<span class="token punctuation">,</span> Integer b<span class="token punctuation">)</span> <span class="token operator">-</span><span class="token operator">></span><span class="token punctuation">{</span>
+            <span class="token keyword">return</span> b<span class="token punctuation">.</span><span class="token function">compareTo</span><span class="token punctuation">(</span>a<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token comment" spellcheck="true">// #2</span>
+        Collections<span class="token punctuation">.</span><span class="token function">sort</span><span class="token punctuation">(</span>numList<span class="token punctuation">,</span> <span class="token punctuation">(</span>Integer a<span class="token punctuation">,</span> Integer b<span class="token punctuation">)</span> <span class="token operator">-</span><span class="token operator">></span> b<span class="token punctuation">.</span><span class="token function">compareTo</span><span class="token punctuation">(</span>a<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token comment" spellcheck="true">// #3</span>
+        numList<span class="token punctuation">.</span><span class="token function">sort</span><span class="token punctuation">(</span><span class="token punctuation">(</span>a<span class="token punctuation">,</span>  b<span class="token punctuation">)</span> <span class="token operator">-</span><span class="token operator">></span> b<span class="token punctuation">.</span><span class="token function">compareTo</span><span class="token punctuation">(</span>a<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 
-        System.out.println(numList.toString());
-    }</code></pre><h4 id="3-Functional-Intefaces-功能性接口的快速实现"><a href="#3-Functional-Intefaces-功能性接口的快速实现" class="headerlink" title="3.Functional Intefaces(功能性接口的快速实现)"></a>3.Functional Intefaces(功能性接口的快速实现)</h4><pre><code>public static void main(String[] args) {
-        // #1
-        Converter&lt;String, Integer&gt; convert = (from -&gt; Integer.valueOf(from));
-        // #2
-        Converter&lt;String, Integer&gt; convert = Integer::valueof;
-        // #3
-        Converter&lt;String, String&gt; convert = Something::startWith;
+        System<span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span>numList<span class="token punctuation">.</span><span class="token function">toString</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span></code></pre>
+<h4 id="3-Functional-Intefaces-功能性接口的快速实现"><a href="#3-Functional-Intefaces-功能性接口的快速实现" class="headerlink" title="3.Functional Intefaces(功能性接口的快速实现)"></a>3.Functional Intefaces(功能性接口的快速实现)</h4><pre class=" language-java"><code class="language-java"><span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">void</span> <span class="token function">main</span><span class="token punctuation">(</span>String<span class="token punctuation">[</span><span class="token punctuation">]</span> args<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token comment" spellcheck="true">// #1</span>
+        Converter<span class="token operator">&lt;</span>String<span class="token punctuation">,</span> Integer<span class="token operator">></span> convert <span class="token operator">=</span> <span class="token punctuation">(</span>from <span class="token operator">-</span><span class="token operator">></span> Integer<span class="token punctuation">.</span><span class="token function">valueOf</span><span class="token punctuation">(</span>from<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token comment" spellcheck="true">// #2</span>
+        Converter<span class="token operator">&lt;</span>String<span class="token punctuation">,</span> Integer<span class="token operator">></span> convert <span class="token operator">=</span> Integer<span class="token operator">:</span><span class="token operator">:</span>valueof<span class="token punctuation">;</span>
+        <span class="token comment" spellcheck="true">// #3</span>
+        Converter<span class="token operator">&lt;</span>String<span class="token punctuation">,</span> String<span class="token operator">></span> convert <span class="token operator">=</span> Something<span class="token operator">:</span><span class="token operator">:</span>startWith<span class="token punctuation">;</span>
 
-        Integer converted = convert.convert("123");
-        System.out.println(converted);
-    }
+        Integer converted <span class="token operator">=</span> convert<span class="token punctuation">.</span><span class="token function">convert</span><span class="token punctuation">(</span><span class="token string">"123"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        System<span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span>converted<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
 
-    @FunctionalInterface
-    interface Converter&lt;F, T&gt;{
-        T convert(F from);
-    }
+    <span class="token annotation punctuation">@FunctionalInterface</span>
+    <span class="token keyword">interface</span> <span class="token class-name">Converter</span><span class="token operator">&lt;</span>F<span class="token punctuation">,</span> T<span class="token operator">></span><span class="token punctuation">{</span>
+        T <span class="token function">convert</span><span class="token punctuation">(</span>F from<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
 
-    class Something{
-        String startWith(String s){
-            return String.valueOf(s.charAt(0));
-        }
-    }
+    <span class="token keyword">class</span> <span class="token class-name">Something</span><span class="token punctuation">{</span>
+        String <span class="token function">startWith</span><span class="token punctuation">(</span>String s<span class="token punctuation">)</span><span class="token punctuation">{</span>
+            <span class="token keyword">return</span> String<span class="token punctuation">.</span><span class="token function">valueOf</span><span class="token punctuation">(</span>s<span class="token punctuation">.</span><span class="token function">charAt</span><span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span>
 
-    //构造函数的使用
-    class Person{
-        String name;
+    <span class="token comment" spellcheck="true">//构造函数的使用</span>
+    <span class="token keyword">class</span> <span class="token class-name">Person</span><span class="token punctuation">{</span>
+        String name<span class="token punctuation">;</span>
 
-        public Person(){}
+        <span class="token keyword">public</span> <span class="token function">Person</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">{</span><span class="token punctuation">}</span>
 
-        public Person(String name){
-            this.name = name;
-        }
-    }
+        <span class="token keyword">public</span> <span class="token function">Person</span><span class="token punctuation">(</span>String name<span class="token punctuation">)</span><span class="token punctuation">{</span>
+            <span class="token keyword">this</span><span class="token punctuation">.</span>name <span class="token operator">=</span> name<span class="token punctuation">;</span>
+        <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span>
 
-    interface PersonFactory&lt;T extends Person&gt;{
-        T create(String name);
-    }
+    <span class="token keyword">interface</span> <span class="token class-name">PersonFactory</span><span class="token operator">&lt;</span>T <span class="token keyword">extends</span> <span class="token class-name">Person</span><span class="token operator">></span><span class="token punctuation">{</span>
+        T <span class="token function">create</span><span class="token punctuation">(</span>String name<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
 
-    PersonFactory factory = Person::new;
-    Person person = factory.create("Peter");</code></pre><h4 id="4-Lambda-Scopes-使用范围"><a href="#4-Lambda-Scopes-使用范围" class="headerlink" title="4. Lambda Scopes(使用范围)"></a>4. Lambda Scopes(使用范围)</h4><h6 id="4-1-Accessing-local-variables-接受本地变量"><a href="#4-1-Accessing-local-variables-接受本地变量" class="headerlink" title="4.1 Accessing local variables(接受本地变量)"></a>4.1 Accessing local variables(接受本地变量)</h6><pre><code>final int num = 1
-Converter&lt;Integer, String&gt; stringConverter = (from) -&gt; String.valueOf(from + num);
-stringConverter.convert(2);</code></pre><h6 id="4-2-Accessing-fields-and-static-variables-属性和静态属性"><a href="#4-2-Accessing-fields-and-static-variables-属性和静态属性" class="headerlink" title="4.2 Accessing fields and static variables(属性和静态属性)"></a>4.2 Accessing fields and static variables(属性和静态属性)</h6><pre><code>class Lambda4{
-    static int outerStaticNum;
-    int outerNum;
+    PersonFactory factory <span class="token operator">=</span> Person<span class="token operator">:</span><span class="token operator">:</span><span class="token keyword">new</span><span class="token punctuation">;</span>
+    Person person <span class="token operator">=</span> factory<span class="token punctuation">.</span><span class="token function">create</span><span class="token punctuation">(</span><span class="token string">"Peter"</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
+<h4 id="4-Lambda-Scopes-使用范围"><a href="#4-Lambda-Scopes-使用范围" class="headerlink" title="4. Lambda Scopes(使用范围)"></a>4. Lambda Scopes(使用范围)</h4><h6 id="4-1-Accessing-local-variables-接受本地变量"><a href="#4-1-Accessing-local-variables-接受本地变量" class="headerlink" title="4.1 Accessing local variables(接受本地变量)"></a>4.1 Accessing local variables(接受本地变量)</h6><pre class=" language-java"><code class="language-java"><span class="token keyword">final</span> <span class="token keyword">int</span> num <span class="token operator">=</span> <span class="token number">1</span>
+Converter<span class="token operator">&lt;</span>Integer<span class="token punctuation">,</span> String<span class="token operator">></span> stringConverter <span class="token operator">=</span> <span class="token punctuation">(</span>from<span class="token punctuation">)</span> <span class="token operator">-</span><span class="token operator">></span> String<span class="token punctuation">.</span><span class="token function">valueOf</span><span class="token punctuation">(</span>from <span class="token operator">+</span> num<span class="token punctuation">)</span><span class="token punctuation">;</span>
+stringConverter<span class="token punctuation">.</span><span class="token function">convert</span><span class="token punctuation">(</span><span class="token number">2</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
+<h6 id="4-2-Accessing-fields-and-static-variables-属性和静态属性"><a href="#4-2-Accessing-fields-and-static-variables-属性和静态属性" class="headerlink" title="4.2 Accessing fields and static variables(属性和静态属性)"></a>4.2 Accessing fields and static variables(属性和静态属性)</h6><pre class=" language-java"><code class="language-java"><span class="token keyword">class</span> <span class="token class-name">Lambda4</span><span class="token punctuation">{</span>
+    <span class="token keyword">static</span> <span class="token keyword">int</span> outerStaticNum<span class="token punctuation">;</span>
+    <span class="token keyword">int</span> outerNum<span class="token punctuation">;</span>
 
-    void testScopes(){
-        java8Study.Converter&lt;Integer, String&gt; stringConverter = (from) -&gt; {
-            outerNum = 23;
-            return String.valueOf(from);
-        };
-        java8Study.Converter&lt;Integer, String&gt; stringConverter1 = (from) -&gt; {
-            outerStaticNum = 70;
-            return String.valueOf(from);
-        };
-    }
-}</code></pre><h4 id="5-Built-in-Functional-Interfaces-内置功能接口"><a href="#5-Built-in-Functional-Interfaces-内置功能接口" class="headerlink" title="5. Built-in Functional Interfaces(内置功能接口)"></a>5. Built-in Functional Interfaces(内置功能接口)</h4><h6 id="5-1-Predicates-用于判断boolean值的接口"><a href="#5-1-Predicates-用于判断boolean值的接口" class="headerlink" title="5.1 Predicates(用于判断boolean值的接口)"></a>5.1 Predicates(用于判断boolean值的接口)</h6><pre><code>  Predicate&lt;String&gt; predicate = (s) -&gt; s.length() &gt; 0;
+    <span class="token keyword">void</span> <span class="token function">testScopes</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
+        java8Study<span class="token punctuation">.</span>Converter<span class="token operator">&lt;</span>Integer<span class="token punctuation">,</span> String<span class="token operator">></span> stringConverter <span class="token operator">=</span> <span class="token punctuation">(</span>from<span class="token punctuation">)</span> <span class="token operator">-</span><span class="token operator">></span> <span class="token punctuation">{</span>
+            outerNum <span class="token operator">=</span> <span class="token number">23</span><span class="token punctuation">;</span>
+            <span class="token keyword">return</span> String<span class="token punctuation">.</span><span class="token function">valueOf</span><span class="token punctuation">(</span>from<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token punctuation">}</span><span class="token punctuation">;</span>
+        java8Study<span class="token punctuation">.</span>Converter<span class="token operator">&lt;</span>Integer<span class="token punctuation">,</span> String<span class="token operator">></span> stringConverter1 <span class="token operator">=</span> <span class="token punctuation">(</span>from<span class="token punctuation">)</span> <span class="token operator">-</span><span class="token operator">></span> <span class="token punctuation">{</span>
+            outerStaticNum <span class="token operator">=</span> <span class="token number">70</span><span class="token punctuation">;</span>
+            <span class="token keyword">return</span> String<span class="token punctuation">.</span><span class="token function">valueOf</span><span class="token punctuation">(</span>from<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token punctuation">}</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span></code></pre>
+<h4 id="5-Built-in-Functional-Interfaces-内置功能接口"><a href="#5-Built-in-Functional-Interfaces-内置功能接口" class="headerlink" title="5. Built-in Functional Interfaces(内置功能接口)"></a>5. Built-in Functional Interfaces(内置功能接口)</h4><h6 id="5-1-Predicates-用于判断boolean值的接口"><a href="#5-1-Predicates-用于判断boolean值的接口" class="headerlink" title="5.1 Predicates(用于判断boolean值的接口)"></a>5.1 Predicates(用于判断boolean值的接口)</h6><pre class=" language-java"><code class="language-java">  Predicate<span class="token operator">&lt;</span>String<span class="token operator">></span> predicate <span class="token operator">=</span> <span class="token punctuation">(</span>s<span class="token punctuation">)</span> <span class="token operator">-</span><span class="token operator">></span> s<span class="token punctuation">.</span><span class="token function">length</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">></span> <span class="token number">0</span><span class="token punctuation">;</span>
 
-        Predicate&lt;Object&gt; nonNull = Objects::nonNull;
-        Predicate&lt;Object&gt; isNull = Objects ::isNull;
+        Predicate<span class="token operator">&lt;</span>Object<span class="token operator">></span> nonNull <span class="token operator">=</span> Objects<span class="token operator">:</span><span class="token operator">:</span>nonNull<span class="token punctuation">;</span>
+        Predicate<span class="token operator">&lt;</span>Object<span class="token operator">></span> isNull <span class="token operator">=</span> Objects <span class="token operator">:</span><span class="token operator">:</span>isNull<span class="token punctuation">;</span>
 
-        Predicate&lt;String&gt; isEmpty = String::isEmpty;
-        Predicate&lt;String&gt; isNotEmpty = isEmpty.negate();
+        Predicate<span class="token operator">&lt;</span>String<span class="token operator">></span> isEmpty <span class="token operator">=</span> String<span class="token operator">:</span><span class="token operator">:</span>isEmpty<span class="token punctuation">;</span>
+        Predicate<span class="token operator">&lt;</span>String<span class="token operator">></span> isNotEmpty <span class="token operator">=</span> isEmpty<span class="token punctuation">.</span><span class="token function">negate</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 
-        boolean t1 =  predicate.test("job");
-        boolean t2 = predicate.negate().test("job");
+        <span class="token keyword">boolean</span> t1 <span class="token operator">=</span>  predicate<span class="token punctuation">.</span><span class="token function">test</span><span class="token punctuation">(</span><span class="token string">"job"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">boolean</span> t2 <span class="token operator">=</span> predicate<span class="token punctuation">.</span><span class="token function">negate</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">test</span><span class="token punctuation">(</span><span class="token string">"job"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 
-        String a = null;
-        boolean t3 = nonNull.test(a);
-        boolean t4 = isNull.test(a);
-        System.out.println(t1+" "+t2+" "+t3+" "+t4);
+        String a <span class="token operator">=</span> null<span class="token punctuation">;</span>
+        <span class="token keyword">boolean</span> t3 <span class="token operator">=</span> nonNull<span class="token punctuation">.</span><span class="token function">test</span><span class="token punctuation">(</span>a<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">boolean</span> t4 <span class="token operator">=</span> isNull<span class="token punctuation">.</span><span class="token function">test</span><span class="token punctuation">(</span>a<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        System<span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span>t1<span class="token operator">+</span><span class="token string">" "</span><span class="token operator">+</span>t2<span class="token operator">+</span><span class="token string">" "</span><span class="token operator">+</span>t3<span class="token operator">+</span><span class="token string">" "</span><span class="token operator">+</span>t4<span class="token punctuation">)</span><span class="token punctuation">;</span>
 
-        true false false true</code></pre><p><img src="/2018/11/18/java-java8-te-xing/1569555883604.png" alt="1569555883604"></p>
-<h6 id="5-2-Functions-接受一个参数，返回一个结果"><a href="#5-2-Functions-接受一个参数，返回一个结果" class="headerlink" title="5.2 Functions(接受一个参数，返回一个结果)"></a>5.2 Functions(接受一个参数，返回一个结果)</h6><pre><code>    Function&lt;String, Integer&gt; toInteger = Integer::valueOf;
-    Function&lt;String, String&gt; backToString = toInteger.andThen(String::valueOf);
-    System.out.println(backToString.apply("123"));
+        <span class="token boolean">true</span> <span class="token boolean">false</span> <span class="token boolean">false</span> <span class="token boolean">true</span></code></pre>
+<p><img src="/2018/11/18/java-java8-te-xing/1569555883604.png" alt="1569555883604"></p>
+<h6 id="5-2-Functions-接受一个参数，返回一个结果"><a href="#5-2-Functions-接受一个参数，返回一个结果" class="headerlink" title="5.2 Functions(接受一个参数，返回一个结果)"></a>5.2 Functions(接受一个参数，返回一个结果)</h6><pre class=" language-java"><code class="language-java">    Function<span class="token operator">&lt;</span>String<span class="token punctuation">,</span> Integer<span class="token operator">></span> toInteger <span class="token operator">=</span> Integer<span class="token operator">:</span><span class="token operator">:</span>valueOf<span class="token punctuation">;</span>
+    Function<span class="token operator">&lt;</span>String<span class="token punctuation">,</span> String<span class="token operator">></span> backToString <span class="token operator">=</span> toInteger<span class="token punctuation">.</span><span class="token function">andThen</span><span class="token punctuation">(</span>String<span class="token operator">:</span><span class="token operator">:</span>valueOf<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    System<span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span>backToString<span class="token punctuation">.</span><span class="token function">apply</span><span class="token punctuation">(</span><span class="token string">"123"</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 
-        123</code></pre><p><img src="/2018/11/18/java-java8-te-xing/1569556224804.png" alt="1569556224804"></p>
-<h6 id="5-3-Suppliers-产生指定类型结果-不接受参数"><a href="#5-3-Suppliers-产生指定类型结果-不接受参数" class="headerlink" title="5.3 Suppliers(产生指定类型结果,不接受参数)"></a>5.3 Suppliers(产生指定类型结果,不接受参数)</h6><pre><code>        Supplier&lt;Person&gt; personSupplier = Person::new;
-        Person person = personSupplier.get();</code></pre><p><img src="/2018/11/18/java-java8-te-xing/1569556641067.png" alt="1569556641067"></p>
-<h6 id="5-4-Consumers-指定对输入参数的处理动作"><a href="#5-4-Consumers-指定对输入参数的处理动作" class="headerlink" title="5.4 Consumers(指定对输入参数的处理动作)"></a>5.4 Consumers(指定对输入参数的处理动作)</h6><pre><code>Consumer&lt;Person&gt; greeter = (p) -&gt; System.out.println("Hello" + p.name);
-greeter.accept(new Person("Lee"));</code></pre><h6 id="5-6-Comparators-比较器接口"><a href="#5-6-Comparators-比较器接口" class="headerlink" title="5.6 Comparators(比较器接口)"></a>5.6 Comparators(比较器接口)</h6><pre><code>Comparator&lt;Person&gt; comparator = (p1, p2) -&gt; p1.name.compareTo(p2.name);
-        Person p1 = new Person("a");
-        Person p2 = new Person("b");
+        <span class="token number">123</span></code></pre>
+<p><img src="/2018/11/18/java-java8-te-xing/1569556224804.png" alt="1569556224804"></p>
+<h6 id="5-3-Suppliers-产生指定类型结果-不接受参数"><a href="#5-3-Suppliers-产生指定类型结果-不接受参数" class="headerlink" title="5.3 Suppliers(产生指定类型结果,不接受参数)"></a>5.3 Suppliers(产生指定类型结果,不接受参数)</h6><pre class=" language-java"><code class="language-java">        Supplier<span class="token operator">&lt;</span>Person<span class="token operator">></span> personSupplier <span class="token operator">=</span> Person<span class="token operator">:</span><span class="token operator">:</span><span class="token keyword">new</span><span class="token punctuation">;</span>
+        Person person <span class="token operator">=</span> personSupplier<span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
+<p><img src="/2018/11/18/java-java8-te-xing/1569556641067.png" alt="1569556641067"></p>
+<h6 id="5-4-Consumers-指定对输入参数的处理动作"><a href="#5-4-Consumers-指定对输入参数的处理动作" class="headerlink" title="5.4 Consumers(指定对输入参数的处理动作)"></a>5.4 Consumers(指定对输入参数的处理动作)</h6><pre class=" language-java"><code class="language-java">Consumer<span class="token operator">&lt;</span>Person<span class="token operator">></span> greeter <span class="token operator">=</span> <span class="token punctuation">(</span>p<span class="token punctuation">)</span> <span class="token operator">-</span><span class="token operator">></span> System<span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"Hello"</span> <span class="token operator">+</span> p<span class="token punctuation">.</span>name<span class="token punctuation">)</span><span class="token punctuation">;</span>
+greeter<span class="token punctuation">.</span><span class="token function">accept</span><span class="token punctuation">(</span><span class="token keyword">new</span> <span class="token class-name">Person</span><span class="token punctuation">(</span><span class="token string">"Lee"</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
+<h6 id="5-6-Comparators-比较器接口"><a href="#5-6-Comparators-比较器接口" class="headerlink" title="5.6 Comparators(比较器接口)"></a>5.6 Comparators(比较器接口)</h6><pre class=" language-java"><code class="language-java">Comparator<span class="token operator">&lt;</span>Person<span class="token operator">></span> comparator <span class="token operator">=</span> <span class="token punctuation">(</span>p1<span class="token punctuation">,</span> p2<span class="token punctuation">)</span> <span class="token operator">-</span><span class="token operator">></span> p1<span class="token punctuation">.</span>name<span class="token punctuation">.</span><span class="token function">compareTo</span><span class="token punctuation">(</span>p2<span class="token punctuation">.</span>name<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        Person p1 <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Person</span><span class="token punctuation">(</span><span class="token string">"a"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        Person p2 <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Person</span><span class="token punctuation">(</span><span class="token string">"b"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 
-        comparator.compare(p1, p2);
-        comparator.reversed().compare(p1, p2);</code></pre><p><img src="/2018/11/18/java-java8-te-xing/1569557367186.png" alt="1569557367186"></p>
-<h4 id="6-Optionals-防止空指针异常"><a href="#6-Optionals-防止空指针异常" class="headerlink" title="6.Optionals(防止空指针异常)"></a>6.Optionals(防止空指针异常)</h4><pre><code>Optional&lt;String&gt; optional = Optional.of("bam");
-optional.isPresent();  //true
-optional.get();  //"bam"
-optional.orElse("fallback");  //"bam"
+        comparator<span class="token punctuation">.</span><span class="token function">compare</span><span class="token punctuation">(</span>p1<span class="token punctuation">,</span> p2<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        comparator<span class="token punctuation">.</span><span class="token function">reversed</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">compare</span><span class="token punctuation">(</span>p1<span class="token punctuation">,</span> p2<span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
+<p><img src="/2018/11/18/java-java8-te-xing/1569557367186.png" alt="1569557367186"></p>
+<h4 id="6-Optionals-防止空指针异常"><a href="#6-Optionals-防止空指针异常" class="headerlink" title="6.Optionals(防止空指针异常)"></a>6.Optionals(防止空指针异常)</h4><pre class=" language-java"><code class="language-java">Optional<span class="token operator">&lt;</span>String<span class="token operator">></span> optional <span class="token operator">=</span> Optional<span class="token punctuation">.</span><span class="token function">of</span><span class="token punctuation">(</span><span class="token string">"bam"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+optional<span class="token punctuation">.</span><span class="token function">isPresent</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>  <span class="token comment" spellcheck="true">//true</span>
+optional<span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>  <span class="token comment" spellcheck="true">//"bam"</span>
+optional<span class="token punctuation">.</span><span class="token function">orElse</span><span class="token punctuation">(</span><span class="token string">"fallback"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>  <span class="token comment" spellcheck="true">//"bam"</span>
 
-optional.ifPresent((s) -&gt; System.out.println(s.chartAt(0)));</code></pre><p><img src="/2018/11/18/java-java8-te-xing/1569557923854.png" alt="1569557923854"></p>
-<h4 id="7-Streams"><a href="#7-Streams" class="headerlink" title="7. Streams"></a>7. Streams</h4><h6 id="7-1-Filter-过滤器"><a href="#7-1-Filter-过滤器" class="headerlink" title="7.1 Filter(过滤器)"></a>7.1 Filter(过滤器)</h6><pre><code>stringCollection
-                .stream()
-                .filter((s) -&gt; s.startsWith("a"))
-                .forEach(System.out::println);</code></pre><h6 id="7-2-Sorted"><a href="#7-2-Sorted" class="headerlink" title="7.2 Sorted"></a>7.2 Sorted</h6><p>​        元素会自然排序，除非指定Comparator，并且只是流进行了排序，集合并不会被改变。</p>
-<pre><code>stringCollection
-                .stream()
-                .sorted()
-                .filter((s) -&gt; s.startsWith("a"))
-                .forEach(System.out::println);</code></pre><h6 id="7-3-Map"><a href="#7-3-Map" class="headerlink" title="7.3 Map"></a>7.3 Map</h6><pre><code> stringCollection
-                .stream()
-                .map(String::toUpperCase)
-                .sorted((a, b) -&gt; a.compareTo(b))
-                .forEach(System.out :: println);</code></pre><h6 id="7-4-Match"><a href="#7-4-Match" class="headerlink" title="7.4 Match"></a>7.4 Match</h6><pre><code>//是否存在以a开头的元素
-boolean anyStartWithA =
+optional<span class="token punctuation">.</span><span class="token function">ifPresent</span><span class="token punctuation">(</span><span class="token punctuation">(</span>s<span class="token punctuation">)</span> <span class="token operator">-</span><span class="token operator">></span> System<span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span>s<span class="token punctuation">.</span><span class="token function">chartAt</span><span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
+<p><img src="/2018/11/18/java-java8-te-xing/1569557923854.png" alt="1569557923854"></p>
+<h4 id="7-Streams"><a href="#7-Streams" class="headerlink" title="7. Streams"></a>7. Streams</h4><h6 id="7-1-Filter-过滤器"><a href="#7-1-Filter-过滤器" class="headerlink" title="7.1 Filter(过滤器)"></a>7.1 Filter(过滤器)</h6><pre class=" language-java"><code class="language-java">stringCollection
+                <span class="token punctuation">.</span><span class="token function">stream</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+                <span class="token punctuation">.</span><span class="token function">filter</span><span class="token punctuation">(</span><span class="token punctuation">(</span>s<span class="token punctuation">)</span> <span class="token operator">-</span><span class="token operator">></span> s<span class="token punctuation">.</span><span class="token function">startsWith</span><span class="token punctuation">(</span><span class="token string">"a"</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+                <span class="token punctuation">.</span><span class="token function">forEach</span><span class="token punctuation">(</span>System<span class="token punctuation">.</span>out<span class="token operator">:</span><span class="token operator">:</span>println<span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
+<h6 id="7-2-Sorted"><a href="#7-2-Sorted" class="headerlink" title="7.2 Sorted"></a>7.2 Sorted</h6><p>​        元素会自然排序，除非指定Comparator，并且只是流进行了排序，集合并不会被改变。</p>
+<pre class=" language-java"><code class="language-java">stringCollection
+                <span class="token punctuation">.</span><span class="token function">stream</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+                <span class="token punctuation">.</span><span class="token function">sorted</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+                <span class="token punctuation">.</span><span class="token function">filter</span><span class="token punctuation">(</span><span class="token punctuation">(</span>s<span class="token punctuation">)</span> <span class="token operator">-</span><span class="token operator">></span> s<span class="token punctuation">.</span><span class="token function">startsWith</span><span class="token punctuation">(</span><span class="token string">"a"</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+                <span class="token punctuation">.</span><span class="token function">forEach</span><span class="token punctuation">(</span>System<span class="token punctuation">.</span>out<span class="token operator">:</span><span class="token operator">:</span>println<span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
+<h6 id="7-3-Map"><a href="#7-3-Map" class="headerlink" title="7.3 Map"></a>7.3 Map</h6><pre class=" language-java"><code class="language-java"> stringCollection
+                <span class="token punctuation">.</span><span class="token function">stream</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+                <span class="token punctuation">.</span><span class="token function">map</span><span class="token punctuation">(</span>String<span class="token operator">:</span><span class="token operator">:</span>toUpperCase<span class="token punctuation">)</span>
+                <span class="token punctuation">.</span><span class="token function">sorted</span><span class="token punctuation">(</span><span class="token punctuation">(</span>a<span class="token punctuation">,</span> b<span class="token punctuation">)</span> <span class="token operator">-</span><span class="token operator">></span> a<span class="token punctuation">.</span><span class="token function">compareTo</span><span class="token punctuation">(</span>b<span class="token punctuation">)</span><span class="token punctuation">)</span>
+                <span class="token punctuation">.</span><span class="token function">forEach</span><span class="token punctuation">(</span>System<span class="token punctuation">.</span>out <span class="token operator">:</span><span class="token operator">:</span> println<span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
+<h6 id="7-4-Match"><a href="#7-4-Match" class="headerlink" title="7.4 Match"></a>7.4 Match</h6><pre class=" language-java"><code class="language-java"><span class="token comment" spellcheck="true">//是否存在以a开头的元素</span>
+<span class="token keyword">boolean</span> anyStartWithA <span class="token operator">=</span>
                 stringCollection
-                .stream()
-                .anyMatch((s) -&gt; s.startsWith("a"));
- //所有元素是否以a开头                    
- boolean allStartWithA =
+                <span class="token punctuation">.</span><span class="token function">stream</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+                <span class="token punctuation">.</span><span class="token function">anyMatch</span><span class="token punctuation">(</span><span class="token punctuation">(</span>s<span class="token punctuation">)</span> <span class="token operator">-</span><span class="token operator">></span> s<span class="token punctuation">.</span><span class="token function">startsWith</span><span class="token punctuation">(</span><span class="token string">"a"</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+ <span class="token comment" spellcheck="true">//所有元素是否以a开头                    </span>
+ <span class="token keyword">boolean</span> allStartWithA <span class="token operator">=</span>
                 stringCollection
-                .stream()
-                .allMatch((a) -&gt; a.startsWith("a"));
-  //没有以Z开头的              
-  boolean nonStartWithZ =
+                <span class="token punctuation">.</span><span class="token function">stream</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+                <span class="token punctuation">.</span><span class="token function">allMatch</span><span class="token punctuation">(</span><span class="token punctuation">(</span>a<span class="token punctuation">)</span> <span class="token operator">-</span><span class="token operator">></span> a<span class="token punctuation">.</span><span class="token function">startsWith</span><span class="token punctuation">(</span><span class="token string">"a"</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token comment" spellcheck="true">//没有以Z开头的              </span>
+  <span class="token keyword">boolean</span> nonStartWithZ <span class="token operator">=</span>
                 stringCollection
-                .stream()
-                .noneMatch((a) -&gt; a.startsWith("z"));</code></pre><h6 id="7-5-Count"><a href="#7-5-Count" class="headerlink" title="7.5 Count"></a>7.5 Count</h6><pre><code>long startWithB =
+                <span class="token punctuation">.</span><span class="token function">stream</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+                <span class="token punctuation">.</span><span class="token function">noneMatch</span><span class="token punctuation">(</span><span class="token punctuation">(</span>a<span class="token punctuation">)</span> <span class="token operator">-</span><span class="token operator">></span> a<span class="token punctuation">.</span><span class="token function">startsWith</span><span class="token punctuation">(</span><span class="token string">"z"</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
+<h6 id="7-5-Count"><a href="#7-5-Count" class="headerlink" title="7.5 Count"></a>7.5 Count</h6><pre class=" language-java"><code class="language-java"><span class="token keyword">long</span> startWithB <span class="token operator">=</span>
                 stringCollection
-                .stream()
-                .filter((s)-&gt;s.startsWith("b"))
-                .count();</code></pre><h6 id="7-6Reduce"><a href="#7-6Reduce" class="headerlink" title="7.6Reduce"></a>7.6Reduce</h6><pre><code>Optional&lt;String&gt; reduced =
+                <span class="token punctuation">.</span><span class="token function">stream</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+                <span class="token punctuation">.</span><span class="token function">filter</span><span class="token punctuation">(</span><span class="token punctuation">(</span>s<span class="token punctuation">)</span><span class="token operator">-</span><span class="token operator">></span>s<span class="token punctuation">.</span><span class="token function">startsWith</span><span class="token punctuation">(</span><span class="token string">"b"</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+                <span class="token punctuation">.</span><span class="token function">count</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
+<h6 id="7-6Reduce"><a href="#7-6Reduce" class="headerlink" title="7.6Reduce"></a>7.6Reduce</h6><pre class=" language-java"><code class="language-java">Optional<span class="token operator">&lt;</span>String<span class="token operator">></span> reduced <span class="token operator">=</span>
                 stringCollection
-                .stream()
-                .sorted()
-                .reduce((s1, s2) -&gt; s1 + "#" + s2);</code></pre><script>
+                <span class="token punctuation">.</span><span class="token function">stream</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+                <span class="token punctuation">.</span><span class="token function">sorted</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+                <span class="token punctuation">.</span><span class="token function">reduce</span><span class="token punctuation">(</span><span class="token punctuation">(</span>s1<span class="token punctuation">,</span> s2<span class="token punctuation">)</span> <span class="token operator">-</span><span class="token operator">></span> s1 <span class="token operator">+</span> <span class="token string">"#"</span> <span class="token operator">+</span> s2<span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
+<script>
         document.querySelectorAll('.github-emoji')
           .forEach(el => {
             if (!el.dataset.src) { return; }

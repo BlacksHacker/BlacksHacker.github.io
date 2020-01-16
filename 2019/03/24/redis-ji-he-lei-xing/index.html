@@ -437,33 +437,44 @@ sadd key element ">
 <li><p>集合内操作</p>
 <ul>
 <li><p>添加元素</p>
-<pre><code>sadd key element [element ...]</code></pre></li>
+<pre class=" language-shell"><code class="language-shell">sadd key element [element ...]</code></pre>
+</li>
 <li><p>删除元素</p>
-<pre><code>srem key element [element ...]</code></pre></li>
+<pre class=" language-shell"><code class="language-shell">srem key element [element ...]</code></pre>
+</li>
 <li><p>计算元素个数</p>
-<pre><code>scard key</code></pre></li>
+<pre class=" language-shell"><code class="language-shell">scard key</code></pre>
+</li>
 <li><p>判断元素是否存在</p>
-<pre><code>sismember key element</code></pre></li>
+<pre class=" language-shell"><code class="language-shell">sismember key element</code></pre>
+</li>
 <li><p>随机返回指定个数元素(count 默认为 1)</p>
-<pre><code>srandmember key [count]</code></pre></li>
+<pre class=" language-shell"><code class="language-shell">srandmember key [count]</code></pre>
+</li>
 <li><p>随机弹出元素</p>
-<pre><code>spop key</code></pre></li>
+<pre class=" language-shell"><code class="language-shell">spop key</code></pre>
+</li>
 <li><p>获取所有元素</p>
-<pre><code>smembers key</code></pre></li>
+<pre class=" language-shell"><code class="language-shell">smembers key</code></pre>
+</li>
 </ul>
 </li>
 <li><p>集合间操作</p>
 <ul>
 <li><p>交集</p>
-<pre><code>sinter key [key ...]</code></pre></li>
+<pre class=" language-shell"><code class="language-shell">sinter key [key ...]</code></pre>
+</li>
 <li><p>并集</p>
-<pre><code>suinon key [key ...]</code></pre></li>
+<pre class=" language-shell"><code class="language-shell">suinon key [key ...]</code></pre>
+</li>
 <li><p>差集</p>
-<pre><code>sdiff key [key ...]</code></pre></li>
+<pre class=" language-shell"><code class="language-shell">sdiff key [key ...]</code></pre>
+</li>
 <li><p>保存上述结果</p>
-<pre><code>sinterstore destination key [key ...]
+<pre class=" language-shell"><code class="language-shell">sinterstore destination key [key ...]
 suionstore destination key [key ...]
-sdiffstore destination key [key ...]</code></pre></li>
+sdiffstore destination key [key ...]</code></pre>
+</li>
 </ul>
 </li>
 </ul>

@@ -442,28 +442,30 @@
 <li>不同库不同表将会增加数据库访问次数</li>
 </ul>
 <p><strong>利用merge存储引擎分表</strong><br> 把已有的大数据量的表进行切分的确非常困难，可能涉及到要修改代码中大量的sql，利用merge存储引擎分表将会在数据库层面进行表的切分，而对外程序的中依旧是该主表，不需要代码中sql的修改，但仅限于MyISAM存储引擎，采用InnoDB引擎的表不适用。<br> 具体代码如下：</p>
-<pre><code># 分表1
-CREATE TABLE user_1(
-    id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
-    NAME VARCHAR(50)
-) ENGINE=MYISAM
+<pre class=" language-sql"><code class="language-sql"><span class="token comment" spellcheck="true"># 分表1</span>
+<span class="token keyword">CREATE</span> <span class="token keyword">TABLE</span> user_1<span class="token punctuation">(</span>
+    id <span class="token keyword">INT</span> <span class="token operator">NOT</span> <span class="token boolean">NULL</span> <span class="token keyword">PRIMARY</span> <span class="token keyword">KEY</span> <span class="token keyword">AUTO_INCREMENT</span><span class="token punctuation">,</span>
+    NAME <span class="token keyword">VARCHAR</span><span class="token punctuation">(</span><span class="token number">50</span><span class="token punctuation">)</span>
+<span class="token punctuation">)</span> <span class="token keyword">ENGINE</span><span class="token operator">=</span>MYISAM
 
-#分表2
-CREATE TABLE user_2(
-    id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
-    NAME VARCHAR(50)
-) ENGINE=MYISAM
+<span class="token comment" spellcheck="true">#分表2</span>
+<span class="token keyword">CREATE</span> <span class="token keyword">TABLE</span> user_2<span class="token punctuation">(</span>
+    id <span class="token keyword">INT</span> <span class="token operator">NOT</span> <span class="token boolean">NULL</span> <span class="token keyword">PRIMARY</span> <span class="token keyword">KEY</span> <span class="token keyword">AUTO_INCREMENT</span><span class="token punctuation">,</span>
+    NAME <span class="token keyword">VARCHAR</span><span class="token punctuation">(</span><span class="token number">50</span><span class="token punctuation">)</span>
+<span class="token punctuation">)</span> <span class="token keyword">ENGINE</span><span class="token operator">=</span>MYISAM
 
-# merge表挂载分表
-CREATE TABLE USER(
-    id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
-    NAME VARCHAR(50)
-)  ENGINE=MERGE UNION=(user_1,user_2) INSERT_METHOD=LAST;</code></pre><ul>
+<span class="token comment" spellcheck="true"># merge表挂载分表</span>
+<span class="token keyword">CREATE</span> <span class="token keyword">TABLE</span> <span class="token keyword">USER</span><span class="token punctuation">(</span>
+    id <span class="token keyword">INT</span> <span class="token operator">NOT</span> <span class="token boolean">NULL</span> <span class="token keyword">PRIMARY</span> <span class="token keyword">KEY</span> <span class="token keyword">AUTO_INCREMENT</span><span class="token punctuation">,</span>
+    NAME <span class="token keyword">VARCHAR</span><span class="token punctuation">(</span><span class="token number">50</span><span class="token punctuation">)</span>
+<span class="token punctuation">)</span>  <span class="token keyword">ENGINE</span><span class="token operator">=</span><span class="token keyword">MERGE</span> <span class="token keyword">UNION</span><span class="token operator">=</span><span class="token punctuation">(</span>user_1<span class="token punctuation">,</span>user_2<span class="token punctuation">)</span> INSERT_METHOD<span class="token operator">=</span><span class="token keyword">LAST</span><span class="token punctuation">;</span></code></pre>
+<ul>
 <li><strong>ENGINE=MERGE</strong> 指明merge表使用MERGE引擎</li>
 <li><strong>UNION=(user_1,user_2)</strong> 指明merge表挂载了哪些表</li>
 </ul>
-<pre><code>#该sql用于移除user_2的挂载
-ALTER TABLE USER ENGINE=MERGE UNION=(user_1) INSERT_METHOD=LAST </code></pre><ul>
+<pre class=" language-sql"><code class="language-sql"><span class="token comment" spellcheck="true">#该sql用于移除user_2的挂载</span>
+<span class="token keyword">ALTER</span> <span class="token keyword">TABLE</span> <span class="token keyword">USER</span> <span class="token keyword">ENGINE</span><span class="token operator">=</span><span class="token keyword">MERGE</span> <span class="token keyword">UNION</span><span class="token operator">=</span><span class="token punctuation">(</span>user_1<span class="token punctuation">)</span> INSERT_METHOD<span class="token operator">=</span><span class="token keyword">LAST</span> </code></pre>
+<ul>
 <li><strong>INSERT_METHOD=LAST</strong> 指明输入插入的方式，0表示不允许数据插入，<strong>FIRST</strong>将会插入UNION的第一个分表中，<strong>LAST</strong>将会插入UNION的最后一个分表中</li>
 <li>如上sql所示，merger表和其他的分表结构必须保持一致，包括同样的索引。</li>
 <li>一个merge表不能在整个表上维持unique约束，若merge存在重复主键，按主键查询，获取一条记录便会停止。后续重复主键的数据将无法插入，即只保证挂载之后主键的唯一性。</li>

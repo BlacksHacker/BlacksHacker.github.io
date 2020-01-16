@@ -11,7 +11,8 @@
 
 添加成员
 zadd key score member [score member ...]
-计算成员个">
+
+计算成员">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <meta name="renderer" content="webkit|ie-stand|ie-comp">
@@ -436,36 +437,48 @@ zadd key score member [score member ...]
 <li><p>集合内</p>
 <ul>
 <li><p>添加成员</p>
-<pre><code>zadd key score member [score member ...]</code></pre></li>
+<pre class=" language-shell"><code class="language-shell">zadd key score member [score member ...]</code></pre>
+</li>
 <li><p>计算成员个数</p>
-<pre><code>zcard key</code></pre></li>
+<pre class=" language-shell"><code class="language-shell">zcard key</code></pre>
+</li>
 <li><p>计算某个成员的分数</p>
-<pre><code>zscore key member</code></pre></li>
+<pre class=" language-shell"><code class="language-shell">zscore key member</code></pre>
+</li>
 <li><p>计算成员的排名</p>
-<pre><code>zrank key member
-zrevrank key member</code></pre></li>
+<pre class=" language-shell"><code class="language-shell">zrank key member
+zrevrank key member</code></pre>
+</li>
 <li><p>删除成员</p>
-<pre><code>zrem key member [member ...]</code></pre></li>
+<pre class=" language-shell"><code class="language-shell">zrem key member [member ...]</code></pre>
+</li>
 <li><p>增加成员的分数</p>
-<pre><code>zincrby key increment member</code></pre></li>
+<pre class=" language-shell"><code class="language-shell">zincrby key increment member</code></pre>
+</li>
 <li><p>返回指定排名范围的成员</p>
-<pre><code>zrange key start end [withscores]
-zrevrange key start end [withscores]</code></pre></li>
+<pre class=" language-shell"><code class="language-shell">zrange key start end [withscores]
+zrevrange key start end [withscores]</code></pre>
+</li>
 <li><p>返回指定分数范围的成员</p>
-<pre><code>zrangebyscore key min max [withscores] [limit offset count]
-zrevrangebyscore key min max [withscores] [limit offset count]</code></pre></li>
+<pre class=" language-shell"><code class="language-shell">zrangebyscore key min max [withscores] [limit offset count]
+zrevrangebyscore key min max [withscores] [limit offset count]</code></pre>
+</li>
 <li><p>返回分数范围成员个数</p>
-<pre><code>zcount key min max</code></pre></li>
+<pre class=" language-shell"><code class="language-shell">zcount key min max</code></pre>
+</li>
 <li><p>删除指定排名内的升序元素</p>
-<pre><code>zremrangebyrank key start end</code></pre></li>
+<pre class=" language-shell"><code class="language-shell">zremrangebyrank key start end</code></pre>
+</li>
 <li><p>删除指定分数范围的成员</p>
-<pre><code>zremrangebyscore key min max</code></pre></li>
+<pre class=" language-shell"><code class="language-shell">zremrangebyscore key min max</code></pre>
+</li>
 </ul>
 </li>
 <li><p>集合间的操作</p>
 <ul>
 <li><p>交集</p>
-<pre><code>zinterstore destination numkeys key [key ...] [weights weight [weight ..]] [aggregate sum|min|max]</code></pre><ul>
+<pre class=" language-shell"><code class="language-shell">zinterstore destination numkeys key [key ...] [weights weight [weight ..]] [aggregate sum|min|max]</code></pre>
+<ul>
 <li>destination 计算的交集保存到这个键</li>
 <li>numkeys 需要做交集计算键的个数</li>
 <li>key[key …] 需要做交集计算的键</li>
@@ -474,7 +487,8 @@ zrevrangebyscore key min max [withscores] [limit offset count]</code></pre></li>
 </ul>
 </li>
 <li><p>并集</p>
-<pre><code>zunionstore destination numkeys key[key ...] [weights weight [weight ...]] [aggregate sum|min|max]</code></pre></li>
+<pre class=" language-shell"><code class="language-shell">zunionstore destination numkeys key[key ...] [weights weight [weight ...]] [aggregate sum|min|max]</code></pre>
+</li>
 </ul>
 </li>
 </ul>
@@ -737,15 +751,18 @@ zrevrangebyscore key min max [withscores] [limit offset count]</code></pre></li>
 1.2 常用命令
 设置值
 set key value 
+
 用于新加(键必须不存在)
 setnx key value
 
 
+
 获取值
 get key
+
 批量设置值
 mset key value [key value ...]
-批量获
+
                         
                     </div>
                     <div class="publish-info">

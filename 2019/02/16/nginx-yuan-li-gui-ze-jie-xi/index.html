@@ -469,7 +469,7 @@
 </li>
 </ul>
 <p>  nginx.conf配置代码如下：</p>
-<pre><code> upstream OrdinaryPolling {
+<pre class=" language-shell"><code class="language-shell"> upstream OrdinaryPolling {
       server 106.12.128.114:8080;
       server 106.12.128.114:8090;
       }
@@ -482,8 +482,9 @@
              index  index.html index.htm index.jsp;
 
          }
-     }</code></pre><h5 id="1-2-2-基于比例加权轮询"><a href="#1-2-2-基于比例加权轮询" class="headerlink" title="1.2.2 基于比例加权轮询"></a>1.2.2 基于比例加权轮询</h5><p>  nginx.conf配置代码如下：</p>
-<pre><code> upstream OrdinaryPolling {
+     }</code></pre>
+<h5 id="1-2-2-基于比例加权轮询"><a href="#1-2-2-基于比例加权轮询" class="headerlink" title="1.2.2 基于比例加权轮询"></a>1.2.2 基于比例加权轮询</h5><p>  nginx.conf配置代码如下：</p>
+<pre class=" language-shell"><code class="language-shell"> upstream OrdinaryPolling {
       server 106.12.128.114:8080 weight=5;
       server 106.12.128.114:8090 weight=2;
       }
@@ -496,13 +497,14 @@
              index  index.html index.htm index.jsp;
 
          }
-     }</code></pre><p>加权轮询的区别在于加上了weight，普通轮询实质上也是基于比例的加权轮询算法，只不过weight都是1.</p>
+     }</code></pre>
+<p>加权轮询的区别在于加上了weight，普通轮询实质上也是基于比例的加权轮询算法，只不过weight都是1.</p>
 <h5 id="1-2-3-基于IP路由负载"><a href="#1-2-3-基于IP路由负载" class="headerlink" title="1.2.3 基于IP路由负载"></a>1.2.3 基于IP路由负载</h5><p>  在请求经由服务器处理时，服务器会保存相关的会话信息，比如session，但如果是轮询模式下，session在不同服务器之间是不能共享的，可能导致用户每次发起请求都需要进行登录验证。<br>  解决上述问题有两种思路：</p>
 <ul>
 <li>采用中间件，将登录信息保存在中间件上，比如redis,这样第一次登录时，保存会话信息到redis中，当轮询跳转时，先去redis上查询登录信息，如果有就直接操作，没有就保存到redis上。</li>
 <li>根据客户端的IP地址划分，即将一个IP的请求全部发送到同一个服务器上，就不存在session共享的问题，nginx的基于IP路由负载，就是该形式，详细实例代码如下：</li>
 </ul>
-<pre><code>     upstream OrdinaryPolling {
+<pre class=" language-shell"><code class="language-shell">     upstream OrdinaryPolling {
        ip_hash
       server 106.12.128.114:8080 weight=5;
       server 106.12.128.114:8090 weight=2;
@@ -516,10 +518,11 @@
              index  index.html index.htm index.jsp;
 
          }
-     }</code></pre><p>  区别在于加上了 <strong>ip_hash</strong>.</p>
+     }</code></pre>
+<p>  区别在于加上了 <strong>ip_hash</strong>.</p>
 <h5 id="1-2-4-基于服务器响应时间负载分配"><a href="#1-2-4-基于服务器响应时间负载分配" class="headerlink" title="1.2.4 基于服务器响应时间负载分配"></a>1.2.4 基于服务器响应时间负载分配</h5><p>  根据服务器处理请求的时间来进行负载，处理请求越快，也就是响应时间越短的优先分配。<br>代码同上 只是将 <strong>ip_hash</strong> 替换为<strong>fair</strong>。</p>
 <h5 id="1-2-5-对不同域名实现负载均衡"><a href="#1-2-5-对不同域名实现负载均衡" class="headerlink" title="1.2.5 对不同域名实现负载均衡"></a>1.2.5 对不同域名实现负载均衡</h5><p>  配合location指令块实现对不同域名实现负载均衡。</p>
-<pre><code>upstream wordbackend {
+<pre class=" language-shell"><code class="language-shell">upstream wordbackend {
     server 127.0.0.1:8080;
     server 127.0.0.1:8081;
     }
@@ -543,7 +546,8 @@
             index  index.html index.htm index.jsp;
 
         }
-    }</code></pre><h3 id="1-3-Web缓存"><a href="#1-3-Web缓存" class="headerlink" title="1.3 Web缓存"></a>1.3 Web缓存</h3><p>  Nginx会对用户已经访问过的内容在服务器本地建立副本，这段时间内再次访问是，不需要Nginx再向服务器后端发送请求，缓存前端请求，提高Web服务器的性能。</p>
+    }</code></pre>
+<h3 id="1-3-Web缓存"><a href="#1-3-Web缓存" class="headerlink" title="1.3 Web缓存"></a>1.3 Web缓存</h3><p>  Nginx会对用户已经访问过的内容在服务器本地建立副本，这段时间内再次访问是，不需要Nginx再向服务器后端发送请求，缓存前端请求，提高Web服务器的性能。</p>
 <h3 id="1-4-总结"><a href="#1-4-总结" class="headerlink" title="1.4 总结"></a>1.4 总结</h3><h5 id="1-4-1-Master-Worker模式"><a href="#1-4-1-Master-Worker模式" class="headerlink" title="1.4.1 Master-Worker模式"></a>1.4.1 Master-Worker模式</h5><ul>
 <li><strong>Master</strong>：负责读取验证配置文件nginx.conf,管理worker进程。</li>
 <li><strong>Worker</strong>：每一个Worker进程维护一个线程（避免线程切换），处理连接和请求。其个数由配置文件决定，和CPU个有关，配置几个就有几个work进程。</li>
@@ -820,9 +824,10 @@
                             1.环境搭建  关于jdk环境的安装详见
 2. tomcat安装配置
 解压压缩包tar -zxvf apache-tomcat-8.5.45.tar.gz
+
 将解压后的tomcat文件夹重命名
 
-mv apache-tomcat-8.5.45
+mv apache-tomcat-8.5.4
                         
                     </div>
                     <div class="publish-info">

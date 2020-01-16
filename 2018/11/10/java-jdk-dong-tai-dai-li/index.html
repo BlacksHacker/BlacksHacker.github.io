@@ -429,73 +429,74 @@
 <li>代理类调用具体的函数方法</li>
 </ul>
 <p><strong><em>代码如下</em></strong></p>
-<pre><code>//被代理类接口
-public interface UserService {
-    String getName();
-}
+<pre class=" language-java"><code class="language-java"><span class="token comment" spellcheck="true">//被代理类接口</span>
+<span class="token keyword">public</span> <span class="token keyword">interface</span> <span class="token class-name">UserService</span> <span class="token punctuation">{</span>
+    String <span class="token function">getName</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
 
-//被代理类实现类
-public class UserServiceImpl implements UserService{
-    @Override
-    public String getName() {
-        System.out.println("this is Jerry");
-        return "Jerry";
-    }
-}
+<span class="token comment" spellcheck="true">//被代理类实现类</span>
+<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">UserServiceImpl</span> <span class="token keyword">implements</span> <span class="token class-name">UserService</span><span class="token punctuation">{</span>
+    <span class="token annotation punctuation">@Override</span>
+    <span class="token keyword">public</span> String <span class="token function">getName</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        System<span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"this is Jerry"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">return</span> <span class="token string">"Jerry"</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
 
-//InvocationJHandler的实现类
-public class MyInvocationHandler implements InvocationHandler {
-    private Object target;
+<span class="token comment" spellcheck="true">//InvocationJHandler的实现类</span>
+<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">MyInvocationHandler</span> <span class="token keyword">implements</span> <span class="token class-name">InvocationHandler</span> <span class="token punctuation">{</span>
+    <span class="token keyword">private</span> Object target<span class="token punctuation">;</span>
 
-    public MyInvocationHandler(){
+    <span class="token keyword">public</span> <span class="token function">MyInvocationHandler</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
 
-    }
+    <span class="token punctuation">}</span>
 
-    public MyInvocationHandler(Object target) {
-        super();
-        this.target = target;
-    }
+    <span class="token keyword">public</span> <span class="token function">MyInvocationHandler</span><span class="token punctuation">(</span>Object target<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">super</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token keyword">this</span><span class="token punctuation">.</span>target <span class="token operator">=</span> target<span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
 
-    @Override
-    public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
-            System.out.println("beforeExecute---" + method.getName());
-            Object result = method.invoke(target, args);
-            System.out.println("afterExecute---" + method.getName());
-            return result;
-    }
-}
+    <span class="token annotation punctuation">@Override</span>
+    <span class="token keyword">public</span> Object <span class="token function">invoke</span><span class="token punctuation">(</span>Object proxy<span class="token punctuation">,</span> Method method<span class="token punctuation">,</span> Object<span class="token punctuation">[</span><span class="token punctuation">]</span> args<span class="token punctuation">)</span> <span class="token keyword">throws</span> Throwable <span class="token punctuation">{</span>
+            System<span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"beforeExecute---"</span> <span class="token operator">+</span> method<span class="token punctuation">.</span><span class="token function">getName</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+            Object result <span class="token operator">=</span> method<span class="token punctuation">.</span><span class="token function">invoke</span><span class="token punctuation">(</span>target<span class="token punctuation">,</span> args<span class="token punctuation">)</span><span class="token punctuation">;</span>
+            System<span class="token punctuation">.</span>out<span class="token punctuation">.</span><span class="token function">println</span><span class="token punctuation">(</span><span class="token string">"afterExecute---"</span> <span class="token operator">+</span> method<span class="token punctuation">.</span><span class="token function">getName</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token keyword">return</span> result<span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
 
-//测试类
-public class MainTest {
-    public static void main(String[] args) throws Exception {
-        //1.获取代理类的class
-        Class clazz = Proxy.getProxyClass(UserService.class.getClassLoader(), UserService.class);
-        //2.获取代理类的构造函数
-        Constructor constructor = clazz.getConstructor(InvocationHandler.class);
-        //3.通过构造函数，拿到代理对象
-        UserService userService  = (UserService) constructor.newInstance(new MyInvocationHandler(new UserServiceImpl()));
-        //4.代理对象调用方法
-        userService.getName();
+<span class="token comment" spellcheck="true">//测试类</span>
+<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">MainTest</span> <span class="token punctuation">{</span>
+    <span class="token keyword">public</span> <span class="token keyword">static</span> <span class="token keyword">void</span> <span class="token function">main</span><span class="token punctuation">(</span>String<span class="token punctuation">[</span><span class="token punctuation">]</span> args<span class="token punctuation">)</span> <span class="token keyword">throws</span> Exception <span class="token punctuation">{</span>
+        <span class="token comment" spellcheck="true">//1.获取代理类的class</span>
+        Class <span class="token class-name">clazz</span> <span class="token operator">=</span> Proxy<span class="token punctuation">.</span><span class="token function">getProxyClass</span><span class="token punctuation">(</span>UserService<span class="token punctuation">.</span><span class="token keyword">class</span><span class="token punctuation">.</span><span class="token function">getClassLoader</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span> UserService<span class="token punctuation">.</span><span class="token keyword">class</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token comment" spellcheck="true">//2.获取代理类的构造函数</span>
+        Constructor constructor <span class="token operator">=</span> clazz<span class="token punctuation">.</span><span class="token function">getConstructor</span><span class="token punctuation">(</span>InvocationHandler<span class="token punctuation">.</span><span class="token keyword">class</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token comment" spellcheck="true">//3.通过构造函数，拿到代理对象</span>
+        UserService userService  <span class="token operator">=</span> <span class="token punctuation">(</span>UserService<span class="token punctuation">)</span> constructor<span class="token punctuation">.</span><span class="token function">newInstance</span><span class="token punctuation">(</span><span class="token keyword">new</span> <span class="token class-name">MyInvocationHandler</span><span class="token punctuation">(</span><span class="token keyword">new</span> <span class="token class-name">UserServiceImpl</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token comment" spellcheck="true">//4.代理对象调用方法</span>
+        userService<span class="token punctuation">.</span><span class="token function">getName</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
 
 
-        //Proxy 提供了静态方法，可以一步获得代理类的执行结果，以上的几步可以整合为一个方法
-        UserService userServiceProxy = (UserService) Proxy.newProxyInstance(
-                UserService.class.getClassLoader(),
-                new Class[]{UserService.class},
-                new MyInvocationHandler(new UserServiceImpl())
-        );
-        userServiceProxy.getName();
-    }
-}
+        <span class="token comment" spellcheck="true">//Proxy 提供了静态方法，可以一步获得代理类的执行结果，以上的几步可以整合为一个方法</span>
+        UserService userServiceProxy <span class="token operator">=</span> <span class="token punctuation">(</span>UserService<span class="token punctuation">)</span> Proxy<span class="token punctuation">.</span><span class="token function">newProxyInstance</span><span class="token punctuation">(</span>
+                UserService<span class="token punctuation">.</span><span class="token keyword">class</span><span class="token punctuation">.</span><span class="token function">getClassLoader</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+                <span class="token keyword">new</span> <span class="token class-name">Class</span><span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token punctuation">{</span>UserService<span class="token punctuation">.</span><span class="token keyword">class</span><span class="token punctuation">}</span><span class="token punctuation">,</span>
+                <span class="token keyword">new</span> <span class="token class-name">MyInvocationHandler</span><span class="token punctuation">(</span><span class="token keyword">new</span> <span class="token class-name">UserServiceImpl</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+        <span class="token punctuation">)</span><span class="token punctuation">;</span>
+        userServiceProxy<span class="token punctuation">.</span><span class="token function">getName</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
 
-//执行结果
-beforeExecute---getName
-this is Jerry
-afterExecute---getName
-beforeExecute---getName
-this is Jerry
-afterExecute---getName
-</code></pre><h4 id="2-2-补充整理："><a href="#2-2-补充整理：" class="headerlink" title="2.2 补充整理："></a>2.2 补充整理：</h4><p>  在动态代理中，InvocationHandler是核心，每一个代理实例都具有一个关联的调用处理程序，当代理对象生成后，还最后由InvocationHandler的invoke()方法调用目标方法。</p>
+<span class="token comment" spellcheck="true">//执行结果</span>
+beforeExecute<span class="token operator">--</span><span class="token operator">-</span>getName
+<span class="token keyword">this</span> is Jerry
+afterExecute<span class="token operator">--</span><span class="token operator">-</span>getName
+beforeExecute<span class="token operator">--</span><span class="token operator">-</span>getName
+<span class="token keyword">this</span> is Jerry
+afterExecute<span class="token operator">--</span><span class="token operator">-</span>getName
+</code></pre>
+<h4 id="2-2-补充整理："><a href="#2-2-补充整理：" class="headerlink" title="2.2 补充整理："></a>2.2 补充整理：</h4><p>  在动态代理中，InvocationHandler是核心，每一个代理实例都具有一个关联的调用处理程序，当代理对象生成后，还最后由InvocationHandler的invoke()方法调用目标方法。</p>
 <script>
         document.querySelectorAll('.github-emoji')
           .forEach(el => {

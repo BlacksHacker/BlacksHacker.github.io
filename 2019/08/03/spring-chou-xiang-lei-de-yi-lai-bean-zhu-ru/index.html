@@ -423,15 +423,16 @@
         <div class="card-content article-card-content">
             <div id="articleContent">
                 <h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><p>​            抽象类在Spring启动时并不会被实例化，固不能采用@Service等注解将其注入，保证其他依赖Bean的注入。所以要采用set方法注入依赖Bean中。</p>
-<h4 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h4><pre><code>public abstract class Test{
-    protected static FlowMapper flowMapper;
+<h4 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h4><pre class=" language-java"><code class="language-java"><span class="token keyword">public</span> <span class="token keyword">abstract</span> <span class="token keyword">class</span> <span class="token class-name">Test</span><span class="token punctuation">{</span>
+    <span class="token keyword">protected</span> <span class="token keyword">static</span> FlowMapper flowMapper<span class="token punctuation">;</span>
 
-    @Autowired
-    public void setFlowMapper(FlowMapper _flowMapper){
-        this.flowMapper = _flowMapper;
-    }
+    <span class="token annotation punctuation">@Autowired</span>
+    <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">setFlowMapper</span><span class="token punctuation">(</span>FlowMapper _flowMapper<span class="token punctuation">)</span><span class="token punctuation">{</span>
+        <span class="token keyword">this</span><span class="token punctuation">.</span>flowMapper <span class="token operator">=</span> _flowMapper<span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
 
-}</code></pre><script>
+<span class="token punctuation">}</span></code></pre>
+<script>
         document.querySelectorAll('.github-emoji')
           .forEach(el => {
             if (!el.dataset.src) { return; }

@@ -427,67 +427,68 @@
         <div class="card-content article-card-content">
             <div id="articleContent">
                 <h3 id="1-前言"><a href="#1-前言" class="headerlink" title="1. 前言"></a>1. 前言</h3><p>​            采用JSONWriter + 多线程 + 安全队列 + CountDownLatch实现 Http请求下，请求边处理边以流的形式将结果进行返回。</p>
-<h3 id="2-代码"><a href="#2-代码" class="headerlink" title="2. 代码"></a>2. 代码</h3><pre><code>public void execute(JSONWriter jsonWriter, List&lt;String&gt; ipList, int threadNum, String threadName) throws Exception{
-    //采用线程安全的队列存放处理信息
-    Queue&lt;String&gt; queue = new ConcurrentLinkedQueue();
-    for(String ip : ipList){
-        //增加一个元素，如果已满则抛出异常
-        queue.add(ip);
-    }
+<h3 id="2-代码"><a href="#2-代码" class="headerlink" title="2. 代码"></a>2. 代码</h3><pre class=" language-java"><code class="language-java"><span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">execute</span><span class="token punctuation">(</span>JSONWriter jsonWriter<span class="token punctuation">,</span> List<span class="token operator">&lt;</span>String<span class="token operator">></span> ipList<span class="token punctuation">,</span> <span class="token keyword">int</span> threadNum<span class="token punctuation">,</span> String threadName<span class="token punctuation">)</span> <span class="token keyword">throws</span> Exception<span class="token punctuation">{</span>
+    <span class="token comment" spellcheck="true">//采用线程安全的队列存放处理信息</span>
+    Queue<span class="token operator">&lt;</span>String<span class="token operator">></span> queue <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">ConcurrentLinkedQueue</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">for</span><span class="token punctuation">(</span>String ip <span class="token operator">:</span> ipList<span class="token punctuation">)</span><span class="token punctuation">{</span>
+        <span class="token comment" spellcheck="true">//增加一个元素，如果已满则抛出异常</span>
+        queue<span class="token punctuation">.</span><span class="token function">add</span><span class="token punctuation">(</span>ip<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
 
-    jsonWriter.startObject();
-    jsonWriter.writeKey("xxxxx");
-    jsonWriter.startArray();
-    //用于保证threadNum个任务完成后，主线程才继续执行。防止子线程在执行时，主线程结束。
-    CountDownlatch latch = new CountDownlatch(threadNum);
-    for(int i = 0; i &lt; threadNum; i++){
-        new Thread(new IPPingRunner(latch, queue, jsonWriter), threadName + "-" + i).start();
-    }
-    //主线程等待，直到threadNum个线程全部执行完毕，即计数器置0
-    latch.await();
-    jsonWriter.endArray();
-    jsonWriter.endObject();
-    jsonWriter.flush();
-}
+    jsonWriter<span class="token punctuation">.</span><span class="token function">startObject</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    jsonWriter<span class="token punctuation">.</span><span class="token function">writeKey</span><span class="token punctuation">(</span><span class="token string">"xxxxx"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    jsonWriter<span class="token punctuation">.</span><span class="token function">startArray</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token comment" spellcheck="true">//用于保证threadNum个任务完成后，主线程才继续执行。防止子线程在执行时，主线程结束。</span>
+    CountDownlatch latch <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">CountDownlatch</span><span class="token punctuation">(</span>threadNum<span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token keyword">for</span><span class="token punctuation">(</span><span class="token keyword">int</span> i <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span> i <span class="token operator">&lt;</span> threadNum<span class="token punctuation">;</span> i<span class="token operator">++</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
+        <span class="token keyword">new</span> <span class="token class-name">Thread</span><span class="token punctuation">(</span><span class="token keyword">new</span> <span class="token class-name">IPPingRunner</span><span class="token punctuation">(</span>latch<span class="token punctuation">,</span> queue<span class="token punctuation">,</span> jsonWriter<span class="token punctuation">)</span><span class="token punctuation">,</span> threadName <span class="token operator">+</span> <span class="token string">"-"</span> <span class="token operator">+</span> i<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">start</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
+    <span class="token comment" spellcheck="true">//主线程等待，直到threadNum个线程全部执行完毕，即计数器置0</span>
+    latch<span class="token punctuation">.</span><span class="token function">await</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    jsonWriter<span class="token punctuation">.</span><span class="token function">endArray</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    jsonWriter<span class="token punctuation">.</span><span class="token function">endObject</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    jsonWriter<span class="token punctuation">.</span><span class="token function">flush</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
 
-class IPPingRunner implements Runnable {
-    private CountDownLatch latch;
-    private Queue&lt;String&gt; queue;
-    private JSONWriter jsonWriter;
+<span class="token keyword">class</span> <span class="token class-name">IPPingRunner</span> <span class="token keyword">implements</span> <span class="token class-name">Runnable</span> <span class="token punctuation">{</span>
+    <span class="token keyword">private</span> CountDownLatch latch<span class="token punctuation">;</span>
+    <span class="token keyword">private</span> Queue<span class="token operator">&lt;</span>String<span class="token operator">></span> queue<span class="token punctuation">;</span>
+    <span class="token keyword">private</span> JSONWriter jsonWriter<span class="token punctuation">;</span>
 
-    public IPPingRunner(CountDownLatch latch, Queue&lt;String&gt; queue, JSONWriter jsonWriter){
-    this.latch = latch;
-    this.queue = queue;
-    this.jsonWriter = jsonWriter;
-    }
+    <span class="token keyword">public</span> <span class="token function">IPPingRunner</span><span class="token punctuation">(</span>CountDownLatch latch<span class="token punctuation">,</span> Queue<span class="token operator">&lt;</span>String<span class="token operator">></span> queue<span class="token punctuation">,</span> JSONWriter jsonWriter<span class="token punctuation">)</span><span class="token punctuation">{</span>
+    <span class="token keyword">this</span><span class="token punctuation">.</span>latch <span class="token operator">=</span> latch<span class="token punctuation">;</span>
+    <span class="token keyword">this</span><span class="token punctuation">.</span>queue <span class="token operator">=</span> queue<span class="token punctuation">;</span>
+    <span class="token keyword">this</span><span class="token punctuation">.</span>jsonWriter <span class="token operator">=</span> jsonWriter<span class="token punctuation">;</span>
+    <span class="token punctuation">}</span>
 
-    @Override
-    public void run(){
-        try{
-            while(true){
-                //获取元素，没有则返回null
-                String ip = queue.poll();
-                if(ip == null){
-                    breadk;
-                }
+    <span class="token annotation punctuation">@Override</span>
+    <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">run</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
+        <span class="token keyword">try</span><span class="token punctuation">{</span>
+            <span class="token keyword">while</span><span class="token punctuation">(</span><span class="token boolean">true</span><span class="token punctuation">)</span><span class="token punctuation">{</span>
+                <span class="token comment" spellcheck="true">//获取元素，没有则返回null</span>
+                String ip <span class="token operator">=</span> queue<span class="token punctuation">.</span><span class="token function">poll</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+                <span class="token keyword">if</span><span class="token punctuation">(</span>ip <span class="token operator">==</span> null<span class="token punctuation">)</span><span class="token punctuation">{</span>
+                    breadk<span class="token punctuation">;</span>
+                <span class="token punctuation">}</span>
                 采用latch作为锁
-                synchronized(latch){
-                    jsonWriter.startObject();
-                    jsonWriter.writeKey("ip");
-                    jsonWriter.writeValue(ip);
-                    jsonWriter.writeKey("xxx");
-                    jsonWriter.writeKey("xx");
-                    jsonWriter.endObject();
-                }
-            }
-        }catch(Exception e){
-            logger.error(e.getMessage(), e);
-        }finally{
-            //出现异常时，则自动释放
-            latch.countDown();
-        }
-    }
-}</code></pre><script>
+                <span class="token keyword">synchronized</span><span class="token punctuation">(</span>latch<span class="token punctuation">)</span><span class="token punctuation">{</span>
+                    jsonWriter<span class="token punctuation">.</span><span class="token function">startObject</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+                    jsonWriter<span class="token punctuation">.</span><span class="token function">writeKey</span><span class="token punctuation">(</span><span class="token string">"ip"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+                    jsonWriter<span class="token punctuation">.</span><span class="token function">writeValue</span><span class="token punctuation">(</span>ip<span class="token punctuation">)</span><span class="token punctuation">;</span>
+                    jsonWriter<span class="token punctuation">.</span><span class="token function">writeKey</span><span class="token punctuation">(</span><span class="token string">"xxx"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+                    jsonWriter<span class="token punctuation">.</span><span class="token function">writeKey</span><span class="token punctuation">(</span><span class="token string">"xx"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+                    jsonWriter<span class="token punctuation">.</span><span class="token function">endObject</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+                <span class="token punctuation">}</span>
+            <span class="token punctuation">}</span>
+        <span class="token punctuation">}</span><span class="token keyword">catch</span><span class="token punctuation">(</span>Exception e<span class="token punctuation">)</span><span class="token punctuation">{</span>
+            logger<span class="token punctuation">.</span><span class="token function">error</span><span class="token punctuation">(</span>e<span class="token punctuation">.</span><span class="token function">getMessage</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span> e<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token punctuation">}</span><span class="token keyword">finally</span><span class="token punctuation">{</span>
+            <span class="token comment" spellcheck="true">//出现异常时，则自动释放</span>
+            latch<span class="token punctuation">.</span><span class="token function">countDown</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span></code></pre>
+<script>
         document.querySelectorAll('.github-emoji')
           .forEach(el => {
             if (!el.dataset.src) { return; }

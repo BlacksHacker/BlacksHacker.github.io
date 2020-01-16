@@ -475,7 +475,7 @@
 </li>
 </ul>
 <h3 id="3-对象模型"><a href="#3-对象模型" class="headerlink" title="3. 对象模型"></a>3. 对象模型</h3><p>​        项目的层次结构如下：</p>
-<pre><code>$&gt;tree
+<pre class=" language-shell"><code class="language-shell">$>tree
 .
 |-- README
 `-- lib
@@ -483,9 +483,10 @@
     |   `-- tricks.rb
     `-- mylib.rb
 
-2 directories, 3 files</code></pre><p>​        在Git中的存储层次如下：</p>
+2 directories, 3 files</code></pre>
+<p>​        在Git中的存储层次如下：</p>
 <p><img src="/2019/09/08/git-dui-xiang-mo-xing/image/objects-example.png" alt=""></p>
-<h3 id="4-Git目录"><a href="#4-Git目录" class="headerlink" title="4. Git目录"></a>4. Git目录</h3><pre><code>$&gt;tree -L 1
+<h3 id="4-Git目录"><a href="#4-Git目录" class="headerlink" title="4. Git目录"></a>4. Git目录</h3><pre class=" language-shell"><code class="language-shell">$>tree -L 1
 .
 |-- HEAD         # 这个git项目当前处在哪个分支里
 |-- config       # 项目的配置信息，git config命令会改动它
@@ -494,7 +495,8 @@
 |-- index        # 索引文件
 |-- logs/        # 各个refs的历史信息
 |-- objects/     # Git本地仓库的所有对象 (commits, trees, blobs, tags)
-`-- refs/        # 标识你项目里的每个分支指向了哪个提交(commit)。</code></pre><script>
+`-- refs/        # 标识你项目里的每个分支指向了哪个提交(commit)。</code></pre>
+<script>
         document.querySelectorAll('.github-emoji')
           .forEach(el => {
             if (!el.dataset.src) { return; }

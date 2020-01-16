@@ -305,10 +305,19 @@ $('.bg-cover').css('background-image', 'url(/medias/banner/' + new Date().getDay
                 </a>
                 
                 
+                <a href="/categories/java/" title="java: 19">
+                    <span class="chip center-align waves-effect waves-light
+                             chip-default "
+                            style="background-color: #F5EEF8;">java
+                        <span class="tag-length">19</span>
+                    </span>
+                </a>
+                
+                
                 <a href="/categories/中间件/" title="中间件: 2">
                     <span class="chip center-align waves-effect waves-light
                              chip-default "
-                            style="background-color: #F5EEF8;">中间件
+                            style="background-color: #D5F5E3;">中间件
                         <span class="tag-length">2</span>
                     </span>
                 </a>
@@ -317,17 +326,8 @@ $('.bg-cover').css('background-image', 'url(/medias/banner/' + new Date().getDay
                 <a href="/categories/版本管理/" title="版本管理: 1">
                     <span class="chip center-align waves-effect waves-light
                              chip-default "
-                            style="background-color: #D5F5E3;">版本管理
+                            style="background-color: #E8F8F5;">版本管理
                         <span class="tag-length">1</span>
-                    </span>
-                </a>
-                
-                
-                <a href="/categories/java/" title="java: 18">
-                    <span class="chip center-align waves-effect waves-light
-                             chip-default "
-                            style="background-color: #E8F8F5;">java
-                        <span class="tag-length">18</span>
                     </span>
                 </a>
                 
@@ -414,15 +414,18 @@ $('.bg-cover').css('background-image', 'url(/medias/banner/' + new Date().getDay
 1.2 常用命令
 设置值
 set key value 
+
 用于新加(键必须不存在)
 setnx key value
 
 
+
 获取值
 get key
+
 批量设置值
 mset key value [key value ...]
-批量获
+
                             
                         </div>
                         <div class="publish-info">
@@ -482,7 +485,8 @@ mset key value [key value ...]
 
 添加成员
 zadd key score member [score member ...]
-计算成员个
+
+计算成员
                             
                         </div>
                         <div class="publish-info">
@@ -778,15 +782,20 @@ sadd key element
                                 1. 全局命令
 查看所有键
 keys *    
+
 键总数
 dbsize
+
 检查键是否存在
 exists key 
+
 删除键(支持删除多个)
 del key
+
 键过期
 expire key seconds
-键过期剩余时间(-1 : 没有过期时间， 
+
+键过期剩余时间(-1 : 没有过
                             
                         </div>
                         <div class="publish-info">
@@ -845,10 +854,11 @@ expire key seconds
 2. 常用命令
 设置值(可以给一个键设置多次，即设置多个值)
 hest key field value
+
 获取值
 hget key field
-删除值
 
+删除
                             
                         </div>
                         <div class="publish-info">
@@ -971,12 +981,14 @@ hget key field
 解压安装包
 
 tar -zxvf  redis-5.0.4.tar.gz
+
 进入解压后的安装包进行编译(时间较长)
 
 make
+
 出现以上结果，表明编译成功。
 
-运行mak
+运行m
                             
                         </div>
                         <div class="publish-info">
