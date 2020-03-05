@@ -4,10 +4,8 @@
 
 <head><meta name="generator" content="Hexo 3.9.0">
     <meta charset="utf-8">
-    <meta name="keywords" content="Java：反射框架 Reflections, Shelton_Lee">
-    <meta name="description" content="1. 类介绍​        Reflections通过classpath，索引元数据，并且允许在运行时查询这些元数据。
-1.1 maven坐标&amp;lt;dependency&gt;
-  &amp;lt;groupId&gt;org.reflections&amp;lt">
+    <meta name="keywords" content="Java：SQL脚本执行 ScriptRunner, Shelton_Lee">
+    <meta name="description" content="1. 前言​        最近公司在搞SaaS,涉及到多租户问题，包括租户保存时，需要为租户单独建立新的数据库，其中需要进行数据表的拷贝，公司使用mysql数据库，并且不包含存储过程等其他东西，仅仅是表的结构拷贝。因而最终采用Mybati">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <meta name="renderer" content="webkit|ie-stand|ie-comp">
@@ -15,7 +13,7 @@
     <meta name="format-detection" content="telephone=no">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <title>Java：反射框架 Reflections | Shelton_Lee</title>
+    <title>Java：SQL脚本执行 ScriptRunner | Shelton_Lee</title>
     <link rel="icon" type="image/png" href="/favicon.png">
 
     <link rel="stylesheet" type="text/css" href="/libs/awesome/css/font-awesome.min.css">
@@ -262,13 +260,13 @@
 
 
 
-<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/1.jpg')">
+<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/2.jpg')">
     <div class="container">
         <div class="row">
             <div class="col s12 m12 l12">
                 <div class="brand">
                     <div class="description center-align post-title">
-                        Java：反射框架 Reflections
+                        Java：SQL脚本执行 ScriptRunner
                     </div>
                 </div>
             </div>
@@ -403,7 +401,7 @@
             <div class="post-info">
                 <div class="post-date info-break-policy">
                     <i class="fa fa-calendar-minus-o fa-fw"></i>发布日期:&nbsp;&nbsp;
-                    2019-11-24
+                    2020-03-01
                 </div>
 
                 
@@ -419,44 +417,66 @@
         <hr class="clearfix">
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <h3 id="1-类介绍"><a href="#1-类介绍" class="headerlink" title="1. 类介绍"></a>1. 类介绍</h3><p>​        Reflections通过classpath，索引元数据，并且允许在运行时查询这些元数据。</p>
-<h5 id="1-1-maven坐标"><a href="#1-1-maven坐标" class="headerlink" title="1.1 maven坐标"></a>1.1 maven坐标</h5><pre class=" language-java"><code class="language-java"><span class="token operator">&lt;</span>dependency<span class="token operator">></span>
-  <span class="token operator">&lt;</span>groupId<span class="token operator">></span>org<span class="token punctuation">.</span>reflections<span class="token operator">&lt;</span><span class="token operator">/</span>groupId<span class="token operator">></span>
-  <span class="token operator">&lt;</span>artifactId<span class="token operator">></span>reflections<span class="token operator">&lt;</span><span class="token operator">/</span>artifactId<span class="token operator">></span>
-  <span class="token operator">&lt;</span>version<span class="token operator">></span><span class="token number">0.9</span><span class="token punctuation">.</span><span class="token number">10</span><span class="token operator">&lt;</span><span class="token operator">/</span>version<span class="token operator">></span>
-<span class="token operator">&lt;</span><span class="token operator">/</span>dependency<span class="token operator">></span></code></pre>
-<h5 id="1-2-构造方法"><a href="#1-2-构造方法" class="headerlink" title="1.2 构造方法"></a>1.2 构造方法</h5><pre class=" language-java"><code class="language-java"><span class="token comment" spellcheck="true">//"cn." 表示会扫描的包的路径，后面的参数指定要扫描的范围，参数是扫描器</span>
-Reflections reflections <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Reflections</span><span class="token punctuation">(</span><span class="token string">"cn.*"</span><span class="token punctuation">,</span> <span class="token keyword">new</span> <span class="token class-name">MethodAnnotationsScanner</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token keyword">new</span> <span class="token class-name">TypeAnnotationsScanner</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token keyword">new</span> <span class="token class-name">SubTypesScanner</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token keyword">new</span> <span class="token class-name">MethodParameterScanner</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
-<ul>
-<li><strong>SubTypesScanner()</strong> 子类扫描工具</li>
-<li><strong>SubTypesScanner()</strong> 属性注解扫描工具</li>
-<li><strong>MethodAnnotationsScanner()</strong> 方法注解扫描工具</li>
-<li><strong>MethodParameterScanner()</strong> 方法参数扫描工具</li>
-</ul>
-<h5 id="1-3-方法"><a href="#1-3-方法" class="headerlink" title="1.3 方法"></a>1.3 方法</h5><ul>
-<li><p>获取反射出的子类</p>
-<pre class=" language-java"><code class="language-java">Set<span class="token operator">&lt;</span>Class<span class="token operator">&lt;</span><span class="token operator">?</span> <span class="token keyword">extends</span> <span class="token class-name">Test</span><span class="token operator">>></span> set <span class="token operator">=</span> reflections<span class="token punctuation">.</span><span class="token function">getSubTypesOf</span><span class="token punctuation">(</span> Test<span class="token punctuation">.</span><span class="token keyword">class</span> <span class="token punctuation">)</span> <span class="token punctuation">;</span></code></pre>
-</li>
-<li><p>获取反射带有指定注解的类</p>
-<pre class=" language-java"><code class="language-java">Set<span class="token operator">&lt;</span>Class<span class="token operator">&lt;</span><span class="token operator">?</span><span class="token operator">>></span> ss <span class="token operator">=</span> reflections<span class="token punctuation">.</span><span class="token function">getTypesAnnotatedWith</span><span class="token punctuation">(</span> TestAnnotation<span class="token punctuation">.</span><span class="token keyword">class</span> <span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
-</li>
-<li><p>获取带有特定注解的方法</p>
-<pre class=" language-java"><code class="language-java">Set<span class="token operator">&lt;</span>Method<span class="token operator">></span> methods <span class="token operator">=</span> reflections<span class="token punctuation">.</span><span class="token function">getMethodsAnnotatedWith</span><span class="token punctuation">(</span> TestMethodAnnotation<span class="token punctuation">.</span><span class="token keyword">class</span> <span class="token punctuation">)</span> <span class="token punctuation">;</span></code></pre>
-</li>
-<li><p>获取带有特定注解的字段</p>
-<pre class=" language-java"><code class="language-java">Set<span class="token operator">&lt;</span>Field<span class="token operator">></span> fields <span class="token operator">=</span> reflections<span class="token punctuation">.</span><span class="token function">getFieldsAnnotatedWith</span><span class="token punctuation">(</span> TestAutowired<span class="token punctuation">.</span><span class="token keyword">class</span> <span class="token punctuation">)</span> <span class="token punctuation">;</span></code></pre>
-</li>
-<li><p>获取带有特定参数的方法</p>
-<pre class=" language-java"><code class="language-java"> Set<span class="token operator">&lt;</span>Method<span class="token operator">></span> someMethods <span class="token operator">=</span> reflections<span class="token punctuation">.</span><span class="token function">getMethodsMatchParams</span><span class="token punctuation">(</span><span class="token keyword">long</span><span class="token punctuation">.</span><span class="token keyword">class</span><span class="token punctuation">,</span> <span class="token keyword">int</span><span class="token punctuation">.</span><span class="token keyword">class</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
-</li>
-<li><p>获取带有特定返回类型的方法</p>
-<pre class=" language-java"><code class="language-java">   Set<span class="token operator">&lt;</span>Method<span class="token operator">></span> voidMethods <span class="token operator">=</span> reflections<span class="token punctuation">.</span><span class="token function">getMethodsReturn</span><span class="token punctuation">(</span><span class="token keyword">void</span><span class="token punctuation">.</span><span class="token keyword">class</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
-</li>
-<li><p>获取带有参数注解的方法</p>
-<pre class=" language-java"><code class="language-java">Set<span class="token operator">&lt;</span>Method<span class="token operator">></span> pathParamMethods <span class="token operator">=</span>reflections<span class="token punctuation">.</span><span class="token function">getMethodsWithAnyParamAnnotated</span><span class="token punctuation">(</span> PathParam<span class="token punctuation">.</span><span class="token keyword">class</span><span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
-<p><strong><em>备注：</em></strong>以上方法被调用后有返回值的前提是，创建reflections时，要明确加上对应的扫描器参数。</p>
-</li>
-</ul>
+                <h3 id="1-前言"><a href="#1-前言" class="headerlink" title="1. 前言"></a>1. 前言</h3><p>​        最近公司在搞SaaS,涉及到多租户问题，包括租户保存时，需要为租户单独建立新的数据库，其中需要进行数据表的拷贝，公司使用mysql数据库，并且不包含存储过程等其他东西，仅仅是表的结构拷贝。因而最终采用Mybatis包中的ScriptRunner进行SQL脚本的执行，实现数据库的复制操作。</p>
+<h3 id="2-使用"><a href="#2-使用" class="headerlink" title="2. 使用"></a>2. 使用</h3><pre class=" language-java"><code class="language-java">         <span class="token comment" spellcheck="true">//这里采用了Spring的多数据源管理方案，CodeDriverBasicDataSource继承了BasicDataSource</span>
+         CodeDriverBasicDataSource tenantDatasource <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">CodeDriverBasicDataSource</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        tenantDatasource<span class="token punctuation">.</span><span class="token function">setUrl</span><span class="token punctuation">(</span><span class="token function">getTenantUrl</span><span class="token punctuation">(</span>tenantVo<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        tenantDatasource<span class="token punctuation">.</span><span class="token function">setDriverClassName</span><span class="token punctuation">(</span>tenantVo<span class="token punctuation">.</span><span class="token function">getDataSourceParam</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">getDriver</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        tenantDatasource<span class="token punctuation">.</span><span class="token function">setUsername</span><span class="token punctuation">(</span>tenantVo<span class="token punctuation">.</span><span class="token function">getDataSourceParam</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">getUsername</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        tenantDatasource<span class="token punctuation">.</span><span class="token function">setPassword</span><span class="token punctuation">(</span>tenantVo<span class="token punctuation">.</span><span class="token function">getDataSourceParam</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">getPassword</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token comment" spellcheck="true">//将租户数据源加入到Spring的数据源管理列表中</span>
+        DatasourceInitializer<span class="token punctuation">.</span><span class="token function">addDynamicDataSource</span><span class="token punctuation">(</span>tenantVo<span class="token punctuation">.</span><span class="token function">getUuid</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span> tenantDatasource<span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token comment" spellcheck="true">//切换到指定租户</span>
+        TenantContext<span class="token punctuation">.</span><span class="token function">init</span><span class="token punctuation">(</span>tenantVo<span class="token punctuation">.</span><span class="token function">getUuid</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token comment" spellcheck="true">//正文</span>
+        <span class="token comment" spellcheck="true">//获取当前租户数据库连接，（也可以使用JDBC指定url,driver.password,username来创建连接）</span>
+        Connection conn <span class="token operator">=</span> null<span class="token punctuation">;</span>
+        <span class="token keyword">try</span> <span class="token punctuation">{</span>
+            conn <span class="token operator">=</span> tenantDatasource<span class="token punctuation">.</span><span class="token function">getConnection</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+            ScriptRunner runner <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">ScriptRunner</span><span class="token punctuation">(</span>conn<span class="token punctuation">)</span><span class="token punctuation">;</span>
+            runner<span class="token punctuation">.</span><span class="token function">setAutoCommit</span><span class="token punctuation">(</span><span class="token boolean">false</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+            runner<span class="token punctuation">.</span><span class="token function">setStopOnError</span><span class="token punctuation">(</span><span class="token boolean">true</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+            Resources<span class="token punctuation">.</span><span class="token function">setCharset</span><span class="token punctuation">(</span>Charset<span class="token punctuation">.</span><span class="token function">forName</span><span class="token punctuation">(</span><span class="token string">"UTF-8"</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+            runner<span class="token punctuation">.</span><span class="token function">setLogWriter</span><span class="token punctuation">(</span>null<span class="token punctuation">)</span><span class="token punctuation">;</span>
+            runner<span class="token punctuation">.</span><span class="token function">runScript</span><span class="token punctuation">(</span>Resources<span class="token punctuation">.</span><span class="token function">getResourceAsReader</span><span class="token punctuation">(</span><span class="token string">"test.sql"</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+            runner<span class="token punctuation">.</span><span class="token function">closeConnection</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token punctuation">}</span> <span class="token keyword">catch</span> <span class="token punctuation">(</span><span class="token class-name">SQLException</span> e<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+            <span class="token keyword">try</span> <span class="token punctuation">{</span>
+                conn<span class="token punctuation">.</span><span class="token function">rollback</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token punctuation">}</span> <span class="token keyword">catch</span> <span class="token punctuation">(</span><span class="token class-name">SQLException</span> e1<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+                logger<span class="token punctuation">.</span><span class="token function">error</span><span class="token punctuation">(</span>e1<span class="token punctuation">.</span><span class="token function">getMessage</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token punctuation">}</span>
+            logger<span class="token punctuation">.</span><span class="token function">error</span><span class="token punctuation">(</span>e<span class="token punctuation">.</span><span class="token function">getMessage</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token punctuation">}</span> <span class="token keyword">catch</span> <span class="token punctuation">(</span><span class="token class-name">IOException</span> e<span class="token punctuation">)</span><span class="token punctuation">{</span>
+            logger<span class="token punctuation">.</span><span class="token function">error</span><span class="token punctuation">(</span>e<span class="token punctuation">.</span><span class="token function">getMessage</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+        <span class="token punctuation">}</span><span class="token keyword">finally</span> <span class="token punctuation">{</span>
+            <span class="token keyword">try</span> <span class="token punctuation">{</span>
+                conn<span class="token punctuation">.</span><span class="token function">close</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token punctuation">}</span> <span class="token keyword">catch</span> <span class="token punctuation">(</span><span class="token class-name">SQLException</span> e<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+                logger<span class="token punctuation">.</span><span class="token function">error</span><span class="token punctuation">(</span>e<span class="token punctuation">.</span><span class="token function">getMessage</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+            <span class="token punctuation">}</span>
+        <span class="token punctuation">}</span></code></pre>
+<h3 id="3-属性说明"><a href="#3-属性说明" class="headerlink" title="3. 属性说明"></a>3. 属性说明</h3><pre class=" language-java"><code class="language-java">    <span class="token comment" spellcheck="true">//要执行pl/sql的脚本，需要置为false，否则只执行正常的sql语句</span>
+    runner<span class="token punctuation">.</span><span class="token function">setEscapeProcessing</span><span class="token punctuation">(</span><span class="token boolean">false</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    <span class="token comment" spellcheck="true">//false 按行读取执行，true则读取所有脚本，若要执行begin end代码块，需要设为true.</span>
+    runner<span class="token punctuation">.</span><span class="token function">setSendFullScript</span><span class="token punctuation">(</span><span class="token boolean">true</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    <span class="token comment" spellcheck="true">//若.sql文件里没有commit语句，则此处设置为true，使runner执行之后自动提交</span>
+    runner<span class="token punctuation">.</span><span class="token function">setAutoCommit</span><span class="token punctuation">(</span><span class="token boolean">true</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+     <span class="token comment" spellcheck="true">//设置一般日志输出位置，参数为PrintWriter类型</span>
+    runner<span class="token punctuation">.</span><span class="token function">setLogWriter</span><span class="token punctuation">(</span>null<span class="token punctuation">)</span><span class="token punctuation">;</span><span class="token comment" spellcheck="true">//设置普通日志</span>
+    runner<span class="token punctuation">.</span><span class="token function">setErrorLogWriter</span><span class="token punctuation">(</span>null<span class="token punctuation">)</span><span class="token punctuation">;</span><span class="token comment" spellcheck="true">//设置异常日志 </span>
+
+    <span class="token comment" spellcheck="true">//出现error是否中断，设置为true则中断，此处的error是指执行.sql文件中的内容出现错误，如键  值重复等。若是文件不存在导致报错，在此处设置是没有用的，需要先判断文件是否存在，然后执行runScript函数。</span>
+    <span class="token comment" spellcheck="true">//当为false时，遇见错误不会停止，会继续执行，打印异常信息，并不会抛出异常，在当前方法无法捕捉异常无法进行回滚操作</span>
+    <span class="token comment" spellcheck="true">//当为true时，遇见错误会停止执行，打印并抛出异常，捕捉异常并进行回滚，保证在一个事务内执行。</span>
+    runner<span class="token punctuation">.</span><span class="token function">setStopOnError</span><span class="token punctuation">(</span><span class="token boolean">false</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+    <span class="token comment" spellcheck="true">//设置字符集,不然中文乱码插入错误</span>
+    Resources<span class="token punctuation">.</span><span class="token function">setCharset</span><span class="token punctuation">(</span>Charset<span class="token punctuation">.</span><span class="token function">forName</span><span class="token punctuation">(</span><span class="token string">"UTF-8"</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span> 
+</code></pre>
 <script>
         document.querySelectorAll('.github-emoji')
           .forEach(el => {
@@ -633,9 +653,9 @@ Reflections reflections <span class="token operator">=</span> <span class="token
             <br/>
             <span xmlns:dct="http://purl.org/dc/terms/" href="http://purl.org/dc/dcmitype/Text"
                   property="dct:title" rel="dct:type">
-                    《Java：反射框架 Reflections》
+                    《Java：SQL脚本执行 ScriptRunner》
                 </span> 由
-            <a xmlns:cc="http://creativecommons.org/ns#" href="/2019/11/24/java-fan-she-kuang-jia-reflections/" property="cc:attributionName"
+            <a xmlns:cc="http://creativecommons.org/ns#" href="/2020/03/01/java-sql-jiao-ben-zhi-xing-scriptrunner/" property="cc:attributionName"
                rel="cc:attributionURL">
                 Shelton Lee
             </a> 采用
@@ -675,9 +695,10 @@ Reflections reflections <span class="token operator">=</span> <span class="token
 <article id="prenext-posts" class="prev-next articles">
     <div class="row article-row">
         
-        <div class="article col s12 m6" data-aos="fade-up">
+        <div class="article col s12 m6" data-aos="fade-up" data-aos="fade-up">
             <div class="article-badge left-badge text-color">
-                <i class="fa fa-chevron-left"></i>&nbsp;上一篇</div>
+                <i class="fa fa-dot-circle-o"></i>&nbsp;本篇
+            </div>
             <div class="card">
                 <a href="/2020/03/01/java-sql-jiao-ben-zhi-xing-scriptrunner/">
                     <div class="card-image">
@@ -695,9 +716,9 @@ Reflections reflections <span class="token operator">=</span> <span class="token
                         
                     </div>
                     <div class="publish-info">
-                        <span class="publish-date">
-                            <i class="fa fa-clock-o fa-fw icon-date"></i>2020-03-01
-                        </span>
+                            <span class="publish-date">
+                                <i class="fa fa-clock-o fa-fw icon-date"></i>2020-03-01
+                            </span>
                         <span class="publish-author">
                             
                             <i class="fa fa-bookmark fa-fw icon-category"></i>
@@ -710,6 +731,7 @@ Reflections reflections <span class="token operator">=</span> <span class="token
                         </span>
                     </div>
                 </div>
+
                 
                 <div class="card-action article-tags">
                     
@@ -728,25 +750,26 @@ Reflections reflections <span class="token operator">=</span> <span class="token
                 下一篇&nbsp;<i class="fa fa-chevron-right"></i>
             </div>
             <div class="card">
-                <a href="/2019/11/18/java-ji-yu-zhu-jie-de-quan-xian-yan-zheng-she-ji/">
+                <a href="/2019/11/24/java-fan-she-kuang-jia-reflections/">
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/5.jpg" class="responsive-img" alt="Java：基于AOP配合注解的权限验证设计">
+                        <img src="/medias/featureimages/1.jpg" class="responsive-img" alt="Java：反射框架 Reflections">
                         
-                        <span class="card-title">Java：基于AOP配合注解的权限验证设计</span>
+                        <span class="card-title">Java：反射框架 Reflections</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
                     <div class="summary block-with-text">
                         
-                            1.前言​        前一段时间负责了一个项目的权限验证方面的设计，主要用于限制不同的角色的不同操作权限，仅限后端控制，前端控制的目的在于隐藏不必要的操作，以达到良好的用户体验，此处暂不涉及前端，进行整理，方便日后回顾。
-2. 基于注解
+                            1. 类介绍​        Reflections通过classpath，索引元数据，并且允许在运行时查询这些元数据。
+1.1 maven坐标&lt;dependency>
+  &lt;groupId>org.reflections&lt
                         
                     </div>
                     <div class="publish-info">
                             <span class="publish-date">
-                                <i class="fa fa-clock-o fa-fw icon-date"></i>2019-11-18
+                                <i class="fa fa-clock-o fa-fw icon-date"></i>2019-11-24
                             </span>
                         <span class="publish-author">
                             
@@ -763,8 +786,8 @@ Reflections reflections <span class="token operator">=</span> <span class="token
                 
                 <div class="card-action article-tags">
                     
-                    <a href="/tags/权限设计/" target="_blank">
-                        <span class="chip bg-color">权限设计</span>
+                    <a href="/tags/java工具类/" target="_blank">
+                        <span class="chip bg-color">java工具类</span>
                     </a>
                     
                 </div>
