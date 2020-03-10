@@ -425,13 +425,13 @@ ApiCompo">
                 <h3 id="1-前言"><a href="#1-前言" class="headerlink" title="1. 前言"></a>1. 前言</h3><p>​        前一篇主要介绍了接口的顶层分派器的设计思路，但本质上业务逻辑的处理还是要由底层的接口具体实现类来进行处理，这篇主要记录一下具体接口实现类的架构体系。</p>
 <h3 id="2-接口实现类架构"><a href="#2-接口实现类架构" class="headerlink" title="2. 接口实现类架构"></a>2. 接口实现类架构</h3><ul>
 <li><p>接口继承与实现关系</p>
-<p><img src="/2019/10/06/qian-hou-duan-fen-chi-de-api-she-ji-si-lu-zheng-li-er/%E7%BB%93%E6%9E%84%E8%AE%BE%E8%AE%A1%E6%9E%B6%E6%9E%84%E5%9B%BE.png" alt=""></p>
+<p><img src="/2019/10/06/qian-hou-duan-fen-chi-de-api-she-ji-si-lu-zheng-li-er/%E7%BB%93%E6%9E%84%E8%AE%BE%E8%AE%A1%E6%9E%B6%E6%9E%84%E5%9B%BE.png" alt></p>
 <ul>
 <li><p><strong>ApiComponent（interface）</strong>作为最顶层的接口定义了具体接口所要实现的方法</p>
-<p><img src="/2019/10/06/qian-hou-duan-fen-chi-de-api-she-ji-si-lu-zheng-li-er/%E9%A1%B6%E5%B1%82%E6%8E%A5%E5%8F%A3.png" alt=""></p>
+<p><img src="/2019/10/06/qian-hou-duan-fen-chi-de-api-she-ji-si-lu-zheng-li-er/%E9%A1%B6%E5%B1%82%E6%8E%A5%E5%8F%A3.png" alt></p>
 </li>
 <li><p><strong>MyAPiComponent（interface）</strong>继承了接口<strong>ApiComponent</strong>,扩展了方法,其目的是为了保证基类<strong>ApiComponentBase</strong>内部方法的干净。</p>
-<p><img src="/2019/10/06/qian-hou-duan-fen-chi-de-api-she-ji-si-lu-zheng-li-er/MyApiComponent.png" alt=""></p>
+<p><img src="/2019/10/06/qian-hou-duan-fen-chi-de-api-she-ji-si-lu-zheng-li-er/MyApiComponent.png" alt></p>
 </li>
 <li><p><strong>ApiValidateAndHelpBase</strong>类的作用主要包括提供 <strong>登陆权限验证</strong>，<strong>接口入参格式验证</strong>等功能。</p>
 </li>
@@ -443,7 +443,7 @@ ApiCompo">
 </ul>
 </li>
 <li><p><strong>ProjectSaveApi</strong> 对应具体的接口业务处理层，内部方法结构如下：</p>
-<p><img src="/2019/10/06/qian-hou-duan-fen-chi-de-api-she-ji-si-lu-zheng-li-er/%E6%8E%A5%E5%8F%A3%E5%AE%9E%E7%8E%B0%E7%B1%BB.png" alt=""></p>
+<p><img src="/2019/10/06/qian-hou-duan-fen-chi-de-api-she-ji-si-lu-zheng-li-er/%E6%8E%A5%E5%8F%A3%E5%AE%9E%E7%8E%B0%E7%B1%BB.png" alt></p>
 <p><strong>getToken()</strong>是用来设置接口实现类的唯一主键路径</p>
 <p><strong>myDoService()</strong>用于进行业务处理 </p>
 <p><strong>总结</strong>： <strong>整套接口的架构使用了设计模式–模板模式，通过子类父调的方式实现了对公共层的抽取和处理。</strong></p>

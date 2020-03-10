@@ -425,21 +425,21 @@
                 <h3 id="1-前言"><a href="#1-前言" class="headerlink" title="1. 前言"></a>1. 前言</h3><p>​        学习和使用多线程的过程中，遇到很多的类和接口，以下将其进行梳理做概括性描述，方便后期回顾。</p>
 <h3 id="2-类"><a href="#2-类" class="headerlink" title="2. 类"></a>2. 类</h3><h5 id="2-1-Thread"><a href="#2-1-Thread" class="headerlink" title="2.1 Thread"></a>2.1 Thread</h5><p>​        线程类，实现了Runnable接口， 常用于多个线程做多个任务，各做各的（通过static可以实现多个线程做一个任务）。</p>
 <p>​        该类在jdk1.0的时候就已经存在，是创建线程的方式之一，它实现了Runnable接口。可以通过继承Thread类，重写run方法来创建一个线程，实现类调用start()方法便可以启动一个新的线程，同样它的构造方法也可以接受一个Runnable类型的参数创建一个线程。</p>
-<p><img src="/2019/07/20/java-bing-fa-bing-fa-lei-yu-jie-kou/20190805144649941%5B1%5D.png" alt=""></p>
+<p><img src="/2019/07/20/java-bing-fa-bing-fa-lei-yu-jie-kou/20190805144649941%5B1%5D.png" alt></p>
 <h5 id="2-2-FutureTask"><a href="#2-2-FutureTask" class="headerlink" title="2.2 FutureTask"></a>2.2 FutureTask</h5><p>​        该类直接实现了RunnableFuture接口，间接实现了Runnble和Future接口。因为实现了Runnbale接口，因此其对象可以作为参数被传递给Thread类启动一个线程，作为Future的一个实现类，调用get()方法拿到线程的执行结果。<br>​        其构造函数可以接受一个Callable类型的参数。</p>
-<p><img src="/2019/07/20/java-bing-fa-bing-fa-lei-yu-jie-kou/20190805153659851%5B1%5D.png" alt=""></p>
+<p><img src="/2019/07/20/java-bing-fa-bing-fa-lei-yu-jie-kou/20190805153659851%5B1%5D.png" alt></p>
 <h5 id="2-3-Executors"><a href="#2-3-Executors" class="headerlink" title="2.3 Executors"></a>2.3 Executors</h5><p>​        该类是一个工具类，通过静态方法可以获取到java自带的几种线程池。</p>
 <h5 id="2-4-ExecutorCompletionService"><a href="#2-4-ExecutorCompletionService" class="headerlink" title="2.4 ExecutorCompletionService"></a>2.4 <strong>ExecutorCompletionService</strong></h5><p>​        该类是接口CompletionService的唯一实现类，总的来说，相对于ExecutorService，该类内部会有一个队列，每当任务提交时，该类会调用Executor进行执行，如果任务执行完毕，其结果future对象便会加入到该队列之中，确保该队列获取到的future对象都是已经完成的，以便于进行后续的工作。但是ExecutorServiece执行完毕的之后的Future有可能只是一个空的壳子，内部线程未执行完毕，这时调用get（）方法可能会阻塞，阻碍获取后续已经完成的Future的对象。</p>
 <h3 id="3-接口"><a href="#3-接口" class="headerlink" title="3.接口"></a>3.接口</h3><h5 id="3-1-Runnable"><a href="#3-1-Runnable" class="headerlink" title="3.1 Runnable"></a>3.1 <strong>Runnable</strong></h5><p>​        该接口也是一个顶层接口，只有一个run方法,创建线程的方式之一就是实现该类，重写run方法，将实现类作为参数，传递给Thread的构造方法启动一个新的线程，同样在jdk1.0中就已经出现。</p>
 <p>​    <strong>备注：通过继承Thread类型实现的多线程，大多是多个线程去做多件事情。而通过实现Runnale接口的多线程，一般是多个线程去做同一件事情，即将一个实现类交给多个线程去运行。</strong></p>
 <h5 id="3-2-Callable"><a href="#3-2-Callable" class="headerlink" title="3.2 Callable"></a>3.2 <strong>Callable</strong></h5><p>​        该接口出现于jdk1.5，目的是作为Runnable的替换类，该类支持执行方法call()返回执行结果，而Runnable方法的run()的返回类型为void。</p>
 <pre class=" language-java"><code class="language-java">V <span class="token function">call</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token keyword">throws</span> Exception<span class="token punctuation">;</span></code></pre>
-<p><img src="/2019/07/20/java-bing-fa-bing-fa-lei-yu-jie-kou/20190805151420132.png" alt=""></p>
+<p><img src="/2019/07/20/java-bing-fa-bing-fa-lei-yu-jie-kou/20190805151420132.png" alt></p>
 <h5 id="3-3-Future"><a href="#3-3-Future" class="headerlink" title="3.3 Future"></a>3.3 Future</h5><p>​        该接口同样出现在jdk1.5，配合与Callable使用，Callable的作用是产生结果，而Future的作用则是获取结果。并且该接口设计一种新的模式。</p>
-<p><img src="/2019/07/20/java-bing-fa-bing-fa-lei-yu-jie-kou/20190805151901429%5B1%5D.png" alt=""></p>
+<p><img src="/2019/07/20/java-bing-fa-bing-fa-lei-yu-jie-kou/20190805151901429%5B1%5D.png" alt></p>
 <h5 id="3-4-Executor"><a href="#3-4-Executor" class="headerlink" title="3.4 Executor"></a>3.4 <strong>Executor</strong></h5><p>​        多线程的顶层接口，仅有一个方法，接受的是Runnable类型的参数，像ThreadPoolExecutor, ExecutorService 等都是继承或实现了该接口。</p>
 <pre class=" language-java"><code class="language-java"><span class="token keyword">void</span> <span class="token function">execute</span><span class="token punctuation">(</span>Runnable command<span class="token punctuation">)</span><span class="token punctuation">;</span></code></pre>
-<h5 id="3-5-ExecutorService"><a href="#3-5-ExecutorService" class="headerlink" title="3.5 ExecutorService"></a>3.5 <strong>ExecutorService</strong></h5><p><img src="/2019/07/20/java-bing-fa-bing-fa-lei-yu-jie-kou/20190805154624625%5B1%5D.png" alt=""></p>
+<h5 id="3-5-ExecutorService"><a href="#3-5-ExecutorService" class="headerlink" title="3.5 ExecutorService"></a>3.5 <strong>ExecutorService</strong></h5><p><img src="/2019/07/20/java-bing-fa-bing-fa-lei-yu-jie-kou/20190805154624625%5B1%5D.png" alt></p>
 <p>​        该接口是对Executor接口的扩展，其submit()方法支持接受Callable类型参数，运行后的结果将会返回到Future中。</p>
 <pre class=" language-java"><code class="language-java"><span class="token operator">&lt;</span>T<span class="token operator">></span> Future<span class="token operator">&lt;</span>T<span class="token operator">></span> <span class="token function">submit</span><span class="token punctuation">(</span>Callable<span class="token operator">&lt;</span>T<span class="token operator">></span> task<span class="token punctuation">)</span><span class="token punctuation">;</span>
 
