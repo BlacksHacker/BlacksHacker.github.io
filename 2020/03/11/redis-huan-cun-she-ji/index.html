@@ -4,8 +4,11 @@
 
 <head><meta name="generator" content="Hexo 3.9.0">
     <meta charset="utf-8">
-    <meta name="keywords" content="Zookeeper：分布式管理, Shelton_Lee">
-    <meta name="description" content="1. 前言  随着公司业务的不断增长，单机模式已经不足以处理当下的业务量，所以不得不采用多台服务器构成集群，来处理激增的业务量。集群在一定程度上能够分解单个服务器的处理压力，打破单机的性能瓶颈，提高系统服务的可用性。但分布式集群往往存在一些">
+    <meta name="keywords" content="Redis：缓存设计, Shelton_Lee">
+    <meta name="description" content="1.前言​        缓存通常都是全内存的，因而可以有效的加快读写，优化用户体验。并且能减少后端的数据访问量和访问次数，有效降低后端负载。
+​        但加入缓存也有一定成本：
+
+数据不一致性：缓存数据和后端数据存在一定的时间窗口">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <meta name="renderer" content="webkit|ie-stand|ie-comp">
@@ -13,7 +16,7 @@
     <meta name="format-detection" content="telephone=no">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <title>Zookeeper：分布式管理 | Shelton_Lee</title>
+    <title>Redis：缓存设计 | Shelton_Lee</title>
     <link rel="icon" type="image/png" href="/favicon.png">
 
     <link rel="stylesheet" type="text/css" href="/libs/awesome/css/font-awesome.min.css">
@@ -260,13 +263,13 @@
 
 
 
-<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/23.jpg')">
+<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/7.jpg')">
     <div class="container">
         <div class="row">
             <div class="col s12 m12 l12">
                 <div class="brand">
                     <div class="description center-align post-title">
-                        Zookeeper：分布式管理
+                        Redis：缓存设计
                     </div>
                 </div>
             </div>
@@ -377,12 +380,16 @@
                     
                     <div class="article-tag">
                         
-                            <a href="/tags/zookeeper/" target="_blank">
-                                <span class="chip bg-color">zookeeper</span>
+                            <a href="/tags/数据库/" target="_blank">
+                                <span class="chip bg-color">数据库</span>
                             </a>
                         
-                            <a href="/tags/分布式/" target="_blank">
-                                <span class="chip bg-color">分布式</span>
+                            <a href="/tags/Redis/" target="_blank">
+                                <span class="chip bg-color">Redis</span>
+                            </a>
+                        
+                            <a href="/tags/缓存/" target="_blank">
+                                <span class="chip bg-color">缓存</span>
                             </a>
                         
                     </div>
@@ -393,8 +400,8 @@
                     <div class="post-cate">
                         <i class="fa fa-bookmark fa-fw icon-category"></i>
                         
-                            <a href="/categories/架构/" class="post-category" target="_blank">
-                                架构
+                            <a href="/categories/数据库/" class="post-category" target="_blank">
+                                数据库
                             </a>
                         
                     </div>
@@ -405,7 +412,7 @@
             <div class="post-info">
                 <div class="post-date info-break-policy">
                     <i class="fa fa-calendar-minus-o fa-fw"></i>发布日期:&nbsp;&nbsp;
-                    2019-08-24
+                    2020-03-11
                 </div>
 
                 
@@ -421,162 +428,111 @@
         <hr class="clearfix">
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <h1 id="1-前言"><a href="#1-前言" class="headerlink" title="1. 前言"></a>1. 前言</h1><p>  随着公司业务的不断增长，单机模式已经不足以处理当下的业务量，所以不得不采用多台服务器构成集群，来处理激增的业务量。集群在一定程度上能够分解单个服务器的处理压力，打破单机的性能瓶颈，提高系统服务的可用性。但分布式集群往往存在一些问题：</p>
+                <h3 id="1-前言"><a href="#1-前言" class="headerlink" title="1.前言"></a>1.前言</h3><p>​        缓存通常都是全内存的，因而可以有效的加快读写，优化用户体验。并且能减少后端的数据访问量和访问次数，有效降低后端负载。</p>
+<p>​        但加入缓存也有一定成本：</p>
 <ul>
-<li>不同于单机下，多个进程或线程在日志信息的保证下能够安全的处理同一资源，多台服务器处理属于不同的物理机,如何能够保证事务安全性，即比如如何保证多台服务器对于一个文件的写操作。</li>
-<li>多台服务器下，如果一台宕机，如何保证其他服务器能接受其任务，如果保证业务激增时进行服务器扩展，能在不重启的情况下进行业务数据的迁移。</li>
-<li>如何保证任务的均匀分配，保证任务执行的效率，实现负载均衡。</li>
-<li>程序运行依赖于配置文件，不同物理机如何实现像数据库地址，黑名单控制，服务地址列表等这些配置文件的共享，并且修改后能即时达到数据一致。</li>
-</ul>
-<h1 id="2-Zookeeper简介"><a href="#2-Zookeeper简介" class="headerlink" title="2.Zookeeper简介"></a>2.Zookeeper简介</h1><p>  Zookeeper是一个<strong>分布式协调服务</strong>。单机上的协调都是进程内的协调，在进行内进行协调可以使用语言，平台，操作系统等提供的同步机制，保证单机内部多线程访问同一资源时的同步，实现多线程的协调。但分布式集群环境下，程序可能在不同的机器，机器可能不在同一个机房，机房又在不同的地域分布，这时候需要类似Zookeeper这类分布式协调服务来进行对集群的协调。</p>
-<h2 id="2-1-存储结构"><a href="#2-1-存储结构" class="headerlink" title="2.1 存储结构"></a>2.1 存储结构</h2><p><img src="/2019/08/24/zookeeper-fen-bu-shi-guan-li/1567479565493-1574416654648.png" alt=""><br>zookeeper的数据是按照<strong>树</strong>的结构进行存储的，节点分为四种类型：</p>
-<table>
-<thead>
-<tr>
-<th>名称</th>
-<th>简介</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>PERSISTENT-持久化节点</td>
-<td>在创建该节点的客户端与zookeeper断开后，该节点也不会被删除</td>
-</tr>
-<tr>
-<td>PERSISTENT-SEQUENTIAL-持久化顺序编号节点</td>
-<td>在请求创建节点时，会根据parent-znode的zxid状态，为该节点编写全目录唯一的编号，即使客户端断开，该节点不会被删除</td>
-</tr>
-<tr>
-<td>EPHEMERAL-临时znode节点</td>
-<td>客户端断开后，节点会被删除掉</td>
-</tr>
-<tr>
-<td>EPHEMERAL_SEQUENTIAL-临时顺序编号znode节点</td>
-<td>在请求创建节点时，会根据parent-znode的zxid状态，为该节点编写全目录唯一的编号，客户端断开时，该节点会被删除</td>
-</tr>
-</tbody></table>
-<h2 id="2-2-znode"><a href="#2-2-znode" class="headerlink" title="2.2 znode"></a>2.2 znode</h2><ul>
-<li>每一个znode默认存储1MB的数据</li>
-<li>登陆zookeeper，可以通过ls、create、delete、sync等命令去操作这些节点<br>znode结构</li>
-</ul>
-<table>
-<thead>
-<tr>
-<th>名称</th>
-<th>简介</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>zxid</td>
-<td>时间戳，每次修改znode都会产生新的zxid</td>
-</tr>
-<tr>
-<td>version</td>
-<td>对节点的每次修改都会使得节点的版本号加1</td>
-</tr>
-<tr>
-<td>data</td>
-<td>每一个znode默认能够存储1MB的数据，对data的修改会引起两种的变化</td>
-</tr>
-<tr>
-<td>tick</td>
-<td>租约协议的具体体现，如果当前节点是“临时节点”，在trick时间周期内没有收到新的客户端租约，则视为无效</td>
-</tr>
-</tbody></table>
-<h1 id="2-3-选举FastLeaderElection"><a href="#2-3-选举FastLeaderElection" class="headerlink" title="2.3 选举FastLeaderElection"></a>2.3 选举FastLeaderElection</h1><h1 id="2-4-监听机制"><a href="#2-4-监听机制" class="headerlink" title="2.4 监听机制"></a>2.4 监听机制</h1><p>  zookeeper的主要目的是统一分布式系统中各个节点的工作状态，在资源冲突的情况下协调提供节点资源抢占，给每个节点提供了解集群所处状态的途径，这都依赖于zookeeper中的时间监听和通知机制。</p>
-<h2 id="2-4-1事件和状态"><a href="#2-4-1事件和状态" class="headerlink" title="2.4.1事件和状态"></a>2.4.1事件和状态</h2><p>  <strong>事件和状态构成了zookeeper客户端连接描述的两个维度。</strong></p>
-<ul>
-<li>事件：指zookeeper监听某一个znode节点，一但触发，就执行该事件所绑定的事情。</li>
-<li>状态：指zookeeper与所连接的服务器之间的状态。</li>
-<li>zookeeper客户端与server连接的状态</li>
-</ul>
-<table>
-<thead>
-<tr>
-<th>连接状态</th>
-<th>状态含义</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>KeeperState.Expired</td>
-<td>客户端和服务器在ticktime的时间周期内，要进行发送心跳通知，这是租约协议的一个实现，客户端发送request，告知服务器上一个租约时间，服务器接受之后，告知客户端下一个续租时间，当客户端到达最后一个续租时间事，没有收到服务端发来的新租约时间，即认为自己下线，这个过期状态即为Expired状态</td>
-</tr>
-<tr>
-<td>KeeperState.Disconnected</td>
-<td>当客户端断开一个连接（租约期满或者客户端主动离开），这时客户端和服务器的状态就是Disconnected</td>
-</tr>
-<tr>
-<td>KeeperState.SynConnected</td>
-<td>一旦客户端和服务器的一个节点建立连接，并完成一次version、zxid的同步。该状态就是这个</td>
-</tr>
-<tr>
-<td>KeeperState.AuthFailed</td>
-<td>zookeeper客户端进行连接认证失败时，发生该状态</td>
-</tr>
-<tr>
-<td><strong>备注：这些状态触发时，所记录的事件类型都是：EventType.Node.</strong></td>
-<td></td>
-</tr>
-</tbody></table>
-<p>-zookeeper中的事件，当zookeeper客户端监听某个znode节点时：<br>|zookeeper事件|含义|<br>|—|—|<br>|EventType.NodeCreated|当这个节点被创建时，事件触发|<br>|EventType.NodeChildrenChanged|当这个节点的直接子节点被创建、删除、子节点数据被变更时，触发该事件|<br>|EventType.NodeDataChange|当这个节点的数据发生变更时，该事件被触发|<br>|EventType.NodeDeleted|当这个节点被删除时，该事件被触发|<br>|EventType.None|当zookeeper的客户端连接状态发生变更时，即上述几个状态之间互相切换时|</p>
-<h2 id="2-5-watcher机制"><a href="#2-5-watcher机制" class="headerlink" title="2.5 watcher机制"></a>2.5 watcher机制</h2><p>  zookeeper建立节点监听可采用的方法有：</p>
-<ul>
-<li>zk.getChilren(path,watch)</li>
-<li>zk.exists(path, watch)</li>
-<li>zk.getData(path,watch,stat)</li>
-<li>zk.register(watcher)注册默认监听</li>
-</ul>
-<p>  <strong>以上的注册方式，都可以对Event.Type事件进行监听，如果注册多个监听器，则它们都会收到Event.Node事件。</strong></p>
-<ul>
-<li>注册方法与监听事件间的关系</li>
-</ul>
-<table>
-<thead>
-<tr>
-<th>注册方式</th>
-<th>NodeCreated</th>
-<th>NodeChildrenChanged</th>
-<th>NodeDataChanged</th>
-<th>NodeDeleted</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>zk.getChildren(“”,watcher)</td>
-<td></td>
-<td>可监控</td>
-<td></td>
-<td>可监控</td>
-</tr>
-<tr>
-<td>zk.exists(“”,watcher)</td>
-<td>可监控</td>
-<td></td>
-<td>可监控</td>
-<td>可监控</td>
-</tr>
-<tr>
-<td>zk.getData(“”,watcher)</td>
-<td>悖论</td>
-<td></td>
-<td>可监控</td>
-<td>可监控</td>
-</tr>
-</tbody></table>
-<p><strong>注意：</strong></p>
-<ul>
-<li><p>当一个watcher实例多次注册一个节点时，zkClient只通知一次，当多个不同watcher实例注册同一个节点时，zkClient会依次进行通知。</p>
+<li><p><strong>数据不一致性</strong>：缓存数据和后端数据存在一定的时间窗口，可能导致数据在一定时间窗口内有差异。</p>
 </li>
-<li><p>监控同一个节点的一个watcher实例，通过exist、getData等多种注册方式注册时，zkClient也只会通知一次。</p>
-<h1 id="3-作用"><a href="#3-作用" class="headerlink" title="3. 作用"></a>3. 作用</h1></li>
-<li><p><strong>配置管理</strong><br>  程序中往往存在众多的配置信息，众多服务器依赖于该配置文件，zookeeper的作用就是对这些配置文件进行集中管理，将配置文件提取放置一个地方，对其进行监听，当配置信息发生改变时，受zookeeper管理的服务器将会受到通知，然后服务器获取新的配置信息。zookeeper使用了Zab这种一致性协议来保证配置在集群中的一致性。</p>
+<li><p><strong>代码维护成本</strong></p>
 </li>
-<li><p><strong>命名服务</strong><br>  在集群和分布式环境下，zookeeper能够简化子项目之间的调用关系，不至于出现不知道哪个调哪个，可以集中精力去处理业务逻辑。在集群中，相同的一个服务有很多个提供者，当提供者启动时，其相关信息（接口，地址，端口等）会注册到zookeeper中，当消费者需要消费时，再依据负载均衡机制选择一个服务者提供服务。</p>
-</li>
-<li><p><strong>分布式锁</strong><br>  zookeeper可以用来协调多个分布式进程之间的活动，一件事情交给多个服务器进行处理时，就需要进行分布式的同步，某个时刻只让一个服务去干活，出现问题时，立马释放分布式锁，交由其他服务器进行处理。其处理策略一般被称为<strong>选举机制</strong>。</p>
-</li>
-<li><p><strong>集群管理</strong><br>  分布式集群中，处于各种原因，节点总是在变化，集群中的其他机器需要动态的感知当前集群中的状态。像在一个分布式存储系统中，存在一个中央控制节点负责存储的分配，其依赖于感知集群节点的变化。</p>
+<li><p><strong>运维成本</strong></p>
+<p>使用场景一般为：<strong>开销大的复杂计算（大量联表查询）</strong>、<strong>加速请求响应</strong>。</p>
 </li>
 </ul>
-<p>参考博客：<a href="https://blog.csdn.net/tang06211015/article/details/51850516" target="_blank" rel="noopener">Zookeeper场景分析及实例代码</a><br>    <a href="https://blog.csdn.net/yinwenjie/article/details/47361419" target="_blank" rel="noopener">  zookeeper单点和集群安装</a></p>
+<h3 id="2-更新策略"><a href="#2-更新策略" class="headerlink" title="2. 更新策略"></a>2. 更新策略</h3><p>​        更新策略大致包括三种：</p>
+<ul>
+<li><p><strong>LRU/LFU/FIFO算法剔除</strong></p>
+<ul>
+<li>场景：缓存使用量超过预设的最大值</li>
+<li>方式：使用<strong>maxmemory-policy</strong>配置内存到达阈值后的剔除策略</li>
+<li>一致性：清除数据由算法确定，因算法固定，一致性差。</li>
+</ul>
+</li>
+<li><p><strong>超时剔除</strong></p>
+<ul>
+<li>场景：会给数据设置过期时间，过期自动删除。</li>
+<li>方式：<strong>expire</strong> 命令可能导致一定时间内缓存数据和存储数据不一致。</li>
+<li>一致性：一定时间窗口存在数据一致性问题。</li>
+</ul>
+</li>
+<li><p><strong>主动更新</strong></p>
+<ul>
+<li><p>场景：数据一致性要求高，真实数据更新后，缓存立即更新。</p>
+</li>
+<li><p>方式：消息系统或其他方式通知更新。</p>
+</li>
+<li><p>一致性：一致性最高，最好配合超时更新一块使用，防止主动更新出错。</p>
+<p>三种对比图如下：</p>
+<p><img src="/2020/03/11/redis-huan-cun-she-ji/image-20200311104034977.png" alt="更新策略对比"></p>
+<p>因而<strong>低一致性业务</strong>推荐配置最大内存+淘汰策略，<strong>高一致性业务</strong>推荐超时剔除+主动更新</p>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="3-缓存粒度"><a href="#3-缓存粒度" class="headerlink" title="3. 缓存粒度"></a>3. 缓存粒度</h3><p>​        在使用缓存过程中，需要去判断需要缓存那些数据。即缓存所有字段 还是缓存必须字段数据等等，考虑因素主要有三点：</p>
+<ul>
+<li><strong>通用性</strong>：全数据比部分数据通用，但基本只用部分数据。</li>
+<li><strong>空间占用</strong>：全部数据内存大、网络流量大以及序列化和反序列化CPU开销更大。</li>
+<li><strong>代码维护</strong>：全部数据更方便，部分数据会涉及源码修改。</li>
+</ul>
+<p>三种要素对比如下，视业务均衡取舍：</p>
+<p><img src="/2020/03/11/redis-huan-cun-she-ji/image-20200311110701013.png" alt="缓存粒度的解决方案对比"></p>
+<h3 id="4-问题优化"><a href="#4-问题优化" class="headerlink" title="4. 问题优化"></a>4. 问题优化</h3><p>​        在使用缓存中，常会出现一些问题，除了代码逻辑外，大致包括如下：</p>
+<ul>
+<li><strong>缓存穿透</strong>：查询一个不存在数据，缓存和存储层均为命中。导致查询不存在的数据时会访问存储层，失去缓存保护存储层的意义，<strong>会加大后端存储负载</strong>。</li>
+<li><strong>无底洞</strong></li>
+<li><strong>缓存雪崩</strong></li>
+<li><strong>热点key重建</strong></li>
+</ul>
+<h4 id="4-1-缓存穿透"><a href="#4-1-缓存穿透" class="headerlink" title="4.1 缓存穿透"></a>4.1 缓存穿透</h4><p>​    出现的基本原因如下：</p>
+<ul>
+<li><p>自身业务代码或数据出现问题。</p>
+</li>
+<li><p>恶意攻击、爬虫造成大量空命中。</p>
+<p>解决方案：</p>
+<ol>
+<li><p><strong>缓存空对象</strong></p>
+<p>当存储层未命中后，保留空对象到缓存中，并设置较短过期时间，自动剔除。</p>
+</li>
+<li><p><strong>布隆过滤拦截</strong></p>
+<p>在访问缓存和存储层之前，将存在的key用布隆过滤器提前保存起来，作为第一层拦截。</p>
+</li>
+</ol>
+<p>两种方案分析如下：</p>
+<p><img src="/2020/03/11/redis-huan-cun-she-ji/image-20200311112639829.png" alt="缓存穿透的解决方案对比"></p>
+</li>
+</ul>
+<h4 id="4-2-无底洞"><a href="#4-2-无底洞" class="headerlink" title="4.2 无底洞"></a>4.2 无底洞</h4><p>​        无底洞的意思是，<strong>更多的节点不代表更多的性能</strong>，因为批量操作会涉及多次网络操作，分布式情况下，节点增多意味着网络耗时的增加。</p>
+<p>​        批量操作方式：</p>
+<ul>
+<li><p><strong>串行命令</strong>：n次网络 + n次命令</p>
+</li>
+<li><p><strong>串行IO</strong>： n次网络（node的个数） + n次命令</p>
+</li>
+<li><p><strong>并行IO</strong>：将串行IO的命令改为多线程即n次网络（node的个数） + 1次命令</p>
+</li>
+<li><p><strong>hash_tag</strong> 强制将多个key分配到一个节点上，即1次网络 + n次命令</p>
+<p>四张方式的对比如下：</p>
+<p><img src="/2020/03/11/redis-huan-cun-she-ji/image-20200311114132417.png" alt="无底洞的解决方案对比"></p>
+</li>
+</ul>
+<h4 id="4-3-缓存雪崩"><a href="#4-3-缓存雪崩" class="headerlink" title="4.3 缓存雪崩"></a>4.3 缓存雪崩</h4><p>​        缓存层由于某些原因不能提供服务，大量请求将会到达存储层，导致存储层崩溃。</p>
+<p>​        预防缓存雪崩的三点方式：</p>
+<ul>
+<li><strong>保证缓存层服务高可用性</strong></li>
+<li><strong>依赖隔离组件为后端限流并降级</strong></li>
+<li><strong>提前演练</strong></li>
+</ul>
+<h4 id="4-4-热点key重建"><a href="#4-4-热点key重建" class="headerlink" title="4.4 热点key重建"></a>4.4 热点key重建</h4><p>​        当某个数据的key的并发量非常大时，通常采用的“缓存+过期时间”模式，可能导致重建缓存难以在短时间内完成，大量线程重建缓存造成后端负载加大，甚至应用崩溃。</p>
+<p>​        解决方案：</p>
+<ol>
+<li><p><strong>互斥锁</strong>：只允许一个线程重建缓存，其他线程等待，完成后从缓存中获取数据。</p>
+</li>
+<li><p><strong>永远不过期</strong>：即不设置key的过期时间，或者为value设置过期时间，当超过过期时间时，线程进行重建。</p>
+<p>两种方式比较如下：</p>
+<p><img src="/2020/03/11/redis-huan-cun-she-ji/image-20200311120348107.png" alt="热点key的解决方案对比"></p>
+</li>
+</ol>
 <script>
         document.querySelectorAll('.github-emoji')
           .forEach(el => {
@@ -753,9 +709,9 @@
             <br/>
             <span xmlns:dct="http://purl.org/dc/terms/" href="http://purl.org/dc/dcmitype/Text"
                   property="dct:title" rel="dct:type">
-                    《Zookeeper：分布式管理》
+                    《Redis：缓存设计》
                 </span> 由
-            <a xmlns:cc="http://creativecommons.org/ns#" href="/2019/08/24/zookeeper-fen-bu-shi-guan-li/" property="cc:attributionName"
+            <a xmlns:cc="http://creativecommons.org/ns#" href="/2020/03/11/redis-huan-cun-she-ji/" property="cc:attributionName"
                rel="cc:attributionURL">
                 Shelton Lee
             </a> 采用
@@ -795,46 +751,59 @@
 <article id="prenext-posts" class="prev-next articles">
     <div class="row article-row">
         
-        <div class="article col s12 m6" data-aos="fade-up">
+        <div class="article col s12 m6" data-aos="fade-up" data-aos="fade-up">
             <div class="article-badge left-badge text-color">
-                <i class="fa fa-chevron-left"></i>&nbsp;上一篇</div>
+                <i class="fa fa-dot-circle-o"></i>&nbsp;本篇
+            </div>
             <div class="card">
-                <a href="/2019/08/31/dubbo-fu-wu-zhi-li/">
+                <a href="/2020/03/11/redis-huan-cun-she-ji/">
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/18.jpg" class="responsive-img" alt="Dubbo：服务治理（入门篇）">
+                        <img src="/medias/featureimages/7.jpg" class="responsive-img" alt="Redis：缓存设计">
                         
-                        <span class="card-title">Dubbo：服务治理（入门篇）</span>
+                        <span class="card-title">Redis：缓存设计</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
                     <div class="summary block-with-text">
                         
-                            1. 前言​        Dubbo是阿里巴巴开源的一个高性能优秀的服务框架，采用非常简单的模型，将服务的提供方和消费方抽象为两个角色，可实现软负载均衡，并且还可选性的支持监控中心和调用管理中心，使得应用可通过高性能的RPC实现服务的输出
+                            1.前言​        缓存通常都是全内存的，因而可以有效的加快读写，优化用户体验。并且能减少后端的数据访问量和访问次数，有效降低后端负载。
+​        但加入缓存也有一定成本：
+
+数据不一致性：缓存数据和后端数据存在一定的时间窗口
                         
                     </div>
                     <div class="publish-info">
-                        <span class="publish-date">
-                            <i class="fa fa-clock-o fa-fw icon-date"></i>2019-08-31
-                        </span>
+                            <span class="publish-date">
+                                <i class="fa fa-clock-o fa-fw icon-date"></i>2020-03-11
+                            </span>
                         <span class="publish-author">
                             
                             <i class="fa fa-bookmark fa-fw icon-category"></i>
                             
-                            <a href="/categories/架构/" class="post-category" target="_blank">
-                                    架构
+                            <a href="/categories/数据库/" class="post-category" target="_blank">
+                                    数据库
                                 </a>
                             
                             
                         </span>
                     </div>
                 </div>
+
                 
                 <div class="card-action article-tags">
                     
-                    <a href="/tags/Dubbo/" target="_blank">
-                        <span class="chip bg-color">Dubbo</span>
+                    <a href="/tags/数据库/" target="_blank">
+                        <span class="chip bg-color">数据库</span>
+                    </a>
+                    
+                    <a href="/tags/Redis/" target="_blank">
+                        <span class="chip bg-color">Redis</span>
+                    </a>
+                    
+                    <a href="/tags/缓存/" target="_blank">
+                        <span class="chip bg-color">缓存</span>
                     </a>
                     
                 </div>
@@ -848,24 +817,24 @@
                 下一篇&nbsp;<i class="fa fa-chevron-right"></i>
             </div>
             <div class="card">
-                <a href="/2019/08/16/spring-yi-bu-tong-zhi/">
+                <a href="/2020/03/07/spring-dong-tai-shu-ju-yuan-guan-li-jie-jue-fang-an/">
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/19.jpg" class="responsive-img" alt="Spring：异步通知">
+                        <img src="/medias/featureimages/0.jpg" class="responsive-img" alt="Spring:动态数据源管理解决方案">
                         
-                        <span class="card-title">Spring：异步通知</span>
+                        <span class="card-title">Spring:动态数据源管理解决方案</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
                     <div class="summary block-with-text">
                         
-                            前言​        公司最近给主模块搞一个系统通知的功能，要求设计并对接各大分模块的消息通知，要求是分模块业务执行过程中会触发消息插件，将消息推送到系统通知的消息存储区域，但是一旦业务执行失败，业务会进行回滚，但是消息已经发出去了，显然不
+                            1. 前言​        公司最近搞的新项目SaaS层需要实现多租户功能，因租户都有各自的数据库。所以无论是从实现读写分离角度，还是租户管理，都需要进行动态数据源的切换，所以考虑使用Spring的数据管理方案来解决实现，在此进行整理学习。
                         
                     </div>
                     <div class="publish-info">
                             <span class="publish-date">
-                                <i class="fa fa-clock-o fa-fw icon-date"></i>2019-08-16
+                                <i class="fa fa-clock-o fa-fw icon-date"></i>2020-03-07
                             </span>
                         <span class="publish-author">
                             
@@ -886,16 +855,8 @@
                         <span class="chip bg-color">Spring</span>
                     </a>
                     
-                    <a href="/tags/事务/" target="_blank">
-                        <span class="chip bg-color">事务</span>
-                    </a>
-                    
-                    <a href="/tags/框架/" target="_blank">
-                        <span class="chip bg-color">框架</span>
-                    </a>
-                    
-                    <a href="/tags/异步/" target="_blank">
-                        <span class="chip bg-color">异步</span>
+                    <a href="/tags/数据源管理/" target="_blank">
+                        <span class="chip bg-color">数据源管理</span>
                     </a>
                     
                 </div>

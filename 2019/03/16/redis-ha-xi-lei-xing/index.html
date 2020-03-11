@@ -736,25 +736,40 @@ hincrbyfloat key field</code></pre>
             <div class="article-badge left-badge text-color">
                 <i class="fa fa-chevron-left"></i>&nbsp;上一篇</div>
             <div class="card">
-                <a href="/2019/03/18/redis-chi-jiu-hua/">
+                <a href="/2019/03/16/redis-ji-chu-jie-shao/">
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/3.jpg" class="responsive-img" alt="Redis：持久化">
+                        <img src="/medias/featureimages/9.jpg" class="responsive-img" alt="Redis：基础介绍">
                         
-                        <span class="card-title">Redis：持久化</span>
+                        <span class="card-title">Redis：基础介绍</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
                     <div class="summary block-with-text">
                         
-                            1.前言​        Redis的持久化支持RDB和AOF两种持久化机制，持久化能有效避免进程的退出造成数据的丢失问题，保证重启时，利用持久化文件进行数据的恢复。
-2. RDB2.1 持久化触发​        RDB的持久化分为手动触
+                            1. 全局命令
+查看所有键
+keys *    
+
+键总数
+dbsize
+
+检查键是否存在
+exists key 
+
+删除键(支持删除多个)
+del key
+
+键过期
+expire key seconds
+
+键过期剩余时间(-1 : 没有过
                         
                     </div>
                     <div class="publish-info">
                         <span class="publish-date">
-                            <i class="fa fa-clock-o fa-fw icon-date"></i>2019-03-18
+                            <i class="fa fa-clock-o fa-fw icon-date"></i>2019-03-16
                         </span>
                         <span class="publish-author">
                             
@@ -794,40 +809,34 @@ hincrbyfloat key field</code></pre>
                 下一篇&nbsp;<i class="fa fa-chevron-right"></i>
             </div>
             <div class="card">
-                <a href="/2019/03/16/redis-ji-chu-jie-shao/">
+                <a href="/2019/03/10/redis-ji-chu-ming-ling/">
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/9.jpg" class="responsive-img" alt="Redis：基础介绍">
+                        <img src="/medias/featureimages/4.jpg" class="responsive-img" alt="Redis：基础命令">
                         
-                        <span class="card-title">Redis：基础介绍</span>
+                        <span class="card-title">Redis：基础命令</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
                     <div class="summary block-with-text">
                         
-                            1. 全局命令
-查看所有键
-keys *    
+                            前言​        Redis是一个使用ANSI C编写的开源、支持网络、基于内存、可选持久性的键值对存储数据库，其特点如下：
 
-键总数
-dbsize
-
-检查键是否存在
-exists key 
-
-删除键(支持删除多个)
-del key
-
+速度快
+基于键值对的数据结构服务器
+丰富的功能
 键过期
-expire key seconds
+发布订阅
+支持Lua
+提供简单事务
+提供流水线功能
 
-键过期剩余时间(-1 : 没有过
                         
                     </div>
                     <div class="publish-info">
                             <span class="publish-date">
-                                <i class="fa fa-clock-o fa-fw icon-date"></i>2019-03-16
+                                <i class="fa fa-clock-o fa-fw icon-date"></i>2019-03-10
                             </span>
                         <span class="publish-author">
                             
