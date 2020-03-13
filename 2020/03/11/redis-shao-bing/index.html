@@ -4,9 +4,9 @@
 
 <head><meta name="generator" content="Hexo 3.9.0">
     <meta charset="utf-8">
-    <meta name="keywords" content="基于前后端分离的API设计思路整理（三）, Shelton_Lee">
-    <meta name="description" content="1. 前言​        上一篇主要记录了接口处理具体的实现类的架构设计，其中使用到了模板模式的设计模式，本篇重点记录一下基于注解的关于接口请求参数的验证机制和基于Spring 的类启动加载机制，为以后开发做好知识储备。
-2. 注解接口验">
+    <meta name="keywords" content="Redis：哨兵, Shelton_Lee">
+    <meta name="description" content="1. 前言​        Redis从2.8开始正式推出了Redis Sentinel（哨兵）架构，目的是解决主从复制模式下，主节点一旦发生事故，需要人工将从节点进行晋升，并且还需通知应用方更新主节点地址这一问题。
+2. 主从复制2.1 ">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <meta name="renderer" content="webkit|ie-stand|ie-comp">
@@ -14,7 +14,7 @@
     <meta name="format-detection" content="telephone=no">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <title>基于前后端分离的API设计思路整理（三） | Shelton_Lee</title>
+    <title>Redis：哨兵 | Shelton_Lee</title>
     <link rel="icon" type="image/png" href="/favicon.png">
 
     <link rel="stylesheet" type="text/css" href="/libs/awesome/css/font-awesome.min.css">
@@ -261,13 +261,13 @@
 
 
 
-<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/4.jpg')">
+<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/20.jpg')">
     <div class="container">
         <div class="row">
             <div class="col s12 m12 l12">
                 <div class="brand">
                     <div class="description center-align post-title">
-                        基于前后端分离的API设计思路整理（三）
+                        Redis：哨兵
                     </div>
                 </div>
             </div>
@@ -378,8 +378,16 @@
                     
                     <div class="article-tag">
                         
-                            <a href="/tags/架构设计/" target="_blank">
-                                <span class="chip bg-color">架构设计</span>
+                            <a href="/tags/数据库/" target="_blank">
+                                <span class="chip bg-color">数据库</span>
+                            </a>
+                        
+                            <a href="/tags/Redis/" target="_blank">
+                                <span class="chip bg-color">Redis</span>
+                            </a>
+                        
+                            <a href="/tags/缓存/" target="_blank">
+                                <span class="chip bg-color">缓存</span>
                             </a>
                         
                     </div>
@@ -390,8 +398,8 @@
                     <div class="post-cate">
                         <i class="fa fa-bookmark fa-fw icon-category"></i>
                         
-                            <a href="/categories/架构设计/" class="post-category" target="_blank">
-                                架构设计
+                            <a href="/categories/数据库/" class="post-category" target="_blank">
+                                数据库
                             </a>
                         
                     </div>
@@ -402,7 +410,7 @@
             <div class="post-info">
                 <div class="post-date info-break-policy">
                     <i class="fa fa-calendar-minus-o fa-fw"></i>发布日期:&nbsp;&nbsp;
-                    2019-10-13
+                    2020-03-11
                 </div>
 
                 
@@ -418,83 +426,50 @@
         <hr class="clearfix">
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <h3 id="1-前言"><a href="#1-前言" class="headerlink" title="1. 前言"></a>1. 前言</h3><p>​        上一篇主要记录了接口处理具体的实现类的架构设计，其中使用到了模板模式的设计模式，本篇重点记录一下基于注解的关于接口请求参数的验证机制和基于Spring 的类启动加载机制，为以后开发做好知识储备。</p>
-<h3 id="2-注解接口验证"><a href="#2-注解接口验证" class="headerlink" title="2. 注解接口验证"></a>2. 注解接口验证</h3><p>​        该方法的入参依次是，<strong>具体接口实现类的Class，输入参数，入参的Class</strong>。</p>
-<p>​        原理是通过接口实现类的class文件,拿到对应要解析的方法，将其上的注解进行解析，并与入参进行对比，保证入参和注解标记内容的规范一致性。</p>
-<pre class=" language-java"><code class="language-java"><span class="token keyword">protected</span> <span class="token keyword">void</span> <span class="token function">validApi</span><span class="token punctuation">(</span>Class<span class="token operator">&lt;</span><span class="token operator">?</span><span class="token operator">></span> apiClass<span class="token punctuation">,</span> JSONObject paramObj<span class="token punctuation">,</span> Class<span class="token operator">&lt;</span><span class="token operator">?</span><span class="token operator">></span><span class="token punctuation">.</span><span class="token punctuation">.</span><span class="token punctuation">.</span> classes<span class="token punctuation">)</span> <span class="token keyword">throws</span> NoSuchMethodException<span class="token punctuation">,</span> SecurityException <span class="token punctuation">{</span>
-        <span class="token comment" spellcheck="true">// 获取目标类</span>
-        Boolean isAuth <span class="token operator">=</span> <span class="token boolean">false</span><span class="token punctuation">;</span>
-        <span class="token keyword">if</span> <span class="token punctuation">(</span>apiClass <span class="token operator">!=</span> null<span class="token punctuation">)</span> <span class="token punctuation">{</span>
-        <span class="token comment" spellcheck="true">//AuthAction注解的作用是进行url权限验证</span>
-            AuthAction action <span class="token operator">=</span> apiClass<span class="token punctuation">.</span><span class="token function">getAnnotation</span><span class="token punctuation">(</span>AuthAction<span class="token punctuation">.</span><span class="token keyword">class</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-            <span class="token keyword">if</span> <span class="token punctuation">(</span>null <span class="token operator">!=</span> action <span class="token operator">&amp;&amp;</span> StringUtils<span class="token punctuation">.</span><span class="token function">isNotBlank</span><span class="token punctuation">(</span>action<span class="token punctuation">.</span><span class="token function">name</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-                String actionName <span class="token operator">=</span> action<span class="token punctuation">.</span><span class="token function">name</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-                <span class="token comment" spellcheck="true">// 判断用户角色是否拥有接口权限</span>
-                <span class="token keyword">if</span> <span class="token punctuation">(</span>AuthActionChecker<span class="token punctuation">.</span><span class="token function">check</span><span class="token punctuation">(</span>actionName<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-                    isAuth <span class="token operator">=</span> <span class="token boolean">true</span><span class="token punctuation">;</span>
-                <span class="token punctuation">}</span>
-            <span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token punctuation">{</span>
-                isAuth <span class="token operator">=</span> <span class="token boolean">true</span><span class="token punctuation">;</span>
-            <span class="token punctuation">}</span>
-
-            <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span>isAuth<span class="token punctuation">)</span> <span class="token punctuation">{</span>
-                <span class="token keyword">throw</span> <span class="token keyword">new</span> <span class="token class-name">PermissionDeniedException</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-            <span class="token punctuation">}</span>
-            <span class="token comment" spellcheck="true">// 判断参数是否合法，拿到具体接口实现类的“myDoservice”方法</span>
-            Method method <span class="token operator">=</span> apiClass<span class="token punctuation">.</span><span class="token function">getMethod</span><span class="token punctuation">(</span><span class="token string">"myDoService"</span><span class="token punctuation">,</span> classes<span class="token punctuation">)</span><span class="token punctuation">;</span>
-            <span class="token keyword">if</span> <span class="token punctuation">(</span>method <span class="token operator">!=</span> null<span class="token punctuation">)</span> <span class="token punctuation">{</span>
-                <span class="token comment" spellcheck="true">//拿到Input注解</span>
-                Input input <span class="token operator">=</span> method<span class="token punctuation">.</span><span class="token function">getAnnotation</span><span class="token punctuation">(</span>Input<span class="token punctuation">.</span><span class="token keyword">class</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-                <span class="token keyword">if</span> <span class="token punctuation">(</span>input <span class="token operator">!=</span> null<span class="token punctuation">)</span> <span class="token punctuation">{</span>
-                    Param<span class="token punctuation">[</span><span class="token punctuation">]</span> params <span class="token operator">=</span> input<span class="token punctuation">.</span><span class="token function">value</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-                    <span class="token keyword">if</span> <span class="token punctuation">(</span>params <span class="token operator">!=</span> null <span class="token operator">&amp;&amp;</span> params<span class="token punctuation">.</span>length <span class="token operator">></span> <span class="token number">0</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-                        <span class="token keyword">for</span> <span class="token punctuation">(</span>Param p <span class="token operator">:</span> params<span class="token punctuation">)</span> <span class="token punctuation">{</span>
-                            <span class="token comment" spellcheck="true">// 判断是否必填，即isRequired的值为true，但参数中没有则抛出异常</span>
-                            <span class="token keyword">if</span> <span class="token punctuation">(</span>p<span class="token punctuation">.</span><span class="token function">isRequired</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">&amp;&amp;</span> <span class="token operator">!</span>paramObj<span class="token punctuation">.</span><span class="token function">containsKey</span><span class="token punctuation">(</span>p<span class="token punctuation">.</span><span class="token function">name</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-                                <span class="token keyword">throw</span> <span class="token keyword">new</span> <span class="token class-name">ParamNotExistsException</span><span class="token punctuation">(</span><span class="token string">"参数：“"</span> <span class="token operator">+</span> p<span class="token punctuation">.</span><span class="token function">name</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">+</span> <span class="token string">"”不能为空"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-                            <span class="token punctuation">}</span>
-                            <span class="token comment" spellcheck="true">// 参数类型校验</span>
-                            Object paramValue <span class="token operator">=</span> paramObj<span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span>p<span class="token punctuation">.</span><span class="token function">name</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-                            <span class="token comment" spellcheck="true">// xss过滤</span>
-                            <span class="token keyword">if</span> <span class="token punctuation">(</span>p<span class="token punctuation">.</span><span class="token function">xss</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">&amp;&amp;</span> paramObj<span class="token punctuation">.</span><span class="token function">containsKey</span><span class="token punctuation">(</span>p<span class="token punctuation">.</span><span class="token function">name</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-                                <span class="token function">encodeHtml</span><span class="token punctuation">(</span>paramObj<span class="token punctuation">,</span> p<span class="token punctuation">.</span><span class="token function">name</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-                            <span class="token punctuation">}</span>
-
-                            <span class="token comment" spellcheck="true">// 判断长度</span>
-                            <span class="token keyword">if</span> <span class="token punctuation">(</span>p<span class="token punctuation">.</span><span class="token function">length</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">></span> <span class="token number">0</span> <span class="token operator">&amp;&amp;</span> paramValue <span class="token operator">!=</span> null <span class="token operator">&amp;&amp;</span> paramValue <span class="token keyword">instanceof</span> <span class="token class-name">String</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-                                <span class="token keyword">if</span> <span class="token punctuation">(</span>paramValue<span class="token punctuation">.</span><span class="token function">toString</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">length</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">></span> p<span class="token punctuation">.</span><span class="token function">length</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-                                    <span class="token keyword">throw</span> <span class="token keyword">new</span> <span class="token class-name">ParamValueTooLongException</span><span class="token punctuation">(</span>p<span class="token punctuation">.</span><span class="token function">name</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span> paramValue<span class="token punctuation">.</span><span class="token function">toString</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">length</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">,</span> p<span class="token punctuation">.</span><span class="token function">length</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-                                <span class="token punctuation">}</span>
-                            <span class="token punctuation">}</span>
-                            <span class="token keyword">if</span> <span class="token punctuation">(</span>paramValue <span class="token operator">!=</span> null <span class="token operator">&amp;&amp;</span> <span class="token operator">!</span>ApiParamFactory<span class="token punctuation">.</span><span class="token function">getAuthInstance</span><span class="token punctuation">(</span>p<span class="token punctuation">.</span><span class="token function">type</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">validate</span><span class="token punctuation">(</span>paramValue<span class="token punctuation">,</span> p<span class="token punctuation">.</span><span class="token function">rule</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-                                <span class="token keyword">throw</span> <span class="token keyword">new</span> <span class="token class-name">ParamIrregularException</span><span class="token punctuation">(</span><span class="token string">"参数“"</span> <span class="token operator">+</span> p<span class="token punctuation">.</span><span class="token function">name</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">+</span> <span class="token string">"”不符合格式要求"</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-                            <span class="token punctuation">}</span>
-                        <span class="token punctuation">}</span>
-                    <span class="token punctuation">}</span>
-                <span class="token punctuation">}</span>
-            <span class="token punctuation">}</span>
-        <span class="token punctuation">}</span>
-    <span class="token punctuation">}</span></code></pre>
-<h3 id="3-SpringBean加载"><a href="#3-SpringBean加载" class="headerlink" title="3.  SpringBean加载"></a>3.  SpringBean加载</h3><p>​        在项目启动时，会扫描拿到指定接口的所有实现类，存储在内存中。其原理是在项目启动时拿到上下文，在上下文中拿到指定接口的实现类，将其存储在List或者Map中。</p>
-<pre class=" language-java"><code class="language-java"><span class="token comment" spellcheck="true">//实现ApplicationListener&lt;ContextRefreshedEvent> 接口，实现 onApplicationEvent 方法</span>
-<span class="token annotation punctuation">@RootComponent</span>
-<span class="token keyword">public</span> <span class="token keyword">class</span> <span class="token class-name">ApiComponentFactory</span> <span class="token keyword">implements</span> <span class="token class-name">ApplicationListener</span><span class="token operator">&lt;</span>ContextRefreshedEvent<span class="token operator">></span> <span class="token punctuation">{</span>
-    <span class="token annotation punctuation">@Override</span>
-    <span class="token keyword">public</span> <span class="token keyword">void</span> <span class="token function">onApplicationEvent</span><span class="token punctuation">(</span>ContextRefreshedEvent event<span class="token punctuation">)</span> <span class="token punctuation">{</span>
-        <span class="token comment" spellcheck="true">//拿到启动上下文</span>
-        ApplicationContext context <span class="token operator">=</span> event<span class="token punctuation">.</span><span class="token function">getApplicationContext</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-        <span class="token comment" spellcheck="true">//获取指定接口的BeanMap</span>
-        Map<span class="token operator">&lt;</span>String<span class="token punctuation">,</span> ApiComponent<span class="token operator">></span> myMap <span class="token operator">=</span> context<span class="token punctuation">.</span><span class="token function">getBeansOfType</span><span class="token punctuation">(</span>ApiComponent<span class="token punctuation">.</span><span class="token keyword">class</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-        <span class="token keyword">for</span> <span class="token punctuation">(</span>Map<span class="token punctuation">.</span>Entry<span class="token operator">&lt;</span>String<span class="token punctuation">,</span> ApiComponent<span class="token operator">></span> entry <span class="token operator">:</span> myMap<span class="token punctuation">.</span><span class="token function">entrySet</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-            <span class="token comment" spellcheck="true">//拿到具体的实现类，作相应的处理</span>
-            ApiComponent component <span class="token operator">=</span> entry<span class="token punctuation">.</span><span class="token function">getValue</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
-            <span class="token keyword">if</span> <span class="token punctuation">(</span>component<span class="token punctuation">.</span><span class="token function">getId</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">!=</span> null<span class="token punctuation">)</span> <span class="token punctuation">{</span>
-
-            <span class="token punctuation">}</span>
-        <span class="token punctuation">}</span>
-    <span class="token punctuation">}</span>        
-<span class="token punctuation">}</span></code></pre>
-<p>​        可将其存储到Map中，通过工厂模式，后期的获取只需要根据主键ID去获取响应的实体Bean。</p>
+                <h3 id="1-前言"><a href="#1-前言" class="headerlink" title="1. 前言"></a>1. 前言</h3><p>​        <strong>Redis</strong>从2.8开始正式推出了<strong>Redis Sentinel（哨兵）</strong>架构，目的是解决主从复制模式下，主节点一旦发生事故，需要<strong>人工将从节点进行晋升，并且还需通知应用方更新主节点地址</strong>这一问题。</p>
+<h3 id="2-主从复制"><a href="#2-主从复制" class="headerlink" title="2. 主从复制"></a>2. 主从复制</h3><h4 id="2-1-节点作用"><a href="#2-1-节点作用" class="headerlink" title="2.1 节点作用"></a>2.1 节点作用</h4><p>​        在主从复制中，从节点起两种作用：</p>
+<ul>
+<li><p>作为主节点备份，随时顶替主节点，保证数据不丢失。</p>
+</li>
+<li><p>扩展主节点读能力，并发读场景，可减轻主节点压力。</p>
+<h4 id="2-2-存在问题"><a href="#2-2-存在问题" class="headerlink" title="2.2 存在问题"></a>2.2 存在问题</h4><p>主从复制存在的问题：</p>
+</li>
+<li><p>主节点故障不可达，需人工干预</p>
+</li>
+<li><p>应用方无法感知主节点的变化，造成写数据丢失和读数据错误，甚至服务不可用。</p>
+<h4 id="2-3-故障转移"><a href="#2-3-故障转移" class="headerlink" title="2.3 故障转移"></a>2.3 故障转移</h4><p>主从复制模式下故障转移步骤如下：</p>
+<ol>
+<li>主节点故障，与客户端、从节点连接失败。</li>
+<li>若主节点无法正常启动，选从节点，执行slaveof no one成为新主节点。</li>
+<li>从节点变为主节点，更新应用方主节点信息。</li>
+<li>客户端命令从节点去复制新主节点。</li>
+<li>待主节点恢复，去复制新主节点。</li>
+</ol>
+</li>
+</ul>
+<h3 id="3-Redis-Sentinel（哨兵）"><a href="#3-Redis-Sentinel（哨兵）" class="headerlink" title="3. Redis Sentinel（哨兵）"></a>3. Redis Sentinel（哨兵）</h3><p>​        Redis Sentinel 是一个分布式架构，包含若干Sentinel节点和Redis数据节点，每个Sentinel节点会对其他的Sentinel节点和Redis数据节点进行监控，当不可达时，做下线标记。</p>
+<p>​        当Redis数据主节点被标记时，其他的Sentinel节点会协商选出一个Sentinel节点来进行故障迁移工作，同时通知变化给Redis应用方，全程自动，不需人工干预。其结构拓扑图大致如下：</p>
+<p>​                              <img src="/2020/03/11/redis-shao-bing/image-20200311150749964.png" style="zoom:67%;"></p>
+<p>​        故障迁移四个步骤如下：</p>
+<ol>
+<li><p>主节点master出现故障，与从节点失去联系，主从复制失败。</p>
+</li>
+<li><p>每个Sentinel通过定期监控发现主节点故障。</p>
+</li>
+<li><p>多个Sentinel节点对主节点的故障达成一致，选举Sentinel负责故障迁移。</p>
+</li>
+<li><p>Sentinel完成故障迁移。</p>
+</li>
+<li><p>通知Redis应用方。</p>
+<p>Sentinel的功能如下：</p>
+</li>
+</ol>
+<ul>
+<li><strong>监控</strong>：定期检查Redis节点和其他Sentinel节点</li>
+<li><strong>通知</strong>：结果通知应用方</li>
+<li><strong>主节点故障转移</strong></li>
+<li><strong>配置提供者</strong>：客户端连接Sentinel节点集合，从中获取主节点信息。</li>
+</ul>
 <script>
         document.querySelectorAll('.github-emoji')
           .forEach(el => {
@@ -671,9 +646,9 @@
             <br/>
             <span xmlns:dct="http://purl.org/dc/terms/" href="http://purl.org/dc/dcmitype/Text"
                   property="dct:title" rel="dct:type">
-                    《基于前后端分离的API设计思路整理（三）》
+                    《Redis：哨兵》
                 </span> 由
-            <a xmlns:cc="http://creativecommons.org/ns#" href="/2019/10/13/ji-yu-qian-hou-duan-fen-chi-de-api-she-ji-si-lu-zheng-li-san/" property="cc:attributionName"
+            <a xmlns:cc="http://creativecommons.org/ns#" href="/2020/03/11/redis-shao-bing/" property="cc:attributionName"
                rel="cc:attributionURL">
                 Shelton Lee
             </a> 采用
@@ -717,32 +692,36 @@
             <div class="article-badge left-badge text-color">
                 <i class="fa fa-chevron-left"></i>&nbsp;上一篇</div>
             <div class="card">
-                <a href="/2019/10/20/xue-xi-bioaionio-bi-ji-zheng-li/">
+                <a href="/2020/03/12/redis-zu-sai/">
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/11.jpg" class="responsive-img" alt="AIO BIO NIO 笔记整理">
+                        <img src="/medias/featureimages/14.jpg" class="responsive-img" alt="Redis：阻塞">
                         
-                        <span class="card-title">AIO BIO NIO 笔记整理</span>
+                        <span class="card-title">Redis：阻塞</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
                     <div class="summary block-with-text">
                         
-                            1.前言​        本篇文章主要用来记录在开发过程中涉及的IO的一些概念和代码思路，以及对于BIO，NIO，AIO的区分和理解 ，了解如何更好的优化代码。
-2.I/O介绍2.1 什么是IO?​        IO的全称是Input/O
+                            1. 前言​        Redis是单线程架构，一旦发生阻塞，所造成的的问题将会很严重，阻塞一般可归于两大类：
+
+内因：不合理的API或数据结构、CPU饱和，持久化阻塞等
+外因：CPU竞争、内存交换，网络问题
+
+2. 内在原因2.1 A
                         
                     </div>
                     <div class="publish-info">
                         <span class="publish-date">
-                            <i class="fa fa-clock-o fa-fw icon-date"></i>2019-10-20
+                            <i class="fa fa-clock-o fa-fw icon-date"></i>2020-03-12
                         </span>
                         <span class="publish-author">
                             
                             <i class="fa fa-bookmark fa-fw icon-category"></i>
                             
-                            <a href="/categories/java/" class="post-category" target="_blank">
-                                    java
+                            <a href="/categories/数据库/" class="post-category" target="_blank">
+                                    数据库
                                 </a>
                             
                             
@@ -752,8 +731,16 @@
                 
                 <div class="card-action article-tags">
                     
-                    <a href="/tags/java基础/" target="_blank">
-                        <span class="chip bg-color">java基础</span>
+                    <a href="/tags/数据库/" target="_blank">
+                        <span class="chip bg-color">数据库</span>
+                    </a>
+                    
+                    <a href="/tags/Redis/" target="_blank">
+                        <span class="chip bg-color">Redis</span>
+                    </a>
+                    
+                    <a href="/tags/缓存/" target="_blank">
+                        <span class="chip bg-color">缓存</span>
                     </a>
                     
                 </div>
@@ -767,36 +754,34 @@
                 下一篇&nbsp;<i class="fa fa-chevron-right"></i>
             </div>
             <div class="card">
-                <a href="/2019/10/06/qian-hou-duan-fen-chi-de-api-she-ji-si-lu-zheng-li-er/">
+                <a href="/2020/03/11/redis-huan-cun-she-ji/">
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/9.jpg" class="responsive-img" alt="基于前后端分离的API设计思路整理（二）">
+                        <img src="/medias/featureimages/7.jpg" class="responsive-img" alt="Redis：缓存设计">
                         
-                        <span class="card-title">基于前后端分离的API设计思路整理（二）</span>
+                        <span class="card-title">Redis：缓存设计</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
                     <div class="summary block-with-text">
                         
-                            1. 前言​        前一篇主要介绍了接口的顶层分派器的设计思路，但本质上业务逻辑的处理还是要由底层的接口具体实现类来进行处理，这篇主要记录一下具体接口实现类的架构体系。
-2. 接口实现类架构
-接口继承与实现关系
+                            1.前言​        缓存通常都是全内存的，因而可以有效的加快读写，优化用户体验。并且能减少后端的数据访问量和访问次数，有效降低后端负载。
+​        但加入缓存也有一定成本：
 
-
-ApiCompo
+数据不一致性：缓存数据和后端数据存在一定的时间窗口
                         
                     </div>
                     <div class="publish-info">
                             <span class="publish-date">
-                                <i class="fa fa-clock-o fa-fw icon-date"></i>2019-10-06
+                                <i class="fa fa-clock-o fa-fw icon-date"></i>2020-03-11
                             </span>
                         <span class="publish-author">
                             
                             <i class="fa fa-bookmark fa-fw icon-category"></i>
                             
-                            <a href="/categories/架构设计/" class="post-category" target="_blank">
-                                    架构设计
+                            <a href="/categories/数据库/" class="post-category" target="_blank">
+                                    数据库
                                 </a>
                             
                             
@@ -806,8 +791,16 @@ ApiCompo
                 
                 <div class="card-action article-tags">
                     
-                    <a href="/tags/架构设计/" target="_blank">
-                        <span class="chip bg-color">架构设计</span>
+                    <a href="/tags/数据库/" target="_blank">
+                        <span class="chip bg-color">数据库</span>
+                    </a>
+                    
+                    <a href="/tags/Redis/" target="_blank">
+                        <span class="chip bg-color">Redis</span>
+                    </a>
+                    
+                    <a href="/tags/缓存/" target="_blank">
+                        <span class="chip bg-color">缓存</span>
                     </a>
                     
                 </div>

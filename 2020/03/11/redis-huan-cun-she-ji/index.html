@@ -751,33 +751,30 @@
 <article id="prenext-posts" class="prev-next articles">
     <div class="row article-row">
         
-        <div class="article col s12 m6" data-aos="fade-up" data-aos="fade-up">
+        <div class="article col s12 m6" data-aos="fade-up">
             <div class="article-badge left-badge text-color">
-                <i class="fa fa-dot-circle-o"></i>&nbsp;本篇
-            </div>
+                <i class="fa fa-chevron-left"></i>&nbsp;上一篇</div>
             <div class="card">
-                <a href="/2020/03/11/redis-huan-cun-she-ji/">
+                <a href="/2020/03/11/redis-shao-bing/">
                     <div class="card-image">
                         
                         
-                        <img src="/medias/featureimages/7.jpg" class="responsive-img" alt="Redis：缓存设计">
+                        <img src="/medias/featureimages/20.jpg" class="responsive-img" alt="Redis：哨兵">
                         
-                        <span class="card-title">Redis：缓存设计</span>
+                        <span class="card-title">Redis：哨兵</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
                     <div class="summary block-with-text">
                         
-                            1.前言​        缓存通常都是全内存的，因而可以有效的加快读写，优化用户体验。并且能减少后端的数据访问量和访问次数，有效降低后端负载。
-​        但加入缓存也有一定成本：
-
-数据不一致性：缓存数据和后端数据存在一定的时间窗口
+                            1. 前言​        Redis从2.8开始正式推出了Redis Sentinel（哨兵）架构，目的是解决主从复制模式下，主节点一旦发生事故，需要人工将从节点进行晋升，并且还需通知应用方更新主节点地址这一问题。
+2. 主从复制2.1 
                         
                     </div>
                     <div class="publish-info">
-                            <span class="publish-date">
-                                <i class="fa fa-clock-o fa-fw icon-date"></i>2020-03-11
-                            </span>
+                        <span class="publish-date">
+                            <i class="fa fa-clock-o fa-fw icon-date"></i>2020-03-11
+                        </span>
                         <span class="publish-author">
                             
                             <i class="fa fa-bookmark fa-fw icon-category"></i>
@@ -790,7 +787,6 @@
                         </span>
                     </div>
                 </div>
-
                 
                 <div class="card-action article-tags">
                     
