@@ -302,6 +302,13 @@
 
 <div class="carousel carousel-slider center index-cover" data-indicators="true" style="margin-top: -64px;">
     
+    <div id="prev-cover" class="left waves-effect carousel-control">
+        <i class="icon fa fa-angle-left"></i>
+    </div>
+    <div id="next-cover" class="right waves-effect carousel-control">
+        <i class="icon fa fa-angle-right"></i>
+    </div>
+    
 
     <div class="carousel-item red white-text bg-cover about-cover">
         <div class="container">
@@ -356,6 +363,35 @@ $('.bg-cover').css('background-image', 'url(/medias/banner/' + new Date().getDay
         </div>
     </div>
 
+    
+    
+
+    
+    
+    <div class="carousel-item amber white-text carousel-post bg-cover"
+            style="background-image: url('/medias/featureimages/24.jpg');">
+        <div class="container">
+            <div class="row">
+                <div class="col s10 offset-s1">
+                    <div class="title center-align">开源日志组件 Logback配置详解</div>
+                    <div class="description center-align">
+                    
+                        1. 主要模块
+logback-core : 核心代码模块
+logback-classic: log4j的改良版本，同时实现了slf4j的接口
+logback-access: 访问模块与Servlet容器集成，提供通过Http来访问日志的功
+                    
+                    </div>
+                    <div class="cover-btns">
+                        <a href="/2021/03/11/kai-yuan-zu-jian-logback-pei-zhi-xiang-jie/" class="waves-effect waves-light btn" target="_blank">
+                            <i class="icon fa fa-eye fa-fw"></i>阅读更多
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
     
 </div>
 
@@ -433,6 +469,41 @@ $(function () {
 
 
 
+
+
+<div class="title"><i class="fa fa-thumbs-o-up"></i>&nbsp;&nbsp;推荐文章</div>
+
+<div class="row">
+
+    
+    
+    <div class="col s12" >
+        <div class="post-card" style="background-image: url('/medias/featureimages/24.jpg')">
+            <div class="post-body">
+                <div class="post-categories">
+                    
+                    <a href="/categories/开发组件/" class="category" target="_blank">开发组件</a>
+                    
+                </div>
+                <a href="/2021/03/11/kai-yuan-zu-jian-logback-pei-zhi-xiang-jie/" target="_blank">
+                    <h3 class="post-title">开源日志组件 Logback配置详解</h3>
+                </a>
+                <p class="post-description">1. 主要模块
+logback-core : 核心代码模块
+logback-classic: log4j的改良版本，同时实现了slf4j的接口
+logback-acces</p>
+                <a href="/2021/03/11/kai-yuan-zu-jian-logback-pei-zhi-xiang-jie/" target="_blank"
+                        class="read-more btn waves-effect waves-light" style="background: linear-gradient(to right, #FF5E3A 0%, #FF2A68 100%)">
+                    <i class="icon fa fa-eye fa-fw"></i>阅读更多
+                </a>
+            </div>
+        </div>
+    </div>
+    
+
+</div>
+
+
                     </div>
                 </div>
             </div>
@@ -445,6 +516,59 @@ $(function () {
     <!-- 所有文章卡片 -->
     <article id="articles" class="container articles">
         <div class="row article-row">
+            
+            <div class="article col s12 m6 l4" data-aos="zoom-in">
+                <div class="card">
+                    <a href="/2021/03/11/kai-yuan-zu-jian-logback-pei-zhi-xiang-jie/">
+                        <div class="card-image">
+                            
+                            <img src="/medias/featureimages/24.jpg" class="responsive-img" alt="开源日志组件 Logback配置详解">
+                            
+                            <span class="card-title">开源日志组件 Logback配置详解</span>
+                        </div>
+                    </a>
+
+                    <div class="card-content article-content">
+                        <div class="summary block-with-text">
+                            
+                                1. 主要模块
+logback-core : 核心代码模块
+logback-classic: log4j的改良版本，同时实现了slf4j的接口
+logback-access: 访问模块与Servlet容器集成，提供通过Http来访问日志的功
+                            
+                        </div>
+                        <div class="publish-info">
+                            <span class="publish-date">
+                                <i class="fa fa-clock-o fa-fw icon-date"></i>2021-03-11
+                            </span>
+                            <span class="publish-author">
+                                
+                                <i class="fa fa-bookmark fa-fw icon-category"></i>
+                                
+                                <a href="/categories/开发组件/" class="post-category" target="_blank">
+                                    开发组件
+                                </a>
+                                
+                                
+                            </span>
+                        </div>
+                    </div>
+
+                    
+                    <div class="card-action article-tags">
+                        
+                        <a href="/tags/logback/" target="_blank">
+                            <span class="chip bg-color">logback</span>
+                        </a>
+                        
+                        <a href="/tags/日志管理/" target="_blank">
+                            <span class="chip bg-color">日志管理</span>
+                        </a>
+                        
+                    </div>
+                    
+                </div>
+            </div>
             
             <div class="article col s12 m6 l4" data-aos="zoom-in">
                 <div class="card">
@@ -504,21 +628,22 @@ JVM启动时增加两个参数：
             
             <div class="article col s12 m6 l4" data-aos="zoom-in">
                 <div class="card">
-                    <a href="/2020/03/16/quartz-yuan-li-jie-shao-yu-xue-xi/">
+                    <a href="/2020/03/16/quartz-spring-de-ji-cheng-yu-shi-xian/">
                         <div class="card-image">
                             
                             
-                            <img src="/medias/featureimages/0.jpg" class="responsive-img" alt="Quartz：原理介绍与学习">
+                            <img src="/medias/featureimages/2.jpg" class="responsive-img" alt="Quartz：Spring的集成与实现">
                             
-                            <span class="card-title">Quartz：原理介绍与学习</span>
+                            <span class="card-title">Quartz：Spring的集成与实现</span>
                         </div>
                     </a>
 
                     <div class="card-content article-content">
                         <div class="summary block-with-text">
                             
-                                前言​        最近公司业务需要引入定时任务，所以决定采用比较成熟的Quartz框架，在此进行整理学习。
-​        Quartz是一个开源的定时调度框架，支持集群部署，可以和Spring进行集成，通过调用Java API来进行
+                                1. 代码​        本次Spring与Quatz的集成采用了模板设计模式，省略了大量的业务代码。maven的依赖包引入不再赘述。
+1.1 架构
+IJob：继承了Job接口，进行了自定义的扩展，方便在该层做一些所有Job实现类的共有操
                             
                         </div>
                         <div class="publish-info">
@@ -564,22 +689,21 @@ JVM启动时增加两个参数：
             
             <div class="article col s12 m6 l4" data-aos="zoom-in">
                 <div class="card">
-                    <a href="/2020/03/16/quartz-spring-de-ji-cheng-yu-shi-xian/">
+                    <a href="/2020/03/16/quartz-yuan-li-jie-shao-yu-xue-xi/">
                         <div class="card-image">
                             
                             
-                            <img src="/medias/featureimages/2.jpg" class="responsive-img" alt="Quartz：Spring的集成与实现">
+                            <img src="/medias/featureimages/0.jpg" class="responsive-img" alt="Quartz：原理介绍与学习">
                             
-                            <span class="card-title">Quartz：Spring的集成与实现</span>
+                            <span class="card-title">Quartz：原理介绍与学习</span>
                         </div>
                     </a>
 
                     <div class="card-content article-content">
                         <div class="summary block-with-text">
                             
-                                1. 代码​        本次Spring与Quatz的集成采用了模板设计模式，省略了大量的业务代码。maven的依赖包引入不再赘述。
-1.1 架构
-IJob：继承了Job接口，进行了自定义的扩展，方便在该层做一些所有Job实现类的共有操
+                                前言​        最近公司业务需要引入定时任务，所以决定采用比较成熟的Quartz框架，在此进行整理学习。
+​        Quartz是一个开源的定时调度框架，支持集群部署，可以和Spring进行集成，通过调用Java API来进行
                             
                         </div>
                         <div class="publish-info">
@@ -1048,54 +1172,6 @@ IJob：继承了Job接口，进行了自定义的扩展，方便在该层做一�
                         
                         <a href="/tags/java工具类/" target="_blank">
                             <span class="chip bg-color">java工具类</span>
-                        </a>
-                        
-                    </div>
-                    
-                </div>
-            </div>
-            
-            <div class="article col s12 m6 l4" data-aos="zoom-in">
-                <div class="card">
-                    <a href="/2019/11/18/java-ji-yu-zhu-jie-de-quan-xian-yan-zheng-she-ji/">
-                        <div class="card-image">
-                            
-                            
-                            <img src="/medias/featureimages/5.jpg" class="responsive-img" alt="Java：基于AOP配合注解的权限验证设计">
-                            
-                            <span class="card-title">Java：基于AOP配合注解的权限验证设计</span>
-                        </div>
-                    </a>
-
-                    <div class="card-content article-content">
-                        <div class="summary block-with-text">
-                            
-                                1.前言​        前一段时间负责了一个项目的权限验证方面的设计，主要用于限制不同的角色的不同操作权限，仅限后端控制，前端控制的目的在于隐藏不必要的操作，以达到良好的用户体验，此处暂不涉及前端，进行整理，方便日后回顾。
-2. 基于注解
-                            
-                        </div>
-                        <div class="publish-info">
-                            <span class="publish-date">
-                                <i class="fa fa-clock-o fa-fw icon-date"></i>2019-11-18
-                            </span>
-                            <span class="publish-author">
-                                
-                                <i class="fa fa-bookmark fa-fw icon-category"></i>
-                                
-                                <a href="/categories/java/" class="post-category" target="_blank">
-                                    java
-                                </a>
-                                
-                                
-                            </span>
-                        </div>
-                    </div>
-
-                    
-                    <div class="card-action article-tags">
-                        
-                        <a href="/tags/权限设计/" target="_blank">
-                            <span class="chip bg-color">权限设计</span>
                         </a>
                         
                     </div>
