@@ -305,10 +305,19 @@ $('.bg-cover').css('background-image', 'url(/medias/banner/' + new Date().getDay
                 </a>
                 
                 
+                <a href="/categories/java/" title="java: 21">
+                    <span class="chip center-align waves-effect waves-light
+                             chip-default "
+                            style="background-color: #F5EEF8;">java
+                        <span class="tag-length">21</span>
+                    </span>
+                </a>
+                
+                
                 <a href="/categories/中间件/" title="中间件: 2">
                     <span class="chip center-align waves-effect waves-light
                              chip-default "
-                            style="background-color: #F5EEF8;">中间件
+                            style="background-color: #D5F5E3;">中间件
                         <span class="tag-length">2</span>
                     </span>
                 </a>
@@ -317,17 +326,8 @@ $('.bg-cover').css('background-image', 'url(/medias/banner/' + new Date().getDay
                 <a href="/categories/版本管理/" title="版本管理: 1">
                     <span class="chip center-align waves-effect waves-light
                              chip-default "
-                            style="background-color: #D5F5E3;">版本管理
+                            style="background-color: #E8F8F5;">版本管理
                         <span class="tag-length">1</span>
-                    </span>
-                </a>
-                
-                
-                <a href="/categories/java/" title="java: 20">
-                    <span class="chip center-align waves-effect waves-light
-                             chip-default "
-                            style="background-color: #E8F8F5;">java
-                        <span class="tag-length">20</span>
                     </span>
                 </a>
                 
@@ -350,11 +350,11 @@ $('.bg-cover').css('background-image', 'url(/medias/banner/' + new Date().getDay
                 </a>
                 
                 
-                <a href="/categories/Quartz/" title="Quartz: 1">
+                <a href="/categories/Quartz/" title="Quartz: 2">
                     <span class="chip center-align waves-effect waves-light
                              chip-default "
                             style="background-color: #82E0AA;">Quartz
-                        <span class="tag-length">1</span>
+                        <span class="tag-length">2</span>
                     </span>
                 </a>
                 
@@ -386,20 +386,20 @@ $('.bg-cover').css('background-image', 'url(/medias/banner/' + new Date().getDay
                 </a>
                 
                 
-                <a href="/categories/工具类/" title="工具类: 1">
+                <a href="/categories/学习笔记/" title="学习笔记: 2">
                     <span class="chip center-align waves-effect waves-light
                              chip-default "
-                            style="background-color: #F8C471;">工具类
-                        <span class="tag-length">1</span>
+                            style="background-color: #F8C471;">学习笔记
+                        <span class="tag-length">2</span>
                     </span>
                 </a>
                 
                 
-                <a href="/categories/学习笔记/" title="学习笔记: 2">
+                <a href="/categories/工具类/" title="工具类: 1">
                     <span class="chip center-align waves-effect waves-light
                              chip-default "
-                            style="background-color: #F9E79F;">学习笔记
-                        <span class="tag-length">2</span>
+                            style="background-color: #F9E79F;">工具类
+                        <span class="tag-length">1</span>
                     </span>
                 </a>
                 
@@ -965,35 +965,28 @@ sadd key element
             
             <div class="article tag-post col s12 m6 l4" data-aos="zoom-in">
                 <div class="card">
-                    <a href="/2019/03/16/redis-ji-chu-jie-shao/">
+                    <a href="/2019/03/16/redis-ha-xi-lei-xing/">
                         <div class="card-image tag-image">
                             
                             
-                            <img src="/medias/featureimages/9.jpg" class="responsive-img" alt="Redis：基础介绍">
+                            <img src="/medias/featureimages/21.jpg" class="responsive-img" alt="Redis：哈希类型">
                             
-                            <span class="card-title">Redis：基础介绍</span>
+                            <span class="card-title">Redis：哈希类型</span>
                         </div>
                     </a>
                     <div class="card-content article-content">
                         <div class="summary block-with-text">
                             
-                                1. 全局命令
-查看所有键
-keys *    
+                                1. 数据结构
+​        哈希类型的值可以是字符串，数字，哈希，但键只能是字符串
+2. 常用命令
+设置值(可以给一个键设置多次，即设置多个值)
+hest key field value
 
-键总数
-dbsize
+获取值
+hget key field
 
-检查键是否存在
-exists key 
-
-删除键(支持删除多个)
-del key
-
-键过期
-expire key seconds
-
-键过期剩余时间(-1 : 没有过
+删除
                             
                         </div>
                         <div class="publish-info">
@@ -1035,28 +1028,35 @@ expire key seconds
             
             <div class="article tag-post col s12 m6 l4" data-aos="zoom-in">
                 <div class="card">
-                    <a href="/2019/03/16/redis-ha-xi-lei-xing/">
+                    <a href="/2019/03/16/redis-ji-chu-jie-shao/">
                         <div class="card-image tag-image">
                             
                             
-                            <img src="/medias/featureimages/21.jpg" class="responsive-img" alt="Redis：哈希类型">
+                            <img src="/medias/featureimages/9.jpg" class="responsive-img" alt="Redis：基础介绍">
                             
-                            <span class="card-title">Redis：哈希类型</span>
+                            <span class="card-title">Redis：基础介绍</span>
                         </div>
                     </a>
                     <div class="card-content article-content">
                         <div class="summary block-with-text">
                             
-                                1. 数据结构
-​        哈希类型的值可以是字符串，数字，哈希，但键只能是字符串
-2. 常用命令
-设置值(可以给一个键设置多次，即设置多个值)
-hest key field value
+                                1. 全局命令
+查看所有键
+keys *    
 
-获取值
-hget key field
+键总数
+dbsize
 
-删除
+检查键是否存在
+exists key 
+
+删除键(支持删除多个)
+del key
+
+键过期
+expire key seconds
+
+键过期剩余时间(-1 : 没有过
                             
                         </div>
                         <div class="publish-info">

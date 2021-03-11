@@ -435,7 +435,7 @@
 <p><strong>Kafka在设计之初就被认为是集群化工作的</strong></p>
 </li>
 </ul>
-<h4 id="2-1-Kafka-Broker-工作结构"><a href="#2-1-Kafka-Broker-工作结构" class="headerlink" title="2.1 Kafka Broker 工作结构"></a>2.1 Kafka Broker 工作结构</h4><p>​        <img src="/2019/02/08/kafka-shen-ru-yuan-li/1573789480(1).jpg" alt></p>
+<h4 id="2-1-Kafka-Broker-工作结构"><a href="#2-1-Kafka-Broker-工作结构" class="headerlink" title="2.1 Kafka Broker 工作结构"></a>2.1 Kafka Broker 工作结构</h4><p>​        <img src="/2019/02/08/kafka-shen-ru-yuan-li/1573789480(1).jpg" alt=""></p>
 <ul>
 <li>一个独立进行消息获取，消息记录和消息分送操作的队列称为topic，和ActiveMQ中的queue和topic属于同一概念</li>
 <li>将Topic拆分分区，这些分区可能在同一个Broker上也可能在多个Broker上。</li>
@@ -449,7 +449,7 @@
 <li>kafka对Linux操作系统下Page Cache技术的应用，才是其高性能的最大保证</li>
 </ul>
 <h4 id="2-2-Kafka-Cluster结构"><a href="#2-2-Kafka-Cluster结构" class="headerlink" title="2.2 Kafka Cluster结构"></a>2.2 Kafka Cluster结构</h4><p><strong>消息在kafka集群中的流动：</strong></p>
-<p> <img src="/2019/02/08/kafka-shen-ru-yuan-li/cluster.jpg" alt></p>
+<p> <img src="/2019/02/08/kafka-shen-ru-yuan-li/cluster.jpg" alt=""></p>
 <ul>
 <li>消息生产者会决定发送的消息将会送入Topic的哪一个分区</li>
 <li>在同一个Topic下，kafka会为不同的消费者组创建独立的index索引定位，生产者发送有个消息，topic下不同组的消费者都会收到消息。</li>
