@@ -4,16 +4,8 @@
 
 <head><meta name="generator" content="Hexo 3.9.0">
     <meta charset="utf-8">
-    <meta name="keywords" content="ActiveMQ：安装, Shelton_Lee">
-    <meta name="description" content="前言   ActiveMQ安装较为简单, 下载的官网：ActiveMQ
-ActiveMQ的安装
-解压包
-
-tar -zxvf apache-activemq-5.13.2-bin.tar.gz  
-
-配置环境变量
-
-vim /etc/pro">
+    <meta name="keywords" content="开源组件 日志组件简介, Shelton_Lee">
+    <meta name="description" content="1. SLF4J​        slf4j的全称是 Simple Loging Facade For Java(简单日志门面) ，仅仅是为Java程序提供日志输出的统一接口，并不是一个具体的日志实现方案，允许最终用户在部署其应用时使用其所">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <meta name="renderer" content="webkit|ie-stand|ie-comp">
@@ -21,7 +13,7 @@ vim /etc/pro">
     <meta name="format-detection" content="telephone=no">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <title>ActiveMQ：安装 | Shelton_Lee</title>
+    <title>开源组件 日志组件简介 | Shelton_Lee</title>
     <link rel="icon" type="image/png" href="/favicon.png">
 
     <link rel="stylesheet" type="text/css" href="/libs/awesome/css/font-awesome.min.css">
@@ -268,13 +260,13 @@ vim /etc/pro">
 
 
 
-<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/12.jpg')">
+<div class="bg-cover pd-header post-cover" style="background-image: url('/medias/featureimages/24.jpg')">
     <div class="container">
         <div class="row">
             <div class="col s12 m12 l12">
                 <div class="brand">
                     <div class="description center-align post-title">
-                        ActiveMQ：安装
+                        开源组件 日志组件简介
                     </div>
                 </div>
             </div>
@@ -385,16 +377,12 @@ vim /etc/pro">
                     
                     <div class="article-tag">
                         
-                            <a href="/tags/消息中间件/" target="_blank">
-                                <span class="chip bg-color">消息中间件</span>
+                            <a href="/tags/日志管理/" target="_blank">
+                                <span class="chip bg-color">日志管理</span>
                             </a>
                         
-                            <a href="/tags/ActiveMQ/" target="_blank">
-                                <span class="chip bg-color">ActiveMQ</span>
-                            </a>
-                        
-                            <a href="/tags/软件安装/" target="_blank">
-                                <span class="chip bg-color">软件安装</span>
+                            <a href="/tags/SLF4J/" target="_blank">
+                                <span class="chip bg-color">SLF4J</span>
                             </a>
                         
                     </div>
@@ -405,8 +393,8 @@ vim /etc/pro">
                     <div class="post-cate">
                         <i class="fa fa-bookmark fa-fw icon-category"></i>
                         
-                            <a href="/categories/中间件/" class="post-category" target="_blank">
-                                中间件
+                            <a href="/categories/开发组件/" class="post-category" target="_blank">
+                                开发组件
                             </a>
                         
                     </div>
@@ -417,7 +405,7 @@ vim /etc/pro">
             <div class="post-info">
                 <div class="post-date info-break-policy">
                     <i class="fa fa-calendar-minus-o fa-fw"></i>发布日期:&nbsp;&nbsp;
-                    2019-01-27
+                    2021-03-12
                 </div>
 
                 
@@ -433,27 +421,87 @@ vim /etc/pro">
         <hr class="clearfix">
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>   ActiveMQ安装较为简单, 下载的官网：<a href="https://activemq.apache.org/download-archives.html" target="_blank" rel="noopener">ActiveMQ</a></p>
-<h1 id="ActiveMQ的安装"><a href="#ActiveMQ的安装" class="headerlink" title="ActiveMQ的安装"></a>ActiveMQ的安装</h1><ul>
-<li>解压包</li>
-</ul>
-<pre class=" language-shell"><code class="language-shell">tar -zxvf apache-activemq-5.13.2-bin.tar.gz  </code></pre>
+                <h4 id="1-SLF4J"><a href="#1-SLF4J" class="headerlink" title="1. SLF4J"></a>1. SLF4J</h4><p>​        slf4j的全称是 Simple Loging Facade For Java(简单日志门面) ，<strong>仅仅是为Java程序提供日志输出的统一接口</strong>，并不是一个具体的日志实现方案，允许最终用户在部署其应用时使用其所希望的日志系统。</p>
+<p>​        slf4j的使用<strong>必须搭配其他具体的日志实现方案</strong>，比如 apache的 org.apache.log4j.Logger, jdk自带的 java.util.logging.Logger 。</p>
+<p>​        从设计模式角度考虑，对于只要使用SLF4J提供的接口，即可隐藏日志的具体实现，类似于Jdbc,实现对于客户端的解耦，因为使用的是接口，所以可以实时根据情况来调整日志的实现类</p>
+<p>​        slf4j在编译时静态绑定真正的Log库，相应桥接包放置后，slf4j可以自动探测具体使用哪种日志系统，即StaticLoggerBinder类的具体实现类，然后就可以找到对应日志系统的日志文件。</p>
+<p>​        不同的日志系统包都会有一个Adapter包，用来在slf4j和不同日志系统之间做转换。</p>
+<p>​        slf4j支持四个日志级别，分别是：debug、info、warn、error。</p>
+<p>​        slf4j与具体日志实现的桥接包如下：</p>
 <ul>
-<li>配置环境变量</li>
+<li>log4j:</li>
+<li>logback:</li>
+<li>jdk</li>
 </ul>
-<pre class=" language-shell"><code class="language-shell">vim /etc/profile</code></pre>
-<p>添加内容如下：</p>
-<pre class=" language-shell"><code class="language-shell">############activemq############
-export PATH=/usr/lixs/activemq/apache-activemq-5.13.2/bin/linux-x86-64:$PATH
-</code></pre>
+<h4 id="2-common-logging"><a href="#2-common-logging" class="headerlink" title="2. common-logging"></a>2. common-logging</h4><p>​        apache提供的一个通用的日志接口，像slf4j一样，用户可自由选择第三方的日志组件</p>
+<h4 id="3-Log4j"><a href="#3-Log4j" class="headerlink" title="3.Log4j"></a>3.Log4j</h4><p>​        具体的日志实现方案，Apache的一个开源项目代码，其日志信息的输送目的地包括：控制台、文件、GUI组件、甚至时套接口服务器、NT的时间记录器、UNIX Syslog守护进程等。</p>
+<p>​        用户可控制每一条日志的输出格式、级别和过程等，支持文件灵活配置，无需代码修改。</p>
+<h4 id="4-Logback"><a href="#4-Logback" class="headerlink" title="4. Logback"></a>4. Logback</h4><p>​        具体的日志实现方案，logback当前分为三个模块：</p>
 <ul>
-<li>启动程序</li>
+<li>logback-core 核心基础</li>
+<li>logback-classic log4j的改良版本，完整实现了SLF4J API,方便替换成其他日志方案</li>
+<li>logback-access 访问模块与servlet容器集成提供通过http访问日记的功能</li>
 </ul>
-<pre class=" language-shell"><code class="language-shell">activemq start</code></pre>
+<h3 id="日志实现方案比较"><a href="#日志实现方案比较" class="headerlink" title="日志实现方案比较"></a>日志实现方案比较</h3><h4 id="Log4j-VS-LogBack"><a href="#Log4j-VS-LogBack" class="headerlink" title="Log4j VS LogBack"></a>Log4j VS LogBack</h4><p>​        LogBack将作为Log4j的替代和SLF4J组成新的日志系统</p>
 <ul>
-<li>访问页面 ip + 8161</li>
+<li>LogBack 判定日志是否需要记录时间更短</li>
+<li>创建记录器logger的速度更快</li>
+<li>获取已存在的记录器的时间更短</li>
+<li>LogBack的文档是全面免费的</li>
 </ul>
-<p><img src="/2019/01/27/activemq-an-zhuang/1567665904552.png" alt="1567665904552"></p>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p><img src="/2021/03/12/kai-yuan-zu-jian-ri-zhi-zu-jian-jian-jie/image-20210312150507561.png" alt=""></p>
+<ol>
+<li><p>apache common-logging和slf4j 都是日志接口，并非具体实现方案</p>
+</li>
+<li><p>log4j、logback、log4j2等都是日志记录器的具体实现</p>
+</li>
+<li><p>common-logging通过动态绑定去查询具体实现，slf4j编译时会静态绑定 org.slf4j.impl.StaticLoggerBinder这个类，其他日志实现中包含了该类的实现。</p>
+</li>
+<li><p>采用slf4j接口时，会涉及绑定器和桥接器</p>
+<ul>
+<li><p>绑定器：slf4j-log4j2-version.jar 就是绑定slf4j到log4j。</p>
+</li>
+<li><p>桥接器：jcl-over-slf4j将jcl（java-common-log）接口的日志都接到slf4j的接口，然后采用slf4j的绑定器中绑定的日志来实现记录日志。</p>
+<p>component -&gt;&gt; Apache Commons Logging -&gt;&gt; jcl-over-slf4j,jar -&gt;&gt; SLF4J -&gt;&gt; slf4j-log4j2-version.jar -&gt;&gt; log4j.jar -&gt;&gt;输出日志 </p>
+</li>
+</ul>
+</li>
+<li><p>slf4j-api 、slf4j-log4j2和logj的关系</p>
+<ul>
+<li><p>slf4j类似于数据线，一段嵌入程序，另一端链接日志系统，从而实现将程序中的信息导入到日志系统并记录</p>
+</li>
+<li><p>slf4j入口就是众多接口的集合，不负责具体接口实现，只负责编译时寻找合适日志系统进行绑定，具体接口全部定义在slf4j-api中，slf4j-api本质就是一个接口定义。</p>
+<p><img src="/2021/03/12/kai-yuan-zu-jian-ri-zhi-zu-jian-jian-jie/image-20210312162206316.png" alt=""></p>
+</li>
+</ul>
+</li>
+<li><p>jar包介绍</p>
+<ul>
+<li>slf4j-api.jar : slf4j自身接口</li>
+<li>common-logging.jar:  接口</li>
+<li>log4j.jar:  具体实现</li>
+<li>logbacj.jar：具体实现</li>
+<li>log4j2.jar：具体实现</li>
+<li>jcl-over-slf4j.jar: 桥接包</li>
+<li>slf4j-log412.jar: 绑定包</li>
+</ul>
+</li>
+<li><p>jar包配合方案：</p>
+<ul>
+<li>Log4j :   slf4j-api.jar +  log4j.jar + slf4j-log4j12.jar</li>
+<li>Log4j2：log4j-slf4j-impl.jar + log4j-api.jar + log4j-core.jar + slf4j-api.jar</li>
+<li>LogBack：logback-classic + logback-core.jar</li>
+</ul>
+</li>
+<li><p>Class path contains multiple SLF4J bindings</p>
+<p>​    报改错原因就是因为多个包像logback-classic、log4j-slf4j-impl、slf4j-log412、slf4j-jdk 的存在，导致slf4j不能确定该使用哪个框架。</p>
+</li>
+</ol>
+<h3 id="参考文章"><a href="#参考文章" class="headerlink" title="参考文章"></a>参考文章</h3><ol>
+<li><a href="http://www.360doc.com/content/16/0624/19/1073512_570470152.shtml" target="_blank" rel="noopener">http://www.360doc.com/content/16/0624/19/1073512_570470152.shtml</a></li>
+<li><a href="https://zhuanlan.zhihu.com/p/184943995" target="_blank" rel="noopener">https://zhuanlan.zhihu.com/p/184943995</a></li>
+<li><a href="https://blog.csdn.net/weixin_42410730/article/details/102645095" target="_blank" rel="noopener">https://blog.csdn.net/weixin_42410730/article/details/102645095</a></li>
+</ol>
 <script>
         document.querySelectorAll('.github-emoji')
           .forEach(el => {
@@ -630,9 +678,9 @@ export PATH=/usr/lixs/activemq/apache-activemq-5.13.2/bin/linux-x86-64:$PATH
             <br/>
             <span xmlns:dct="http://purl.org/dc/terms/" href="http://purl.org/dc/dcmitype/Text"
                   property="dct:title" rel="dct:type">
-                    《ActiveMQ：安装》
+                    《开源组件 日志组件简介》
                 </span> 由
-            <a xmlns:cc="http://creativecommons.org/ns#" href="/2019/01/27/activemq-an-zhuang/" property="cc:attributionName"
+            <a xmlns:cc="http://creativecommons.org/ns#" href="/2021/03/12/kai-yuan-zu-jian-ri-zhi-zu-jian-jian-jie/" property="cc:attributionName"
                rel="cc:attributionURL">
                 Shelton Lee
             </a> 采用
@@ -672,50 +720,51 @@ export PATH=/usr/lixs/activemq/apache-activemq-5.13.2/bin/linux-x86-64:$PATH
 <article id="prenext-posts" class="prev-next articles">
     <div class="row article-row">
         
-        <div class="article col s12 m6" data-aos="fade-up">
+        <div class="article col s12 m6" data-aos="fade-up" data-aos="fade-up">
             <div class="article-badge left-badge text-color">
-                <i class="fa fa-chevron-left"></i>&nbsp;上一篇</div>
+                <i class="fa fa-dot-circle-o"></i>&nbsp;本篇
+            </div>
             <div class="card">
-                <a href="/2019/02/03/stomp-xie-yi-xue-xi/">
+                <a href="/2021/03/12/kai-yuan-zu-jian-ri-zhi-zu-jian-jian-jie/">
                     <div class="card-image">
                         
+                        <img src="/medias/featureimages/24.jpg" class="responsive-img" alt="开源组件 日志组件简介">
                         
-                        <img src="/medias/featureimages/22.jpg" class="responsive-img" alt="Stomp：协议学习">
-                        
-                        <span class="card-title">Stomp：协议学习</span>
+                        <span class="card-title">开源组件 日志组件简介</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
                     <div class="summary block-with-text">
                         
-                            1.前言  消息从发送到接受的方式有两种：一种称为即时消息通讯，即一端发送之后，另一端能够立即接受 ，具体实现就是RPC。另一种称为延迟消息通讯，即消息发出后，进入中间容器进行存储，到达一定条件之后，再发送给接受者，中间的容器称为消息队列。
+                            1. SLF4J​        slf4j的全称是 Simple Loging Facade For Java(简单日志门面) ，仅仅是为Java程序提供日志输出的统一接口，并不是一个具体的日志实现方案，允许最终用户在部署其应用时使用其所
                         
                     </div>
                     <div class="publish-info">
-                        <span class="publish-date">
-                            <i class="fa fa-clock-o fa-fw icon-date"></i>2019-02-03
-                        </span>
+                            <span class="publish-date">
+                                <i class="fa fa-clock-o fa-fw icon-date"></i>2021-03-12
+                            </span>
                         <span class="publish-author">
                             
                             <i class="fa fa-bookmark fa-fw icon-category"></i>
                             
-                            <a href="/categories/架构/" class="post-category" target="_blank">
-                                    架构
+                            <a href="/categories/开发组件/" class="post-category" target="_blank">
+                                    开发组件
                                 </a>
                             
                             
                         </span>
                     </div>
                 </div>
+
                 
                 <div class="card-action article-tags">
                     
-                    <a href="/tags/通信协议/" target="_blank">
-                        <span class="chip bg-color">通信协议</span>
+                    <a href="/tags/日志管理/" target="_blank">
+                        <span class="chip bg-color">日志管理</span>
                     </a>
                     
-                    <a href="/tags/Stomp/" target="_blank">
-                        <span class="chip bg-color">Stomp</span>
+                    <a href="/tags/SLF4J/" target="_blank">
+                        <span class="chip bg-color">SLF4J</span>
                     </a>
                     
                 </div>
@@ -729,33 +778,33 @@ export PATH=/usr/lixs/activemq/apache-activemq-5.13.2/bin/linux-x86-64:$PATH
                 下一篇&nbsp;<i class="fa fa-chevron-right"></i>
             </div>
             <div class="card">
-                <a href="/2019/01/20/activemq-cun-chu-fang-an/">
+                <a href="/2021/03/11/kai-yuan-zu-jian-logback-pei-zhi-xiang-jie/">
                     <div class="card-image">
                         
+                        <img src="/medias/featureimages/24.jpg" class="responsive-img" alt="开源日志组件 Logback配置详解">
                         
-                        <img src="/medias/featureimages/15.jpg" class="responsive-img" alt="ActiveMQ：存储方案">
-                        
-                        <span class="card-title">ActiveMQ：存储方案</span>
+                        <span class="card-title">开源日志组件 Logback配置详解</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
                     <div class="summary block-with-text">
                         
-                            1.前言  上文已经学习了ActiveMQ的存储分为两种：持久化和非持久化，其中持久化的介质可以是磁盘文件系统，也可以是其内置数据库，或者外部的关系型数据库。
-2.持久化存储
-发布订阅模式下，没有订阅者时，消息也要进行先存储再标记，但不一定
+                            1. 主要模块
+logback-core : 核心代码模块
+logback-classic: log4j的改良版本，同时实现了slf4j的接口
+logback-access: 访问模块与Servlet容器集成，提供通过Http来访问日志的功
                         
                     </div>
                     <div class="publish-info">
                             <span class="publish-date">
-                                <i class="fa fa-clock-o fa-fw icon-date"></i>2019-01-20
+                                <i class="fa fa-clock-o fa-fw icon-date"></i>2021-03-11
                             </span>
                         <span class="publish-author">
                             
                             <i class="fa fa-bookmark fa-fw icon-category"></i>
                             
-                            <a href="/categories/架构/" class="post-category" target="_blank">
-                                    架构
+                            <a href="/categories/开发组件/" class="post-category" target="_blank">
+                                    开发组件
                                 </a>
                             
                             
@@ -765,12 +814,12 @@ export PATH=/usr/lixs/activemq/apache-activemq-5.13.2/bin/linux-x86-64:$PATH
                 
                 <div class="card-action article-tags">
                     
-                    <a href="/tags/消息中间件/" target="_blank">
-                        <span class="chip bg-color">消息中间件</span>
+                    <a href="/tags/logback/" target="_blank">
+                        <span class="chip bg-color">logback</span>
                     </a>
                     
-                    <a href="/tags/ActiveMQ/" target="_blank">
-                        <span class="chip bg-color">ActiveMQ</span>
+                    <a href="/tags/日志管理/" target="_blank">
+                        <span class="chip bg-color">日志管理</span>
                     </a>
                     
                 </div>
