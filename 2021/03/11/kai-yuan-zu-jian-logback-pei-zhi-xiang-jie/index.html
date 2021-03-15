@@ -572,7 +572,25 @@ scanPeriod 默认值 1 seconds,检测配置发生变化的间隔，无单位时�
 <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>triggeringPolicy</span><span class="token punctuation">></span></span></code></pre>
 </li>
 </ul>
-<h5 id="4-参考内容"><a href="#4-参考内容" class="headerlink" title="4. 参考内容"></a>4. 参考内容</h5><ul>
+<ol start="4">
+<li><p>与SpringBoot集成</p>
+<p>Spring的包中已经自动引入logback所需要的包，具体如下：</p>
+<ul>
+<li><p>找到spring-boot-start，点进去</p>
+<p><img src="/2021/03/11/kai-yuan-zu-jian-logback-pei-zhi-xiang-jie/spring-boot-start.jpg" alt=""></p>
+</li>
+<li><p>找到spring-boot-start-logging，点进去</p>
+<p><img src="/2021/03/11/kai-yuan-zu-jian-logback-pei-zhi-xiang-jie/logging.jpg" alt=""></p>
+</li>
+<li><p>可以看到下面的三个包</p>
+<p><img src="/2021/03/11/kai-yuan-zu-jian-logback-pei-zhi-xiang-jie/logback.jpg" alt=""></p>
+<h5 id="application-yml相关配置-只配置logback配置文件路径即可"><a href="#application-yml相关配置-只配置logback配置文件路径即可" class="headerlink" title="application.yml相关配置(只配置logback配置文件路径即可)"></a>application.yml相关配置(只配置logback配置文件路径即可)</h5><pre class=" language-yaml"><code class="language-yaml"><span class="token key atrule">logging</span><span class="token punctuation">:</span>
+  <span class="token key atrule">config</span><span class="token punctuation">:</span> classpath<span class="token punctuation">:</span>/logback/logback<span class="token punctuation">-</span>dev.xml</code></pre>
+</li>
+</ul>
+</li>
+</ol>
+<h5 id="5-参考内容"><a href="#5-参考内容" class="headerlink" title="5. 参考内容"></a>5. 参考内容</h5><ul>
 <li><a href="https://www.jianshu.com/p/04065d8cb2a9" target="_blank" rel="noopener">https://www.jianshu.com/p/04065d8cb2a9</a></li>
 </ul>
 <script>
@@ -800,7 +818,7 @@ scanPeriod 默认值 1 seconds,检测配置发生变化的间隔，无单位时�
                 <a href="/2021/03/12/kai-yuan-zu-jian-ri-zhi-zu-jian-jian-jie/">
                     <div class="card-image">
                         
-                        <img src="/medias/featureimages/24.jpg" class="responsive-img" alt="开源组件 日志组件简介">
+                        <img src="/medias/featureimages/25.jpg" class="responsive-img" alt="开源组件 日志组件简介">
                         
                         <span class="card-title">开源组件 日志组件简介</span>
                     </div>
