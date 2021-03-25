@@ -547,6 +547,23 @@
 
         }
     }</code></pre>
+<h5 id="1-2-6-upstream参数补充"><a href="#1-2-6-upstream参数补充" class="headerlink" title="1.2.6 upstream参数补充"></a>1.2.6 upstream参数补充</h5><pre class=" language-shell"><code class="language-shell">service 
+
+#权重字段
+weight
+
+# nginx对服务进行心跳检测，达到一定程度后，认为挂了，就剔除掉。
+max_fails
+
+#恢复检测时长，剔除后或宕机后 隔一定的时间检测服务是否可以继续用，然后进行下线或者上线操作
+#（所有服务宕掉后，隔一定的时间拉起备份服务，服务正常后，隔一定时间下线备份服务）
+fail_timeout
+
+# 标记备份服务，当所有服务宕掉后，该服务会顶上，其他服务恢复后，该服务退下
+backup
+
+# 项目服务允许的最大连接数
+max_conns</code></pre>
 <h3 id="1-3-Web缓存"><a href="#1-3-Web缓存" class="headerlink" title="1.3 Web缓存"></a>1.3 Web缓存</h3><p>  Nginx会对用户已经访问过的内容在服务器本地建立副本，这段时间内再次访问是，不需要Nginx再向服务器后端发送请求，缓存前端请求，提高Web服务器的性能。</p>
 <h3 id="1-4-总结"><a href="#1-4-总结" class="headerlink" title="1.4 总结"></a>1.4 总结</h3><h5 id="1-4-1-Master-Worker模式"><a href="#1-4-1-Master-Worker模式" class="headerlink" title="1.4.1 Master-Worker模式"></a>1.4.1 Master-Worker模式</h5><ul>
 <li><strong>Master</strong>：负责读取验证配置文件nginx.conf,管理worker进程。</li>
@@ -587,6 +604,7 @@
 <p>  参考博客：<a href="https://www.cnblogs.com/ysocean/p/9392908.html" target="_blank" rel="noopener">Nginx反向代理</a></p>
 <p>​                          <a href="https://blog.csdn.net/yinwenjie/article/details/46620711" target="_blank" rel="noopener">架构设计：负载均衡方案</a>            </p>
 <p>​                          <a href="https://segmentfault.com/a/1190000007803704" target="_blank" rel="noopener">Nginx+Tomcat整合体验</a></p>
+<p>​                        <a href="https://www.jianshu.com/p/7d3360bb1250" target="_blank" rel="noopener">https://www.jianshu.com/p/7d3360bb1250</a></p>
 <script>
         document.querySelectorAll('.github-emoji')
           .forEach(el => {

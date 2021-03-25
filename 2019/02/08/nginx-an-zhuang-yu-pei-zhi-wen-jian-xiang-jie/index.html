@@ -472,6 +472,35 @@
 <li>停止nginx</li>
 </ul>
 <pre class=" language-shell"><code class="language-shell">./nginx -s stop</code></pre>
+<ul>
+<li><p>补充几种命令</p>
+<pre class=" language-shell"><code class="language-shell"># 默认启动方式
+./sbin/nginx
+
+#指定配置文件启动
+./sbin/nginx -c /tmp/nginx.conf
+
+#指定nginx程序目录启动
+./sbin/nginx -p /usr/local/nginx/
+
+#快速停止
+./sbin/nginx -s stop
+
+#优雅停止
+./sbin/nginx -s quit
+
+#热装载配置文件，不用停止可以刷新配置
+./sbin/nginx -s reload
+
+#重新打开日志文件
+./sbin/nginx -s reopen
+
+#检测当前使用的是哪个配置文件，配置是否正确
+./sbin/nginx -t</code></pre>
+</li>
+<li><p>Nginx 默认使用的是80端口</p>
+</li>
+</ul>
 <h3 id="2-3-重要配置项"><a href="#2-3-重要配置项" class="headerlink" title="2.3 重要配置项"></a>2.3 重要配置项</h3><p>  以下是针对于Nginx安装目录下的conf文件夹下的<strong>nginx.conf</strong>配置文件的解析。</p>
 <pre class=" language-shell"><code class="language-shell">#================================以下是全局配置项
 #指定运行nginx的用户和用户组，默认情况下该选项关闭（关闭的情况就是nobody）
@@ -663,7 +692,7 @@ http {
 </li>
 <li><p>解析url之后，会按照配置文件的顺序依次查找适配，一旦查到立马使用相关配置，并停止查找。</p>
 </li>
-<li><p>如果没有找到与之对应的正则表达式，那么值钱匹配的前缀字符串location里面的配置将会被采用。</p>
+<li><p>如果没有找到与之对应的正则表达式，那么之前匹配的前缀字符串location里面的配置将会被采用。</p>
 </li>
 <li><p>使用“=”可以进行精确匹配。</p>
 <table>
@@ -700,44 +729,101 @@ http {
 </li>
 <li><p><strong>文件路径</strong></p>
 <ul>
-<li><p>以root 设置资源路径 root path</p>
-<pre class=" language-shell"><code class="language-shell"># 如果请求是 /abc/index/test.html 则web服务器将会返回 /data/html/abc/index/test.html
-location /abc {
-    root /data/html
+<li><p>root 表示页面所载目录</p>
+<pre class=" language-shell"><code class="language-shell">server{
+    listen 80;
+    server_name localhost
+    location / {
+        root html
+        index index.html index.htm;
+    }
 }
+# 访问localhost:80 端口  会跳转到html目录下的index.html页面
 
-# 请求 .js文件都会返回 /data/js 下的文件
-location \/js$ {
-    root /data/js
-}</code></pre>
+改造如下
+</code></pre>
 </li>
-<li><p>以 alias 设置资源路径：alias path</p>
-<pre class=" language-shell"><code class="language-shell"># 访问 /abc 会映射到 /data/abc 文件夹
-location /abc {
-    alias /data/abc
-}
-
-# 等同于
-location /abc {
-    root /data
-}</code></pre>
-</li>
-<li><p>首页 index file</p>
-<pre class=" language-shell"><code class="language-shell"># 收到请求后，先尝试访问path/index.html 文件，如果可以访问，直接返回文件内容结束请求，否则，再尝试返回 path/index.php
-location / {
-    root path;
-    index /index.html /index.php
-}</code></pre>
-</li>
-<li><p>根据HTTP返回码重定向</p>
-<pre class=" language-shell"><code class="language-shell">error_page 404 /404.html
-error_page 502 503 504 /50x.html
-error_page 403 http://example.com/forbidden.html</code></pre>
-<p>通过 = 更改返回的错误码：</p>
-<pre class=" language-shell"><code class="language-shell">error_page 404=200 /empty.gif</code></pre>
+</ul>
+<p>server{</p>
+<pre><code>  listen 8080;
+server_name www.test.com;
+  location / {
+      root html/www/test
+      index test.html
+  }</code></pre><p>  }</p>
 </li>
 </ul>
 </li>
+</ul>
+<pre><code>  # 因为添加了域名，所以需要给本机添加一个host，将www.test.com进行映射
+
+  # 访问 www.test.com:8080,将会返回html/www/test/test.html页面
+  #如果不想访问带端口，可将端口设为默认的nginx 80端口
+server{
+      listen 8080;
+    server_name www.test.com;
+      # root 放在外部时，其他的location都将会继承这个root
+      root html/www/test
+      location / {
+          index test.html
+      }
+  }
+
+```
+
+
+
+- 以root 设置资源路径 root path
+
+  ```shell
+  # 如果请求是 /abc/index/test.html 则web服务器将会返回 /data/html/abc/index/test.html
+  location /abc {
+      root /data/html
+  }
+
+  # 请求 .js文件都会返回 /data/js 下的文件
+  location \/js$ {
+      root /data/js
+  }
+```
+
+- 以 alias 设置资源路径：alias path
+
+  ```shell
+  # 访问 /abc 会映射到 /data/abc 文件夹
+  location /abc {
+      alias /data/abc
+  }
+
+  # 等同于
+  location /abc {
+      root /data
+  }
+  ```
+
+- 首页 index file
+
+  ```shell
+  # 收到请求后，先尝试访问path/index.html 文件，如果可以访问，直接返回文件内容结束请求，否则，再尝试返回 path/index.php
+  location / {
+      root path;
+      index /index.html /index.php
+  }
+  ```
+
+- 根据HTTP返回码重定向
+
+  ```shell
+  error_page 404 /404.html
+  error_page 502 503 504 /50x.html
+  error_page 403 http://example.com/forbidden.html
+  ```
+
+  通过 = 更改返回的错误码：
+
+  ```shell
+  error_page 404=200 /empty.gif
+  ```</code></pre><ul>
 <li><p><strong>反向代理服务器</strong></p>
 <ul>
 <li><p><strong>proxy_pass</strong></p>
@@ -749,6 +835,142 @@ location /abc {
 </li>
 </ul>
 </li>
+<li><p>动静分离（资源服务器）</p>
+<ol>
+<li><p>nginx目录下创建static文件夹，并上传图片test.jpg进去</p>
+<p><img src="/2019/02/08/nginx-an-zhuang-yu-pei-zhi-wen-jian-xiang-jie/image-20210317164524267.png" alt="image-20210317164524267"></p>
+</li>
+<li><p>在 修改nginx默认页面，/nginx/html/index.html , 引用该图片</p>
+<p><img src="/2019/02/08/nginx-an-zhuang-yu-pei-zhi-wen-jian-xiang-jie/image-20210317164731492.png" alt="image-20210317164731492"></p>
+<p>备注： 图片的路径为 /nginx/static/test.jpg,   html的路径为 /nginx/html/index.html ， 这里使用 <img src="/2019/02/08/nginx-an-zhuang-yu-pei-zhi-wen-jian-xiang-jie/test.jpg">的原因是，nginx 读取的默认是 root根目录，所以读取图片时也是从nginx的根目录角度去读取的。</p>
+</li>
+</ol>
+</li>
+</ul>
+<pre><code>   如果图片的路径是/nginx/static/aa/bb/cc/test.jpg, 则需要在nginx.conf 中配置如下：
+
+   ```shell
+   location /static {
+           alias static/aa/bb/cc
+   }
+
+   # nginx 会自动将static 替换为static/aa/bb/cc 读取 static/aa/bb/cc/test.jpg
+   ```
+
+
+
+   如果图片路径为/nginx/static/aa/bb/cc/image/test.jpg|png|gif, 则直接可以通过网址：81.68.118.170（服务器域名或IP）：80(监听端口)/image/test.jpg|png|gif拿到对应的图片（网页中可以设为&lt;img src="image/test.jpg"&gt;），但前提是设置正则表达式如下
+
+   ```shell
+   location ~*\.(jpg|png|gif|css|js)$ {
+           root static/aa/bb/cc
+   }
+   ```</code></pre><ul>
+<li><p>防盗链</p>
+<ul>
+<li>nginx模块ngx_http_referer_module通常用于阻挡来源非法的域名请求</li>
+</ul>
+<pre class=" language-sh"><code class="language-sh">location ~*\.(jpg|png|gif|css|js)$ {
+        root static/aa/bb/cc
+        # valid_referes 是指白名单
+        # none 表示不存在的Referer头（表示空的，也就是直接访问，在浏览器中打开一个图片）
+        # blocked 意为根据防火墙伪装Referer头
+        # 81.68.118.170 表示只有该来源才能访问当前站点的图片，如果不是，if判断为false,将会返回404 或者跳转页面或图片等。
+        #多个白名单用,隔开，0.5.33以后可以在名称中使用*通配符
+        valid_referes none blocked 81.68.118.170
+        if($invalid_referer){
+                #rewrite ^/ http://www.baidu.com
+                return 404
+        }
+}</code></pre>
+</li>
+<li><p>黑白名单配置</p>
+<ul>
+<li><p>黑名单</p>
+<ol>
+<li>在安装目录的配置文件目录下新建黑名单black.ip，内容为下：</li>
+</ol>
+<pre><code>deny 10.88.80.190</code></pre><ol start="2">
+<li>修改nginx配置文件</li>
+</ol>
+<p><img src="/2019/02/08/nginx-an-zhuang-yu-pei-zhi-wen-jian-xiang-jie/image-20210318143651366.png" alt="image-20210318143651366"></p>
+<p>​        放到http里作为总的黑名单，放在server中为单独的server黑名单</p>
+</li>
+<li><p>白名单</p>
+<ol>
+<li><p>注释掉配置文件的黑名单配置</p>
+</li>
+<li><p>建立文件white.ip,配置一个IP 数量设置为 1 </p>
+<pre class=" language-shell"><code class="language-shell">10.88.80.190 1;</code></pre>
+</li>
+<li><p>修改nginx.conf 文件</p>
+</li>
+<li><p><img src="/2019/02/08/nginx-an-zhuang-yu-pei-zhi-wen-jian-xiang-jie/webp" alt="img"></p>
+<p>geo 为引入白名单，设置白名单之外的默认值都是0</p>
+<p>location做了判断，只要是0的就不在白名单之列，一律返回403.</p>
+</li>
+</ol>
+</li>
+</ul>
+</li>
+<li><p>网络限速</p>
+<p>​        <img src="/2019/02/08/nginx-an-zhuang-yu-pei-zhi-wen-jian-xiang-jie/image-20210318145402715.png" alt="image-20210318145402715"></p>
+<p>limit_rate_after 表示小于2k的部分不限速，大于的部分进行限速</p>
+<p>limit_rate 表示如果限速，限速的速度为1k</p>
+</li>
+<li><p>日志配置</p>
+<p>​    日志配置的两个属性：</p>
+<ul>
+<li><p>log_format  设置日志格式</p>
+</li>
+<li><p>access_log 定义日志级别和位置</p>
+<p>默认配置如下：</p>
+<p><img src="/2019/02/08/nginx-an-zhuang-yu-pei-zhi-wen-jian-xiang-jie/image-20210318150759953.png" alt="image-20210318150759953"></p>
+</li>
+<li><p>日志常用变量解释</p>
+<pre class=" language-shell"><code class="language-shell">$remote_addr,$http_x_forwarded_for #记录客户端IP地址
+$remote_user #记录客户端名称
+$request #记录请求的URL和HTTP协议(GET,POST,DEL,等)
+
+$status #记录请求状态
+
+$body_bytes_sent #发送给客户端的字节数，不包括响应头的大小； 该变量与Apache模块mod_log_config里的“%B”参数兼容。
+
+$bytes_sent #发送给客户端的总字节数。
+
+$connection #连接的序列号。
+
+$connection_requests #当前通过一个连接获得的请求数量。
+
+$msec #日志写入时间。单位为秒，精度是毫秒。
+
+$pipe #如果请求是通过HTTP流水线(pipelined)发送，pipe值为“p”，否则为“.”。
+
+$http_referer #记录从哪个页面链接访问过来的
+
+$http_user_agent #记录客户端浏览器相关信息
+
+$request_length #请求的长度（包括请求行，请求头和请求正文）。
+
+$request_time #请求处理时间，单位为秒，精度毫秒； 从读入客户端的第一个字节开始，直到把最后一个字符发送给客户端后进行日志写入为止。
+
+$time_iso8601 #ISO8601标准格式下的本地时间。
+
+$time_local #通用日志格式下的本地时间。</code></pre>
+<p>打印日志记录IP地址、远程用户、时间和访问地址</p>
+<p><img src="/2019/02/08/nginx-an-zhuang-yu-pei-zhi-wen-jian-xiang-jie/image-20210318152540787.png" alt="image-20210318152540787"></p>
+<p>日志结果：</p>
+<p><img src="/2019/02/08/nginx-an-zhuang-yu-pei-zhi-wen-jian-xiang-jie/image-20210318152505894.png" alt="image-20210318152505894"></p>
+</li>
+<li><p>配置文件可根据网址命名，但要给nginx.conf配置 user root;</p>
+<pre><code>access_log logs/$host.access.log main;</code></pre></li>
+<li><p>要查看nginx错误，需要设置error日志，并设置为debug日志：</p>
+<pre><code>error_log logs/error.log debug</code></pre></li>
+<li><p>平时error日志量大，可针对指定客户端进行debug日志输出</p>
+<pre><code>events{
+    debug_connection 192.168.0.1;
+    debug_connection 192.168.0.2;
+}</code></pre></li>
 </ul>
 </li>
 </ul>
@@ -757,6 +979,12 @@ nginx -s stop #停止服务
 nginx -s quit #处理完当前所有请求再停止服务
 nginx -t # 检查配置信息是否有错误
 nginx -c new_nginx.conf #使用自定义配置文件</code></pre>
+<h3 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h3><ol>
+<li><a href="https://blog.csdn.net/qq_39591494/article/details/78857677" target="_blank" rel="noopener">https://blog.csdn.net/qq_39591494/article/details/78857677</a></li>
+<li><a href="https://www.cnblogs.com/jiangxiaobo/p/10266308.html" target="_blank" rel="noopener">https://www.cnblogs.com/jiangxiaobo/p/10266308.html</a></li>
+<li><a href="https://zhuanlan.zhihu.com/p/56587724" target="_blank" rel="noopener">https://zhuanlan.zhihu.com/p/56587724</a></li>
+<li><a href="https://blog.51cto.com/2475296/2313297" target="_blank" rel="noopener">https://blog.51cto.com/2475296/2313297</a></li>
+</ol>
 <script>
         document.querySelectorAll('.github-emoji')
           .forEach(el => {
